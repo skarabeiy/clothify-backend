@@ -1,6 +1,19 @@
-FROM eclipse-temurin:24-jdk
+FROM eclipse-temurin:24-jdk as builder
+
 WORKDIR /app
-COPY target/clothify-0.0.1-SNAPSHOT.jar app.jar
+
+COPY pom.xml .
+COPY src ./src
+
+RUN mvn clean package -DskipTests
+
+FROM eclipse-temurin:24-jre
+WORKDIR /app
+
+# Копируем только собранный JAR из стадии builder
+COPY --from=builder /app/target/clothify-*.jar app.jar
+
 ENV PORT=8090
 EXPOSE $PORT
-ENTRYPOINT ["java", "-jar", "app.jar"]
+
+ENTRYPOINT ["java", "-Xmx256m", "-jar", "app.jar"]
