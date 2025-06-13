@@ -1,3 +1,4 @@
+# Dockerfile for Render hosting
 FROM maven:3.9-eclipse-temurin-24 as builder
 
 WORKDIR /app
