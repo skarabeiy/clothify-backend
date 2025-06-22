@@ -21,4 +21,9 @@ public class DemoController {
     public String testBD() {
         return demoService.testBD();
     }
+
+    @GetMapping("/test-users")
+    public String testUsers() {
+        return demoService.testUsers();
+    }
 }
