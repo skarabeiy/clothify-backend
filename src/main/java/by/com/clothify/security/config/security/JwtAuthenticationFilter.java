@@ -38,7 +38,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     ) throws ServletException, IOException {
         final String authHeader = request.getHeader("Authorization");
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            filterChain.doFilter(request, response);
+            sendError(response, 401, "Authorization header is missing");
             return;
         }
 
@@ -60,5 +60,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             }
         }
         filterChain.doFilter(request, response);
+    }
+
+    public static void sendError(HttpServletResponse response, int status, String message) throws IOException {
+        response.setContentType("application/json");
+        response.setStatus(status);
+        response.getWriter().write(
+                String.format("{\"status\": %d, \"error\": \"Unauthorized\", \"message\": \"%s\"}",
+                        status, message)
+        );
     }
 }
