@@ -1,11 +1,15 @@
 package by.com.clothify.security.model.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @Builder
-public class RegisterRequest {
+@AllArgsConstructor
+@NoArgsConstructor
+public class AuthRequestDto {
     private String email;
     private String password;
 }

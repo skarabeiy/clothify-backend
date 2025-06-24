@@ -1,9 +1,9 @@
 package by.com.clothify.security.controller;
 
 
-import by.com.clothify.security.model.dto.AuthRequest;
-import by.com.clothify.security.model.dto.AuthResponse;
-import by.com.clothify.security.model.dto.RegisterRequest;
+import by.com.clothify.security.model.dto.AuthRequestDto;
+import by.com.clothify.security.model.dto.AuthResponseDto;
+import by.com.clothify.security.model.dto.RegisterRequestDto;
 import by.com.clothify.security.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -20,12 +20,12 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/register")
-    public ResponseEntity<AuthResponse> register(@RequestBody RegisterRequest request) {
+    public ResponseEntity<AuthResponseDto> register(@RequestBody RegisterRequestDto request) {
         return ResponseEntity.ok(authService.register(request));
     }
 
     @PostMapping("/authenticate")
-    public ResponseEntity<AuthResponse> authenticate(@RequestBody AuthRequest request) {
+    public ResponseEntity<AuthResponseDto> authenticate(@RequestBody AuthRequestDto request) {
         return ResponseEntity.ok(authService.authenticate(request));
     }
 }

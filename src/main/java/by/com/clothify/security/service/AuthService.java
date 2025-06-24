@@ -1,9 +1,9 @@
 package by.com.clothify.security.service;
 
 
-import by.com.clothify.security.model.dto.AuthRequest;
-import by.com.clothify.security.model.dto.AuthResponse;
-import by.com.clothify.security.model.dto.RegisterRequest;
+import by.com.clothify.security.model.dto.AuthRequestDto;
+import by.com.clothify.security.model.dto.AuthResponseDto;
+import by.com.clothify.security.model.dto.RegisterRequestDto;
 import by.com.clothify.security.model.entity.User;
 import by.com.clothify.security.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +23,7 @@ public class AuthService {
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
 
-    public AuthResponse register(RegisterRequest request) {
+    public AuthResponseDto register(RegisterRequestDto request) {
         var user = User.builder()
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
@@ -31,12 +31,12 @@ public class AuthService {
                 .build();
         userRepository.save(user);
         var jwtToken = jwtService.generateToken(user);
-        return AuthResponse.builder()
+        return AuthResponseDto.builder()
                 .token(jwtToken)
                 .build();
     }
 
-    public AuthResponse authenticate(AuthRequest request) {
+    public AuthResponseDto authenticate(AuthRequestDto request) {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         request.getEmail(),
@@ -46,7 +46,7 @@ public class AuthService {
         var user = userRepository.findByEmail(request.getEmail())
                 .orElseThrow();
         var jwtToken = jwtService.generateToken(user);
-        return AuthResponse.builder()
+        return AuthResponseDto.builder()
                 .token(jwtToken)
                 .build();
     }
