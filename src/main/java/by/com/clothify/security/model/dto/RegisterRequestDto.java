@@ -1,5 +1,6 @@
 package by.com.clothify.security.model.dto;
 
+import by.com.clothify.security.model.dto.enums.Gender;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -22,9 +23,4 @@ public class RegisterRequestDto {
     private Gender gender;
 
     private String dateOfBirth;
-
-    public enum Gender {
-        FEMALE,
-        MALE
-    }
 }
