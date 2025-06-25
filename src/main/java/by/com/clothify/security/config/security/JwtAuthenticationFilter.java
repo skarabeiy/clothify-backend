@@ -36,9 +36,18 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             @NonNull HttpServletResponse response,
             @NonNull FilterChain filterChain
     ) throws ServletException, IOException {
+        if (request.getServletPath().contains("/api/auth")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
         final String authHeader = request.getHeader("Authorization");
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            sendError(response, 401, "Authorization header is missing");
+            try {
+                filterChain.doFilter(request, response);
+            } catch (Exception e) {
+                sendError(response, 401, "Authorization header is missing");
+            }
             return;
         }
 

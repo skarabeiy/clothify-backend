@@ -10,6 +10,21 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class RegisterRequestDto {
+
     private String email;
+
     private String password;
+
+    private String passwordConfirmation;
+
+    private String name;
+
+    private Gender gender;
+
+    private String dateOfBirth;
+
+    public enum Gender {
+        FEMALE,
+        MALE
+    }
 }
