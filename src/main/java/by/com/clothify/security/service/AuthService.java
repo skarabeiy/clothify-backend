@@ -15,6 +15,8 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 
+import static by.com.clothify.security.util.UserDetailsMapper.mapToUserDetailsDto;
+
 @Service
 @RequiredArgsConstructor
 public class AuthService {
@@ -55,13 +57,6 @@ public class AuthService {
         return AuthResponseDto.builder()
                 .success(true)
                 .accessToken(jwtToken)
-                .build();
-    }
-
-    private UserDetailsDto mapToUserDetailsDto(User user) {
-        return UserDetailsDto.builder()
-                .username(user.getEmail())
-                .password(user.getPassword())
                 .build();
     }
 }

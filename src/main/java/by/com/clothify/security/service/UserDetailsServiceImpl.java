@@ -1,6 +1,8 @@
 package by.com.clothify.security.service;
 
+import by.com.clothify.security.model.entity.User;
 import by.com.clothify.security.repository.UserRepository;
+import by.com.clothify.security.util.UserDetailsMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -15,7 +17,9 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        return userRepository.findByEmail(email)
+        User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+
+        return UserDetailsMapper.mapToUserDetailsDto(user);
     }
 }
