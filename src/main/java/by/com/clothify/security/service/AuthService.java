@@ -4,6 +4,7 @@ package by.com.clothify.security.service;
 import by.com.clothify.security.model.dto.AuthRequestDto;
 import by.com.clothify.security.model.dto.AuthResponseDto;
 import by.com.clothify.security.model.dto.RegisterRequestDto;
+import by.com.clothify.security.model.dto.UserDetailsDto;
 import by.com.clothify.security.model.entity.User;
 import by.com.clothify.security.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -24,13 +25,15 @@ public class AuthService {
     private final AuthenticationManager authenticationManager;
 
     public AuthResponseDto register(RegisterRequestDto request) {
-        var user = User.builder()
+        User user = User.builder()
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .createdAt(LocalDateTime.now())
                 .build();
         userRepository.save(user);
-        var jwtToken = jwtService.generateToken(user);
+        UserDetailsDto userDetailsDto = mapToUserDetailsDto(user);
+
+        String jwtToken = jwtService.generateToken(userDetailsDto);
         return AuthResponseDto.builder()
                 .success(true)
                 .accessToken(jwtToken)
@@ -44,12 +47,21 @@ public class AuthService {
                         request.getPassword()
                 )
         );
-        var user = userRepository.findByEmail(request.getEmail())
+        User user = userRepository.findByEmail(request.getEmail())
                 .orElseThrow();
-        var jwtToken = jwtService.generateToken(user);
+        UserDetailsDto userDetailsDto = mapToUserDetailsDto(user);
+
+        String jwtToken = jwtService.generateToken(userDetailsDto);
         return AuthResponseDto.builder()
                 .success(true)
                 .accessToken(jwtToken)
+                .build();
+    }
+
+    private UserDetailsDto mapToUserDetailsDto(User user) {
+        return UserDetailsDto.builder()
+                .username(user.getEmail())
+                .password(user.getPassword())
                 .build();
     }
 }
