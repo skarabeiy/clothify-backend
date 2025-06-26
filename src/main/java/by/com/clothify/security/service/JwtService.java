@@ -20,8 +20,11 @@ public class JwtService {
     @Value("${jwt.secret-key}")
     private String secretKey;
 
-    @Value("${jwt.expiration-time}")
-    private long jwtExpiration;
+    @Value("${jwt.access.expiration-time}")
+    private long jwtAccessExpiration;
+
+    @Value("${jwt.refresh.expiration-time}")
+    private long jwtRefreshExpiration;
 
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
@@ -32,13 +35,16 @@ public class JwtService {
         return claimsResolver.apply(claims);
     }
 
-    public String generateToken(UserDetails userDetails) {
-        return generateToken(new HashMap<>(), userDetails);
+    public String generateAccessToken(UserDetails userDetails) {
+        return generateToken(new HashMap<>(), userDetails, getExpirationInMillis(jwtAccessExpiration));
     }
 
-    public String generateToken(Map<String, Object> extraClaims, UserDetails userDetails) {
-        long expirationTimeInMillis = jwtExpiration * 60 * 1000;
-        return buildToken(extraClaims, userDetails, expirationTimeInMillis);
+    public String generateRefreshToken(UserDetails userDetails) {
+        return generateToken(new HashMap<>(), userDetails, getExpirationInMillis(jwtRefreshExpiration));
+    }
+
+    public String generateToken(Map<String, Object> extraClaims, UserDetails userDetails, long expiration) {
+        return buildToken(extraClaims, userDetails, expiration);
     }
 
     private String buildToken(Map<String, Object> extraClaims, UserDetails userDetails, long expiration) {
@@ -75,5 +81,9 @@ public class JwtService {
     private SecretKey getSignInKey() {
         byte[] keyBytes = Decoders.BASE64.decode(secretKey);
         return Keys.hmacShaKeyFor(keyBytes);
+    }
+
+    private long getExpirationInMillis(long minutes) {
+        return minutes * 60 * 1000;
     }
 }

@@ -25,13 +25,8 @@ public class RegisterService {
     public AuthResponseDto register(RegisterRequestDto request) {
         User user = mapToUser(request);
         userRepository.save(user);
-        UserDetailsDto userDetailsDto = mapToUserDetailsDto(user);
 
-        String jwtToken = jwtService.generateToken(userDetailsDto);
-        return AuthResponseDto.builder()
-                .success(true)
-                .accessToken(jwtToken)
-                .build();
+        return createAuthResponse(user);
     }
 
     private User mapToUser(RegisterRequestDto request) {
@@ -42,6 +37,19 @@ public class RegisterService {
                 .name(request.getName())
                 .gender(request.getGender())
                 .dateOfBirth(DateConverter.covertToLocaleDate(request.getDateOfBirth()))
+                .build();
+    }
+
+    private AuthResponseDto createAuthResponse(User user) {
+        UserDetailsDto userDetailsDto = mapToUserDetailsDto(user);
+
+        String jwtAccessToken = jwtService.generateAccessToken(userDetailsDto);
+        String jwtRefreshToken = jwtService.generateRefreshToken(userDetailsDto);
+
+        return AuthResponseDto.builder()
+                .success(true)
+                .accessToken(jwtAccessToken)
+                .refreshToken(jwtRefreshToken)
                 .build();
     }
 }

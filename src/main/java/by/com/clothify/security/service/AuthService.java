@@ -32,7 +32,7 @@ public class AuthService {
                 .orElseThrow();
         UserDetailsDto userDetailsDto = mapToUserDetailsDto(user);
 
-        String jwtToken = jwtService.generateToken(userDetailsDto);
+        String jwtToken = jwtService.generateAccessToken(userDetailsDto);
         return AuthResponseDto.builder()
                 .success(true)
                 .accessToken(jwtToken)
