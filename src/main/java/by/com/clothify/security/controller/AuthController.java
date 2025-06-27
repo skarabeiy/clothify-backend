@@ -3,7 +3,7 @@ package by.com.clothify.security.controller;
 import by.com.clothify.security.model.dto.AuthRequestDto;
 import by.com.clothify.security.model.dto.AuthResponseDto;
 import by.com.clothify.security.model.dto.RegisterRequestDto;
-import by.com.clothify.security.service.AuthService;
+import by.com.clothify.security.service.AuthenticateService;
 import by.com.clothify.security.service.RegisterService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthController {
 
     private final RegisterService registerService;
-    private final AuthService authService;
+    private final AuthenticateService authenticateService;
 
     @PostMapping("/register")
     public AuthResponseDto register(@RequestBody RegisterRequestDto request) {
@@ -26,6 +26,6 @@ public class AuthController {
 
     @PostMapping("/authenticate")
     public AuthResponseDto authenticate(@RequestBody AuthRequestDto request) {
-        return authService.authenticate(request);
+        return authenticateService.authenticate(request);
     }
 }

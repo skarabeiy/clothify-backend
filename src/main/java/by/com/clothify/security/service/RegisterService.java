@@ -2,7 +2,6 @@ package by.com.clothify.security.service;
 
 import by.com.clothify.security.model.dto.AuthResponseDto;
 import by.com.clothify.security.model.dto.RegisterRequestDto;
-import by.com.clothify.security.model.dto.UserDetailsDto;
 import by.com.clothify.security.model.dto.enums.RegisterError;
 import by.com.clothify.security.model.entity.User;
 import by.com.clothify.security.repository.UserRepository;
@@ -14,7 +13,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
-import static by.com.clothify.security.util.UserDetailsMapper.mapToUserDetailsDto;
+import static by.com.clothify.security.service.AuthService.getFailedAuthResponse;
 
 @Service
 @RequiredArgsConstructor
@@ -22,7 +21,7 @@ public class RegisterService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-    private final JwtService jwtService;
+    private final AuthService authService;
 
     public AuthResponseDto register(RegisterRequestDto request) {
 
@@ -35,22 +34,15 @@ public class RegisterService {
         User user = mapToUser(request);
         userRepository.save(user);
 
-        return createAuthResponse(user);
+        return authService.createAuthResponse(user);
     }
 
-    private Optional<AuthResponseDto> registerRequestValidation(RegisterRequestDto request) {
+    private static Optional<AuthResponseDto> registerRequestValidation(RegisterRequestDto request) {
         if (!request.getPassword().equals(request.getPasswordConfirmation())) {
-            return Optional.of(getFailedAuthResponse(RegisterError.PASSWORDS_NOT_MATCH));
+            return Optional.of(getFailedAuthResponse(RegisterError.PASSWORDS_NOT_MATCH.toString()));
         }
 
         return Optional.empty();
-    }
-
-    private AuthResponseDto getFailedAuthResponse(RegisterError registerError) {
-        return AuthResponseDto.builder()
-                .success(false)
-                .errorMessage(registerError.toString())
-                .build();
     }
 
     private User mapToUser(RegisterRequestDto request) {
@@ -61,19 +53,6 @@ public class RegisterService {
                 .name(request.getName())
                 .gender(request.getGender())
                 .dateOfBirth(DateConverter.covertToLocaleDate(request.getDateOfBirth()))
-                .build();
-    }
-
-    private AuthResponseDto createAuthResponse(User user) {
-        UserDetailsDto userDetailsDto = mapToUserDetailsDto(user);
-
-        String jwtAccessToken = jwtService.generateAccessToken(userDetailsDto);
-        String jwtRefreshToken = jwtService.generateRefreshToken(userDetailsDto);
-
-        return AuthResponseDto.builder()
-                .success(true)
-                .accessToken(jwtAccessToken)
-                .refreshToken(jwtRefreshToken)
                 .build();
     }
 }

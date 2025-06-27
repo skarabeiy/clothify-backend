@@ -1,0 +1,65 @@
+package by.com.clothify.security.service;
+
+import by.com.clothify.security.model.dto.AuthRequestDto;
+import by.com.clothify.security.model.dto.AuthResponseDto;
+import by.com.clothify.security.model.dto.enums.AuthError;
+import by.com.clothify.security.model.entity.User;
+import by.com.clothify.security.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.stereotype.Service;
+
+import java.util.Optional;
+
+import static by.com.clothify.security.service.AuthService.getFailedAuthResponse;
+
+@Service
+@RequiredArgsConstructor
+@Slf4j
+public class AuthenticateService {
+
+    private final UserRepository userRepository;
+    private final AuthenticationManager authenticationManager;
+    private final AuthService authService;
+
+    public AuthResponseDto authenticate(AuthRequestDto request) {
+        Optional<User> optionalUser = userRepository.findByEmail(request.getEmail());
+
+        if (optionalUser.isEmpty()) {
+            return getFailedAuthResponse(AuthError.EMAIL_NOT_FOUND.toString());
+        }
+
+        Optional<AuthResponseDto> optionalFailedAuthResponse = authenticateCredentials(request);
+
+        return optionalFailedAuthResponse.orElseGet(() ->
+                authService.createAuthResponse(optionalUser.get()));
+
+    }
+
+    private Optional<AuthResponseDto> authenticateCredentials(AuthRequestDto request) {
+        try {
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(
+                            request.getEmail(),
+                            request.getPassword()
+                    )
+            );
+        } catch (BadCredentialsException bce) {
+
+            log.error("User: {} entered incorrect credentials", request.getEmail());
+            return Optional.of(getFailedAuthResponse(AuthError.BAD_CREDENTIALS.toString()));
+
+        } catch (Exception e) {
+
+            log.error("User authorization failed: {}", request.getEmail());
+            log.error(e.getMessage(), e);
+            return Optional.of(getFailedAuthResponse(AuthError.AUTH_ERROR.toString()));
+
+        }
+
+        return Optional.empty();
+    }
+}
