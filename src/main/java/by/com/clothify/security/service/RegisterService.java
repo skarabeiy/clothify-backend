@@ -15,6 +15,7 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 
 import static by.com.clothify.security.service.AuthService.getFailedAuthResponse;
+import static by.com.clothify.security.service.AuthService.getOptionalFailedAuthResponse;
 
 @Service
 @RequiredArgsConstructor
@@ -46,12 +47,40 @@ public class RegisterService {
         }
     }
 
-    private static Optional<AuthResponseDto> registerRequestValidation(RegisterRequestDto request) {
-        if (!request.getPassword().equals(request.getPasswordConfirmation())) {
-            return Optional.of(getFailedAuthResponse(RegisterError.PASSWORDS_NOT_MATCH.toString()));
+    private Optional<AuthResponseDto> registerRequestValidation(RegisterRequestDto request) {
+        if (isPasswordsNotMatch(request)) {
+            return getOptionalFailedAuthResponse(RegisterError.PASSWORDS_NOT_MATCH.toString());
+        }
+
+        if (isPasswordNotValid(request.getPassword())) {
+            return getOptionalFailedAuthResponse(RegisterError.PASSWORD_NOT_VALID.toString());
+        }
+
+        if (isEmailNotValid(request.getEmail())) {
+            return getOptionalFailedAuthResponse(RegisterError.EMAIL_NOT_VALID.toString());
+        }
+
+        if (isEmailOccupied(request.getEmail())) {
+            return getOptionalFailedAuthResponse(RegisterError.EMAIL_OCCUPIED.toString());
         }
 
         return Optional.empty();
+    }
+
+    private static boolean isPasswordsNotMatch(RegisterRequestDto request) {
+        return !request.getPassword().equals(request.getPasswordConfirmation());
+    }
+
+    private static boolean isPasswordNotValid(String password) {
+        return false;
+    }
+
+    private static boolean isEmailNotValid(String email) {
+        return false;
+    }
+
+    private boolean isEmailOccupied(String email) {
+        return userRepository.findByEmail(email).isPresent();
     }
 
     private User mapToUser(RegisterRequestDto request) {

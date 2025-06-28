@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 
 import static by.com.clothify.security.service.AuthService.getFailedAuthResponse;
+import static by.com.clothify.security.service.AuthService.getOptionalFailedAuthResponse;
 
 @Service
 @RequiredArgsConstructor
@@ -54,7 +55,7 @@ public class AuthenticateService {
             );
         } catch (BadCredentialsException bce) {
             log.error("User: {} entered incorrect credentials", request.getEmail());
-            return Optional.of(getFailedAuthResponse(AuthError.BAD_CREDENTIALS.toString()));
+            return getOptionalFailedAuthResponse(AuthError.BAD_CREDENTIALS.toString());
         }
 
         return Optional.empty();

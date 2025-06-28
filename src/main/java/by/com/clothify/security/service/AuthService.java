@@ -7,6 +7,8 @@ import by.com.clothify.security.model.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 import static by.com.clothify.security.util.UserDetailsMapper.mapToUserDetailsDto;
 
 @Service
@@ -26,6 +28,10 @@ public class AuthService {
                 .accessToken(jwtAccessToken)
                 .refreshToken(jwtRefreshToken)
                 .build();
+    }
+
+    public static Optional<AuthResponseDto> getOptionalFailedAuthResponse(String errorMessage) {
+        return Optional.of(getFailedAuthResponse(errorMessage));
     }
 
     public static AuthResponseDto getFailedAuthResponse(String errorMessage) {
