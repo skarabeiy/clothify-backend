@@ -2,11 +2,12 @@ package by.com.clothify.security.service;
 
 import by.com.clothify.security.model.dto.AuthResponseDto;
 import by.com.clothify.security.model.dto.RegisterRequestDto;
+import by.com.clothify.security.model.dto.enums.AuthError;
 import by.com.clothify.security.model.dto.enums.RegisterError;
 import by.com.clothify.security.model.entity.User;
 import by.com.clothify.security.repository.UserRepository;
-import by.com.clothify.security.util.DateConverter;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +18,7 @@ import static by.com.clothify.security.service.AuthService.getFailedAuthResponse
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class RegisterService {
 
     private final UserRepository userRepository;
@@ -24,17 +26,24 @@ public class RegisterService {
     private final AuthService authService;
 
     public AuthResponseDto register(RegisterRequestDto request) {
+        try {
+            Optional<AuthResponseDto> optionalFailedAuthResponse = registerRequestValidation(request);
 
-        Optional<AuthResponseDto> optionalFailedAuthResponse = registerRequestValidation(request);
+            if (optionalFailedAuthResponse.isPresent()) {
+                return optionalFailedAuthResponse.get();
+            }
 
-        if (optionalFailedAuthResponse.isPresent()) {
-            return optionalFailedAuthResponse.get();
+            User user = mapToUser(request);
+            userRepository.save(user);
+
+            log.info("New user: {} registration", user.getEmail());
+
+            return authService.createAuthResponse(user);
+        } catch (Exception e) {
+            log.error("Failed register user: {}", request.getEmail());
+            log.error(e.getMessage(), e);
+            return getFailedAuthResponse(AuthError.AUTH_ERROR.toString());
         }
-
-        User user = mapToUser(request);
-        userRepository.save(user);
-
-        return authService.createAuthResponse(user);
     }
 
     private static Optional<AuthResponseDto> registerRequestValidation(RegisterRequestDto request) {
@@ -50,9 +59,6 @@ public class RegisterService {
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .createdAt(LocalDateTime.now())
-                .name(request.getName())
-                .gender(request.getGender())
-                .dateOfBirth(DateConverter.covertToLocaleDate(request.getDateOfBirth()))
                 .build();
     }
 }

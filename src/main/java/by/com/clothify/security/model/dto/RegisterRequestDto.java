@@ -1,6 +1,5 @@
 package by.com.clothify.security.model.dto;
 
-import by.com.clothify.security.model.dto.enums.Gender;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -17,10 +16,4 @@ public class RegisterRequestDto {
     private String password;
 
     private String passwordConfirmation;
-
-    private String name;
-
-    private Gender gender;
-
-    private String dateOfBirth;
 }

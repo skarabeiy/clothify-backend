@@ -26,17 +26,22 @@ public class AuthenticateService {
     private final AuthService authService;
 
     public AuthResponseDto authenticate(AuthRequestDto request) {
-        Optional<User> optionalUser = userRepository.findByEmail(request.getEmail());
+        try {
+            Optional<User> optionalUser = userRepository.findByEmail(request.getEmail());
 
-        if (optionalUser.isEmpty()) {
-            return getFailedAuthResponse(AuthError.EMAIL_NOT_FOUND.toString());
+            if (optionalUser.isEmpty()) {
+                return getFailedAuthResponse(AuthError.EMAIL_NOT_FOUND.toString());
+            }
+
+            Optional<AuthResponseDto> optionalFailedAuthResponse = authenticateCredentials(request);
+
+            return optionalFailedAuthResponse.orElseGet(() ->
+                    authService.createAuthResponse(optionalUser.get()));
+        } catch (Exception e) {
+            log.error("User authorization failed: {}", request.getEmail());
+            log.error(e.getMessage(), e);
+            return getFailedAuthResponse(AuthError.AUTH_ERROR.toString());
         }
-
-        Optional<AuthResponseDto> optionalFailedAuthResponse = authenticateCredentials(request);
-
-        return optionalFailedAuthResponse.orElseGet(() ->
-                authService.createAuthResponse(optionalUser.get()));
-
     }
 
     private Optional<AuthResponseDto> authenticateCredentials(AuthRequestDto request) {
@@ -48,16 +53,8 @@ public class AuthenticateService {
                     )
             );
         } catch (BadCredentialsException bce) {
-
             log.error("User: {} entered incorrect credentials", request.getEmail());
             return Optional.of(getFailedAuthResponse(AuthError.BAD_CREDENTIALS.toString()));
-
-        } catch (Exception e) {
-
-            log.error("User authorization failed: {}", request.getEmail());
-            log.error(e.getMessage(), e);
-            return Optional.of(getFailedAuthResponse(AuthError.AUTH_ERROR.toString()));
-
         }
 
         return Optional.empty();
