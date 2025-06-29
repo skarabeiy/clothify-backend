@@ -23,10 +23,17 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+
+        String[] whiteList = {
+                "/api/auth/**",
+                "/v3/api-docs/**",
+                "/swagger-ui/**"
+        };
+
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/auth/**").permitAll()
+                        .requestMatchers(whiteList).permitAll()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session
