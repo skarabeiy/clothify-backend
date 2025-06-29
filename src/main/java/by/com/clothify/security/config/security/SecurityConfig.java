@@ -25,7 +25,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
         String[] whiteList = {
-                "/api/auth/**",
+                "/auth/**",
                 "/v3/api-docs/**",
                 "/swagger-ui/**"
         };
