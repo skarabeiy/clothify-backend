@@ -1,7 +1,13 @@
 package by.com.clothify.security.model.dto.enums;
 
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+
+@RequiredArgsConstructor
+@Getter
 public enum AuthError {
-    EMAIL_NOT_FOUND,
-    BAD_CREDENTIALS,
-    AUTH_ERROR
+    AUTH_ERROR("Auth error"),
+    UNAUTHORIZED("Barer authorization is required for this endpoint");
+
+    private final String description;
 }

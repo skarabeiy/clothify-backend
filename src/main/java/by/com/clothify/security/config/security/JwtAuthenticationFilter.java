@@ -1,11 +1,13 @@
 package by.com.clothify.security.config.security;
 
+import by.com.clothify.security.model.dto.enums.AuthError;
 import by.com.clothify.security.service.JwtService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -17,6 +19,8 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
+import static by.com.clothify.security.service.AuthenticateService.sendError;
+
 @Component
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
@@ -24,21 +28,23 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final JwtService jwtService;
     private final UserDetailsService userDetailsService;
 
+    protected void test(@NonNull HttpServletRequest request,
+                                  @NonNull HttpServletResponse response,
+                                  @NonNull FilterChain filterChain) {
+
+    }
+
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request,
                                     @NonNull HttpServletResponse response,
                                     @NonNull FilterChain filterChain) throws ServletException, IOException {
-        if (request.getServletPath().contains("/api/auth")) {
-            filterChain.doFilter(request, response);
-            return;
-        }
 
         final String authHeader = request.getHeader("Authorization");
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             try {
                 filterChain.doFilter(request, response);
             } catch (Exception e) {
-                sendError(response, 401, "Authorization header is missing");
+                sendError(response, HttpStatus.UNAUTHORIZED, AuthError.UNAUTHORIZED);
             }
             return;
         }
@@ -61,14 +67,5 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             }
         }
         filterChain.doFilter(request, response);
-    }
-
-    public static void sendError(HttpServletResponse response, int status, String message) throws IOException {
-        response.setContentType("application/json");
-        response.setStatus(status);
-        response.getWriter().write(
-                String.format("{\"status\": %d, \"error\": \"Unauthorized\", \"message\": \"%s\"}",
-                        status, message)
-        );
     }
 }
