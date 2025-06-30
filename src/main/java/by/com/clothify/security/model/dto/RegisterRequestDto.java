@@ -1,5 +1,6 @@
 package by.com.clothify.security.model.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -11,9 +12,12 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class RegisterRequestDto {
 
+    @Schema(example = "example@mail.com")
     private String email;
 
+    @Schema(example = "Test123!")
     private String password;
 
+    @Schema(example = "Test123!")
     private String passwordConfirmation;
 }

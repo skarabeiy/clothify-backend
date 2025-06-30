@@ -32,6 +32,10 @@ public class AuthController {
     }
 
     @PostMapping("/authenticate")
+    @Operation(
+            summary = "User authentication",
+            description = "Return tokens if successful, and an error if not"
+    )
     public AuthResponseDto authenticate(@RequestBody AuthRequestDto request) {
         return authenticateService.authenticate(request);
     }
