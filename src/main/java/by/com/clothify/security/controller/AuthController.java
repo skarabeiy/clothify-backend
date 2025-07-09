@@ -5,6 +5,7 @@ import by.com.clothify.security.model.dto.AuthResponseDto;
 import by.com.clothify.security.model.dto.RefreshRequestDto;
 import by.com.clothify.security.model.dto.RegisterRequestDto;
 import by.com.clothify.security.service.AuthenticateService;
+import by.com.clothify.security.service.RefreshService;
 import by.com.clothify.security.service.RegisterService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -22,6 +23,7 @@ public class AuthController {
 
     private final RegisterService registerService;
     private final AuthenticateService authenticateService;
+    private final RefreshService refreshService;
 
     @PostMapping("/register")
     @Operation(
@@ -41,12 +43,12 @@ public class AuthController {
         return authenticateService.authenticate(request);
     }
 
-    @PostMapping("/refresh-token")
+    @PostMapping("/refresh-tokens")
     @Operation(
-            summary = "Refresh token",
+            summary = "Refresh tokens",
             description = "If access token has expired, it issues a new pair of tokens for the refresh token"
     )
-    public AuthResponseDto refreshToken(@RequestBody RefreshRequestDto request) {
-        return null;
+    public AuthResponseDto refreshTokens(@RequestBody RefreshRequestDto request) {
+        return refreshService.refreshTokens(request);
     }
 }
