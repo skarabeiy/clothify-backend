@@ -88,7 +88,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             return Optional.empty();
 
         } catch (ExpiredJwtException eje) {
-            sendError(response, HttpStatus.UNAUTHORIZED, AuthError.TOKEN_EXPIRED);
+            sendError(response, HttpStatus.UNAUTHORIZED, AuthError.ACCESS_TOKEN_EXPIRED);
             return Optional.empty();
         }
     }
