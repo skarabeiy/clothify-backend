@@ -20,6 +20,10 @@ import java.util.function.Function;
 @RequiredArgsConstructor
 public class JwtService {
 
+    private static final String TOKEN_TYPE_CLAIM = "token_type";
+    public static final String ACCESS_TOKEN_TYPE = "access";
+    public static final String REFRESH_TOKEN_TYPE = "refresh";
+
     @Value("${jwt.secret-key}")
     private String secretKey;
 
@@ -35,17 +39,25 @@ public class JwtService {
         return extractClaim(token, Claims::getSubject);
     }
 
+    public String extractType(String token) {
+        return extractClaim(token, claims -> claims.get(TOKEN_TYPE_CLAIM, String.class));
+    }
+
     public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
         final Claims claims = extractAllClaims(token);
         return claimsResolver.apply(claims);
     }
 
     public String generateAccessToken(UserDetails userDetails) {
-        return generateToken(new HashMap<>(), userDetails, getExpirationInMillis(jwtAccessExpiration));
+        Map<String, Object> claims = new HashMap<>();
+        claims.put(TOKEN_TYPE_CLAIM, ACCESS_TOKEN_TYPE);
+        return generateToken(claims, userDetails, getExpirationInMillis(jwtAccessExpiration));
     }
 
     public String generateRefreshToken(UserDetails userDetails) {
-        return generateToken(new HashMap<>(), userDetails, getExpirationInMillis(jwtRefreshExpiration));
+        Map<String, Object> claims = new HashMap<>();
+        claims.put(TOKEN_TYPE_CLAIM, REFRESH_TOKEN_TYPE);
+        return generateToken(claims, userDetails, getExpirationInMillis(jwtRefreshExpiration));
     }
 
     public String generateToken(Map<String, Object> extraClaims, UserDetails userDetails, long expiration) {
@@ -66,9 +78,12 @@ public class JwtService {
         return userDetailsService.loadUserByUsername(userEmail);
     }
 
-    public boolean isTokenValid(String token, UserDetails userDetails) {
+    public boolean isTokenValid(String token, UserDetails userDetails, String expectedTokenType) {
         final String username = extractUsername(token);
-        return (username.equals(userDetails.getUsername())) && !isTokenExpired(token);
+        final String tokenType = extractType(token);
+        return (username.equals(userDetails.getUsername()))
+                && !isTokenExpired(token)
+                && tokenType.equals(expectedTokenType);
     }
 
     private boolean isTokenExpired(String token) {

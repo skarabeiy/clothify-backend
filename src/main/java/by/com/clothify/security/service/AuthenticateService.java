@@ -38,7 +38,7 @@ public class AuthenticateService {
             Optional<AuthResponseDto> optionalFailedAuthResponse = authenticateCredentials(request);
 
             return optionalFailedAuthResponse.orElseGet(() ->
-                    authService.createAuthResponse(optionalUser.get()));
+                    authService.createAuthResponseFromUser(optionalUser.get()));
         } catch (Exception e) {
             log.error("User authorization failed: {}", request.getEmail());
             log.error(e.getMessage(), e);

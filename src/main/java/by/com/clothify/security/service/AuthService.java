@@ -1,6 +1,5 @@
 package by.com.clothify.security.service;
 
-
 import by.com.clothify.security.model.dto.AuthErrorDto;
 import by.com.clothify.security.model.dto.AuthResponseDto;
 import by.com.clothify.security.model.dto.UserDetailsDto;
@@ -12,6 +11,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -28,11 +28,16 @@ public class AuthService {
 
     private final JwtService jwtService;
 
-    public AuthResponseDto createAuthResponse(User user) {
+    public AuthResponseDto createAuthResponseFromUser(User user) {
         UserDetailsDto userDetailsDto = mapToUserDetailsDto(user);
 
-        String jwtAccessToken = jwtService.generateAccessToken(userDetailsDto);
-        String jwtRefreshToken = jwtService.generateRefreshToken(userDetailsDto);
+        return createAuthResponse(userDetailsDto);
+    }
+
+    // TODO: возможно тут user details не нужны, достаточно email
+    public AuthResponseDto createAuthResponse(UserDetails userDetails) {
+        String jwtAccessToken = jwtService.generateAccessToken(userDetails);
+        String jwtRefreshToken = jwtService.generateRefreshToken(userDetails);
 
         return AuthResponseDto.builder()
                 .success(true)

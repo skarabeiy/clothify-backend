@@ -97,7 +97,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                                    String userEmail, String jwt) throws ServletException, IOException {
         if (SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails = jwtService.getUserDetails(userEmail);
-            if (jwtService.isTokenValid(jwt, userDetails)) {
+            if (jwtService.isTokenValid(jwt, userDetails, JwtService.ACCESS_TOKEN_TYPE)) {
                 UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
                         userDetails,
                         null,
@@ -107,6 +107,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                         new WebAuthenticationDetailsSource().buildDetails(request)
                 );
                 SecurityContextHolder.getContext().setAuthentication(authToken);
+            } else {
+                log.error(AuthError.INVALID_TOKEN.getDescription());
+                sendError(response, HttpStatus.UNAUTHORIZED, AuthError.INVALID_TOKEN);
+                return;
             }
         }
         filterChain.doFilter(request, response);

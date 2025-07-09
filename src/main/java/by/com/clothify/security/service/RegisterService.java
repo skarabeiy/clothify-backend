@@ -39,7 +39,7 @@ public class RegisterService {
 
             log.info("New user: {} registration", user.getEmail());
 
-            return authService.createAuthResponse(user);
+            return authService.createAuthResponseFromUser(user);
         } catch (Exception e) {
             log.error("Failed register user: {}", request.getEmail());
             log.error(e.getMessage(), e);
