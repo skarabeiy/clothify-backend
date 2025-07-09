@@ -1,24 +1,18 @@
 package by.com.clothify.security.service;
 
-import by.com.clothify.security.model.dto.AuthErrorDto;
 import by.com.clothify.security.model.dto.AuthRequestDto;
 import by.com.clothify.security.model.dto.AuthResponseDto;
 import by.com.clothify.security.model.dto.enums.AuthError;
 import by.com.clothify.security.model.dto.enums.AuthenticateError;
 import by.com.clothify.security.model.entity.User;
 import by.com.clothify.security.repository.UserRepository;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
 import java.util.Optional;
 
 import static by.com.clothify.security.service.AuthService.getFailedAuthResponse;
@@ -28,8 +22,6 @@ import static by.com.clothify.security.service.AuthService.getOptionalFailedAuth
 @RequiredArgsConstructor
 @Slf4j
 public class AuthenticateService {
-
-    private static final ObjectMapper MAPPER = new ObjectMapper();
 
     private final UserRepository userRepository;
     private final AuthenticationManager authenticationManager;
@@ -68,31 +60,5 @@ public class AuthenticateService {
         }
 
         return Optional.empty();
-    }
-
-    public static void sendError(HttpServletResponse response, HttpStatus httpStatus, AuthError authError) {
-        try {
-            response.setContentType("application/json");
-            response.setStatus(httpStatus.value());
-            response.getWriter().write(getErrorBody(authError));
-        } catch (IOException e) {
-            log.error("Failed send auth error: {}", authError);
-            log.error(e.getMessage(), e);
-            throw new RuntimeException(e);
-        }
-    }
-
-    private static String getErrorBody(AuthError authError) {
-        try {
-            AuthErrorDto authErrorDto = AuthErrorDto.builder()
-                    .errorType(authError)
-                    .errorDescription(authError.getDescription())
-                    .build();
-
-            return MAPPER.writeValueAsString(authErrorDto);
-        } catch (JsonProcessingException e) {
-            log.error(e.getMessage(), e);
-            throw new RuntimeException(e);
-        }
     }
 }

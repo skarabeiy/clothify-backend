@@ -17,6 +17,6 @@ public class AuthErrorDto {
     @Schema(description = "Type of error", example = "UNAUTHORIZED")
     private AuthError errorType;
 
-    @Schema(example = "Barer authorization is required for this endpoint")
+    @Schema(example = "Bearer authorization is required for this endpoint")
     private String errorDescription;
 }

@@ -7,8 +7,9 @@ import lombok.RequiredArgsConstructor;
 @Getter
 public enum AuthError {
     AUTH_ERROR("Auth error"),
-    UNAUTHORIZED("Barer authorization is required for this endpoint"),
+    UNAUTHORIZED("Bearer authorization is required for this endpoint"),
     INVALID_TOKEN("JWT token is invalid"),
+    // TODO: подумать что будет, если у refresh токена тоже истек срок действия
     TOKEN_EXPIRED("JWT token has expired. Please refresh or re-authenticate");
 
     private final String description;

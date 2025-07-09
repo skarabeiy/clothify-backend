@@ -2,6 +2,7 @@ package by.com.clothify.security.controller;
 
 import by.com.clothify.security.model.dto.AuthRequestDto;
 import by.com.clothify.security.model.dto.AuthResponseDto;
+import by.com.clothify.security.model.dto.RefreshRequestDto;
 import by.com.clothify.security.model.dto.RegisterRequestDto;
 import by.com.clothify.security.service.AuthenticateService;
 import by.com.clothify.security.service.RegisterService;
@@ -38,5 +39,14 @@ public class AuthController {
     )
     public AuthResponseDto authenticate(@RequestBody AuthRequestDto request) {
         return authenticateService.authenticate(request);
+    }
+
+    @PostMapping("/refresh-token")
+    @Operation(
+            summary = "Refresh token",
+            description = "If access token has expired, it issues a new pair of tokens for the refresh token"
+    )
+    public AuthResponseDto refreshToken(@RequestBody RefreshRequestDto request) {
+        return null;
     }
 }

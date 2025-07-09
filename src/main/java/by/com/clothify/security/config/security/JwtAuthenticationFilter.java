@@ -23,7 +23,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 import java.util.Optional;
 
-import static by.com.clothify.security.service.AuthenticateService.sendError;
+import static by.com.clothify.security.service.AuthService.sendError;
 
 @Component
 @RequiredArgsConstructor
