@@ -54,8 +54,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
             setAuthentication(request, response, filterChain, userEmail, jwt);
         } catch (Exception e) {
-            log.error(e.getMessage(), e);
             log.error(AuthError.AUTH_ERROR.getDescription());
+            log.error(e.getMessage(), e);
             sendError(response, HttpStatus.UNAUTHORIZED, AuthError.AUTH_ERROR);
         }
     }
@@ -66,8 +66,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             try {
                 filterChain.doFilter(request, response);
             } catch (Exception e) {
-                log.error(e.getMessage(), e);
                 log.error(AuthError.UNAUTHORIZED.getDescription());
+                log.error(e.getMessage(), e);
                 sendError(response, HttpStatus.UNAUTHORIZED, AuthError.UNAUTHORIZED);
             }
             return false;
@@ -80,8 +80,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             return Optional.of(jwtService.extractUsername(jwt));
 
         } catch (SignatureException se) {
-            log.error(se.getMessage(), se);
             log.error(AuthError.INVALID_TOKEN.getDescription());
+            log.error(se.getMessage(), se);
             sendError(response, HttpStatus.UNAUTHORIZED, AuthError.INVALID_TOKEN);
             return Optional.empty();
 
