@@ -58,7 +58,7 @@ public class RegisterService {
             return getOptionalFailedAuthResponse(RegisterError.EMAIL_OCCUPIED.toString());
         }
 
-        if (isPasswordNotValid(request.getPassword())) {
+        if (!Validations.isPasswordValid(request.getPassword())) {
             return getOptionalFailedAuthResponse(RegisterError.PASSWORD_NOT_VALID.toString());
         }
 
@@ -71,10 +71,6 @@ public class RegisterService {
 
     private static boolean isPasswordsNotMatch(RegisterRequestDto request) {
         return !request.getPassword().equals(request.getPasswordConfirmation());
-    }
-
-    private static boolean isPasswordNotValid(String password) {
-        return false;
     }
 
     private boolean isEmailOccupied(String email) {
