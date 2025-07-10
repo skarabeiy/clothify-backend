@@ -6,6 +6,7 @@ import by.com.clothify.security.model.dto.enums.AuthError;
 import by.com.clothify.security.model.dto.enums.RegisterError;
 import by.com.clothify.security.model.entity.User;
 import by.com.clothify.security.repository.UserRepository;
+import by.com.clothify.security.util.Validations;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -48,20 +49,21 @@ public class RegisterService {
     }
 
     private Optional<AuthResponseDto> registerRequestValidation(RegisterRequestDto request) {
-        if (isPasswordsNotMatch(request)) {
-            return getOptionalFailedAuthResponse(RegisterError.PASSWORDS_NOT_MATCH.toString());
+
+        if (!Validations.isEmailValid(request.getEmail())) {
+            return getOptionalFailedAuthResponse(RegisterError.EMAIL_NOT_VALID.toString());
+        }
+
+        if (isEmailOccupied(request.getEmail())) {
+            return getOptionalFailedAuthResponse(RegisterError.EMAIL_OCCUPIED.toString());
         }
 
         if (isPasswordNotValid(request.getPassword())) {
             return getOptionalFailedAuthResponse(RegisterError.PASSWORD_NOT_VALID.toString());
         }
 
-        if (isEmailNotValid(request.getEmail())) {
-            return getOptionalFailedAuthResponse(RegisterError.EMAIL_NOT_VALID.toString());
-        }
-
-        if (isEmailOccupied(request.getEmail())) {
-            return getOptionalFailedAuthResponse(RegisterError.EMAIL_OCCUPIED.toString());
+        if (isPasswordsNotMatch(request)) {
+            return getOptionalFailedAuthResponse(RegisterError.PASSWORDS_NOT_MATCH.toString());
         }
 
         return Optional.empty();
@@ -72,10 +74,6 @@ public class RegisterService {
     }
 
     private static boolean isPasswordNotValid(String password) {
-        return false;
-    }
-
-    private static boolean isEmailNotValid(String email) {
         return false;
     }
 
