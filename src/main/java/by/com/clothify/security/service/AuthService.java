@@ -34,7 +34,6 @@ public class AuthService {
         return createAuthResponse(userDetailsDto);
     }
 
-    // TODO: возможно тут user details не нужны, достаточно email
     public AuthResponseDto createAuthResponse(UserDetails userDetails) {
         String jwtAccessToken = jwtService.generateAccessToken(userDetails);
         String jwtRefreshToken = jwtService.generateRefreshToken(userDetails);

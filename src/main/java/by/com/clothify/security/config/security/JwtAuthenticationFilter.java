@@ -97,7 +97,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                                    String userEmail, String jwt) throws ServletException, IOException {
         if (SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails = jwtService.getUserDetails(userEmail);
-            if (jwtService.isTokenValid(jwt, userDetails, JwtService.ACCESS_TOKEN_TYPE)) {
+            if (jwtService.isTokenValid(jwt, JwtService.ACCESS_TOKEN_TYPE)) {
                 UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
                         userDetails,
                         null,

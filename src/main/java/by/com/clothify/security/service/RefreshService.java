@@ -51,7 +51,7 @@ public class RefreshService {
 
     private Optional<AuthResponseDto> checkRefreshToken(String refreshToken, UserDetails userDetails) {
 
-        if (!jwtService.isTokenValid(refreshToken, userDetails, JwtService.REFRESH_TOKEN_TYPE)) {
+        if (!jwtService.isTokenValid(refreshToken, JwtService.REFRESH_TOKEN_TYPE)) {
 
             if (jwtService.isTokenExpired(refreshToken)) {
                 return getOptionalFailedAuthResponse(AuthError.REFRESH_TOKEN_EXPIRED.toString());
