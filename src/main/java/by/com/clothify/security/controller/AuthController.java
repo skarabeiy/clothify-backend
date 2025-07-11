@@ -2,6 +2,8 @@ package by.com.clothify.security.controller;
 
 import by.com.clothify.security.model.dto.AuthRequestDto;
 import by.com.clothify.security.model.dto.AuthResponseDto;
+import by.com.clothify.security.model.dto.CheckEmailRequestDto;
+import by.com.clothify.security.model.dto.CheckEmailResponseDto;
 import by.com.clothify.security.model.dto.RefreshRequestDto;
 import by.com.clothify.security.model.dto.RegisterRequestDto;
 import by.com.clothify.security.service.AuthenticateService;
@@ -24,6 +26,15 @@ public class AuthController {
     private final RegisterService registerService;
     private final AuthenticateService authenticateService;
     private final RefreshService refreshService;
+
+    @PostMapping("/check-email")
+    @Operation(
+            summary = "Check email availability",
+            description = "Check email validation and availability"
+    )
+    public CheckEmailResponseDto checkEmail(@RequestBody CheckEmailRequestDto request) {
+        return registerService.checkEmail(request);
+    }
 
     @PostMapping("/register")
     @Operation(

@@ -1,8 +1,11 @@
 package by.com.clothify.security.service;
 
 import by.com.clothify.security.model.dto.AuthResponseDto;
+import by.com.clothify.security.model.dto.CheckEmailRequestDto;
+import by.com.clothify.security.model.dto.CheckEmailResponseDto;
 import by.com.clothify.security.model.dto.RegisterRequestDto;
 import by.com.clothify.security.model.dto.enums.AuthError;
+import by.com.clothify.security.model.dto.enums.CheckEmailResult;
 import by.com.clothify.security.model.dto.enums.RegisterError;
 import by.com.clothify.security.model.entity.User;
 import by.com.clothify.security.repository.UserRepository;
@@ -17,6 +20,7 @@ import java.util.Optional;
 
 import static by.com.clothify.security.service.AuthService.getFailedAuthResponse;
 import static by.com.clothify.security.service.AuthService.getOptionalFailedAuthResponse;
+import static by.com.clothify.security.util.Validations.isEmailValid;
 
 @Service
 @RequiredArgsConstructor
@@ -26,6 +30,26 @@ public class RegisterService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final AuthService authService;
+
+    public CheckEmailResponseDto checkEmail(CheckEmailRequestDto request) {
+        try {
+            CheckEmailResult result = CheckEmailResult.EMAIL_FREE;
+
+            if (!isEmailValid(request.getEmail())) {
+                result = CheckEmailResult.EMAIL_NOT_VALID;
+            } else if (isEmailOccupied(request.getEmail())) {
+                result = CheckEmailResult.EMAIL_OCCUPIED;
+            }
+
+            return CheckEmailResponseDto.builder()
+                    .resultMessage(result)
+                    .build();
+        } catch (Exception e) {
+            log.error("Failed check email: {}", request.getEmail());
+            log.error(e.getMessage(), e);
+            throw new RuntimeException(e);
+        }
+    }
 
     public AuthResponseDto register(RegisterRequestDto request) {
         try {
@@ -50,7 +74,7 @@ public class RegisterService {
 
     private Optional<AuthResponseDto> registerRequestValidation(RegisterRequestDto request) {
 
-        if (!Validations.isEmailValid(request.getEmail())) {
+        if (!isEmailValid(request.getEmail())) {
             return getOptionalFailedAuthResponse(RegisterError.EMAIL_NOT_VALID.toString());
         }
 
@@ -74,7 +98,7 @@ public class RegisterService {
     }
 
     private boolean isEmailOccupied(String email) {
-        return userRepository.findByEmail(email).isPresent();
+        return userRepository.existsByEmail(email);
     }
 
     private User mapToUser(RegisterRequestDto request) {
