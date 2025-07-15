@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 public class AppleAuthService {
 
     public AuthResponseDto appleSigning(AppleAuthRequestDto appleAuthRequestDto) {
+        log.info(appleAuthRequestDto.getEmail());
         log.info(appleAuthRequestDto.getAppleAuthorizationCode());
         return null;
     }
