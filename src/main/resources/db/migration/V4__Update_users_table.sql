@@ -1,0 +1,8 @@
+ALTER TABLE users
+    RENAME COLUMN email TO username;
+
+ALTER TABLE users
+    ALTER COLUMN password DROP NOT NULL;
+
+ALTER TABLE users
+    ADD COLUMN auth_type VARCHAR(30) NOT NULL DEFAULT 'EMAIL';
