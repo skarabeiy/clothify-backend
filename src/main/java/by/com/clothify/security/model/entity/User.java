@@ -1,5 +1,6 @@
 package by.com.clothify.security.model.entity;
 
+import by.com.clothify.security.model.dto.enums.AuthType;
 import by.com.clothify.security.model.dto.enums.Gender;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -37,9 +38,8 @@ public class User {
     private Long id;
 
     @Column(unique = true, nullable = false)
-    private String email;
+    private String username;
 
-    @Column(nullable = false)
     private String password;
 
     @Column(nullable = false)
@@ -51,4 +51,8 @@ public class User {
     private Gender gender;
 
     private LocalDate dateOfBirth;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private AuthType authType;
 }
