@@ -1,7 +1,4 @@
 ALTER TABLE users
-    RENAME COLUMN email TO username;
-
-ALTER TABLE users
     ALTER COLUMN password DROP NOT NULL;
 
 ALTER TABLE users
