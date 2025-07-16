@@ -5,6 +5,7 @@ import by.com.clothify.security.model.dto.CheckEmailRequestDto;
 import by.com.clothify.security.model.dto.CheckEmailResponseDto;
 import by.com.clothify.security.model.dto.RegisterRequestDto;
 import by.com.clothify.security.model.dto.enums.AuthError;
+import by.com.clothify.security.model.dto.enums.AuthType;
 import by.com.clothify.security.model.dto.enums.CheckEmailResult;
 import by.com.clothify.security.model.dto.enums.RegisterError;
 import by.com.clothify.security.model.entity.User;
@@ -37,8 +38,12 @@ public class RegisterService {
 
             if (!isEmailValid(request.getEmail())) {
                 result = CheckEmailResult.EMAIL_NOT_VALID;
-            } else if (isEmailOccupied(request.getEmail())) {
-                result = CheckEmailResult.EMAIL_OCCUPIED;
+            } else {
+                Optional<User> optionalUser = userRepository.findByEmail(request.getEmail());
+
+                if (optionalUser.isPresent()) {
+                    result = getCheckEmailOccupiedResult(optionalUser.get().getAuthType());
+                }
             }
 
             return CheckEmailResponseDto.builder()
@@ -49,6 +54,14 @@ public class RegisterService {
             log.error(e.getMessage(), e);
             throw new RuntimeException(e);
         }
+    }
+
+    private CheckEmailResult getCheckEmailOccupiedResult(AuthType authType) {
+        return switch (authType) {
+            case PASSWORD -> CheckEmailResult.EMAIL_OCCUPIED_BY_PASSWORD_AUTH;
+            case APPLE -> CheckEmailResult.EMAIL_OCCUPIED_BY_APPLE_AUTH;
+            case GOOGLE -> CheckEmailResult.EMAIL_OCCUPIED_BY_GOOGLE_AUTH;
+        };
     }
 
     public AuthResponseDto register(RegisterRequestDto request) {
@@ -78,8 +91,11 @@ public class RegisterService {
             return getOptionalFailedAuthResponse(RegisterError.EMAIL_NOT_VALID.toString());
         }
 
-        if (isEmailOccupied(request.getEmail())) {
-            return getOptionalFailedAuthResponse(RegisterError.EMAIL_OCCUPIED.toString());
+        Optional<User> optionalUser = userRepository.findByEmail(request.getEmail());
+
+        if (optionalUser.isPresent()) {
+            RegisterError registerError = getRegisterOccupiedError(optionalUser.get().getAuthType());
+            return getOptionalFailedAuthResponse(registerError.toString());
         }
 
         if (!Validations.isPasswordValid(request.getPassword())) {
@@ -93,12 +109,16 @@ public class RegisterService {
         return Optional.empty();
     }
 
-    private static boolean isPasswordsNotMatch(RegisterRequestDto request) {
-        return !request.getPassword().equals(request.getPasswordConfirmation());
+    private RegisterError getRegisterOccupiedError(AuthType authType) {
+        return switch (authType) {
+            case PASSWORD -> RegisterError.EMAIL_OCCUPIED_BY_PASSWORD_AUTH;
+            case APPLE -> RegisterError.EMAIL_OCCUPIED_BY_APPLE_AUTH;
+            case GOOGLE -> RegisterError.EMAIL_OCCUPIED_BY_GOOGLE_AUTH;
+        };
     }
 
-    private boolean isEmailOccupied(String email) {
-        return userRepository.existsByEmail(email);
+    private static boolean isPasswordsNotMatch(RegisterRequestDto request) {
+        return !request.getPassword().equals(request.getPasswordConfirmation());
     }
 
     private User mapToUser(RegisterRequestDto request) {
@@ -106,6 +126,7 @@ public class RegisterService {
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .createdAt(LocalDateTime.now())
+                .authType(AuthType.PASSWORD)
                 .build();
     }
 }
