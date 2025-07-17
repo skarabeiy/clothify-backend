@@ -21,6 +21,7 @@ import java.util.Optional;
 
 import static by.com.clothify.security.service.AuthService.getFailedAuthResponse;
 import static by.com.clothify.security.service.AuthService.getOptionalFailedAuthResponse;
+import static by.com.clothify.security.service.AuthService.logErrorByAuthType;
 import static by.com.clothify.security.util.Validations.isEmailValid;
 
 @Service
@@ -42,7 +43,10 @@ public class RegisterService {
                 Optional<User> optionalUser = userRepository.findByEmail(request.getEmail());
 
                 if (optionalUser.isPresent()) {
-                    result = getCheckEmailOccupiedResult(optionalUser.get().getAuthType());
+
+                    AuthType authType = optionalUser.get().getAuthType();
+                    logErrorByAuthType(request.getEmail(), AuthType.PASSWORD, authType);
+                    result = getCheckEmailOccupiedResult(authType);
                 }
             }
 
@@ -94,7 +98,10 @@ public class RegisterService {
         Optional<User> optionalUser = userRepository.findByEmail(request.getEmail());
 
         if (optionalUser.isPresent()) {
-            RegisterError registerError = getRegisterOccupiedError(optionalUser.get().getAuthType());
+
+            AuthType authType = optionalUser.get().getAuthType();
+            RegisterError registerError = getRegisterOccupiedError(authType);
+            logErrorByAuthType(request.getEmail(), AuthType.PASSWORD, authType);
             return getOptionalFailedAuthResponse(registerError.toString());
         }
 

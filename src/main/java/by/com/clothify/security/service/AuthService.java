@@ -4,6 +4,7 @@ import by.com.clothify.security.model.dto.AuthErrorDto;
 import by.com.clothify.security.model.dto.AuthResponseDto;
 import by.com.clothify.security.model.dto.UserDetailsDto;
 import by.com.clothify.security.model.dto.enums.AuthError;
+import by.com.clothify.security.model.dto.enums.AuthType;
 import by.com.clothify.security.model.entity.User;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -80,5 +81,10 @@ public class AuthService {
             log.error(e.getMessage(), e);
             throw new RuntimeException(e);
         }
+    }
+
+    public static void logErrorByAuthType(String userEmail, AuthType newAuthType, AuthType currentAuthType) {
+        log.warn("User with email: {} try to register/authenticate by {}, but he is already registered by {}",
+                userEmail, newAuthType, currentAuthType);
     }
 }

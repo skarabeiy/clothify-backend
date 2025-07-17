@@ -18,6 +18,7 @@ import java.util.Optional;
 
 import static by.com.clothify.security.service.AuthService.getFailedAuthResponse;
 import static by.com.clothify.security.service.AuthService.getOptionalFailedAuthResponse;
+import static by.com.clothify.security.service.AuthService.logErrorByAuthType;
 
 @Service
 @RequiredArgsConstructor
@@ -36,9 +37,12 @@ public class AuthenticateService {
                 return getFailedAuthResponse(AuthenticateError.EMAIL_NOT_FOUND.toString());
             } else {
 
-                if (AuthType.APPLE == optionalUser.get().getAuthType()) {
+                AuthType authType = optionalUser.get().getAuthType();
+                if (AuthType.APPLE == authType) {
+                    logErrorByAuthType(request.getEmail(), AuthType.PASSWORD, authType);
                     return getFailedAuthResponse(AuthenticateError.EMAIL_OCCUPIED_BY_APPLE_AUTH.toString());
-                } else if (AuthType.GOOGLE == optionalUser.get().getAuthType()) {
+                } else if (AuthType.GOOGLE == authType) {
+                    logErrorByAuthType(request.getEmail(), AuthType.PASSWORD, authType);
                     return getFailedAuthResponse(AuthenticateError.EMAIL_OCCUPIED_BY_GOOGLE_AUTH.toString());
                 }
             }
