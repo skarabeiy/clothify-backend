@@ -3,6 +3,7 @@ package by.com.clothify.security.service;
 import by.com.clothify.security.model.dto.AuthRequestDto;
 import by.com.clothify.security.model.dto.AuthResponseDto;
 import by.com.clothify.security.model.dto.enums.AuthError;
+import by.com.clothify.security.model.dto.enums.AuthType;
 import by.com.clothify.security.model.dto.enums.AuthenticateError;
 import by.com.clothify.security.model.entity.User;
 import by.com.clothify.security.repository.UserRepository;
@@ -33,6 +34,13 @@ public class AuthenticateService {
 
             if (optionalUser.isEmpty()) {
                 return getFailedAuthResponse(AuthenticateError.EMAIL_NOT_FOUND.toString());
+            } else {
+
+                if (AuthType.APPLE == optionalUser.get().getAuthType()) {
+                    return getFailedAuthResponse(AuthenticateError.EMAIL_OCCUPIED_BY_APPLE_AUTH.toString());
+                } else if (AuthType.GOOGLE == optionalUser.get().getAuthType()) {
+                    return getFailedAuthResponse(AuthenticateError.EMAIL_OCCUPIED_BY_GOOGLE_AUTH.toString());
+                }
             }
 
             Optional<AuthResponseDto> optionalFailedAuthResponse = authenticateCredentials(request);
