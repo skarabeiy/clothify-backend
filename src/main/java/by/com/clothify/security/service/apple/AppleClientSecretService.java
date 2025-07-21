@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.security.KeyFactory;
 import java.security.PrivateKey;
 import java.security.spec.PKCS8EncodedKeySpec;
+import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.Base64;
@@ -48,34 +49,40 @@ public class AppleClientSecretService {
     @Transactional
     public synchronized String getAppleClientSecret() {
 
-        String clientSecret;
-        Optional<AppleClientSecret> optionalSecretCash = appleClientSecretRepository.findFirstBy();
+        try {
+            Optional<AppleClientSecret> optionalSecretCash = appleClientSecretRepository.findFirstBy();
 
-        if (optionalSecretCash.isEmpty()) {
-            clientSecret = generateAppleClientSecret();
+            if (optionalSecretCash.isEmpty()) {
+                return createSecretCash();
 
-            appleClientSecretRepository.save(createSecretCash(clientSecret));
+            } else {
+                AppleClientSecret secretCash = optionalSecretCash.get();
 
-            return clientSecret;
+                if (isClientSecretExpired(secretCash.getCreatedAt())) {
+                    return createSecretCash();
+                }
 
-        } else {
-            AppleClientSecret secretCash = optionalSecretCash.get();
-
-            if (isClientSecretExpired(secretCash.getCreatedAt())) {
-                clientSecret = generateAppleClientSecret();
-                appleClientSecretRepository.save(createSecretCash(clientSecret));
-                return clientSecret;
+                return secretCash.getClientSecret();
             }
-
-            return secretCash.getClientSecret();
+        } catch (Exception e) {
+            log.error("Failed get apple client secret");
+            throw new RuntimeException(e);
         }
     }
 
-    private static AppleClientSecret createSecretCash(String clientSecret) {
-        return AppleClientSecret.builder()
+    private String createSecretCash() {
+
+        String clientSecret = generateAppleClientSecret();
+
+        AppleClientSecret appleClientSecret = AppleClientSecret.builder()
                 .clientSecret(clientSecret)
                 .createdAt(LocalDateTime.now())
                 .build();
+
+        appleClientSecretRepository.save(appleClientSecret);
+        log.info("Save new apple client secret");
+
+        return clientSecret;
     }
 
     private String generateAppleClientSecret() {
@@ -116,6 +123,11 @@ public class AppleClientSecretService {
     }
 
     private boolean isClientSecretExpired(LocalDateTime createdAt) {
-        return false;
+        if (createdAt == null) {
+            return true;
+        }
+
+        return Duration.between(createdAt, LocalDateTime.now()).toSeconds()
+                >= (clientSecretExpirationInMinutes * 60);
     }
 }
