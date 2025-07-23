@@ -54,13 +54,15 @@ public class AppleClientSecretService {
             Optional<AppleClientSecret> optionalSecretCash = appleClientSecretRepository.findFirstBy();
 
             if (optionalSecretCash.isEmpty()) {
-                return createSecretCash();
+                return createSecretCash(createAppleClientSecret());
 
             } else {
                 AppleClientSecret secretCash = optionalSecretCash.get();
 
                 if (isClientSecretExpired(secretCash.getCreatedAt())) {
-                    return createSecretCash();
+                    AppleClientSecret clientSecret = createAppleClientSecret();
+                    clientSecret.setId(secretCash.getId());
+                    return createSecretCash(clientSecret);
                 }
 
                 return secretCash.getClientSecret();
@@ -71,19 +73,22 @@ public class AppleClientSecretService {
         }
     }
 
-    private String createSecretCash() {
+    private AppleClientSecret createAppleClientSecret() {
 
         String clientSecret = generateAppleClientSecret();
 
-        AppleClientSecret appleClientSecret = AppleClientSecret.builder()
+        return AppleClientSecret.builder()
                 .clientSecret(clientSecret)
                 .createdAt(LocalDateTime.now())
                 .build();
+    }
+
+    private String createSecretCash(AppleClientSecret appleClientSecret) {
 
         appleClientSecretRepository.save(appleClientSecret);
         log.info("Save new apple client secret");
 
-        return clientSecret;
+        return appleClientSecret.getClientSecret();
     }
 
     private String generateAppleClientSecret() {
