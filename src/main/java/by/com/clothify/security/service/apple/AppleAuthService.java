@@ -2,6 +2,7 @@ package by.com.clothify.security.service.apple;
 
 import by.com.clothify.security.model.dto.AuthResponseDto;
 import by.com.clothify.security.model.dto.apple.AppleAuthRequestDto;
+import by.com.clothify.security.model.dto.apple.AppleResponseDto;
 import by.com.clothify.security.model.dto.enums.AppleAuthError;
 import by.com.clothify.security.model.dto.enums.AuthType;
 import by.com.clothify.security.model.entity.User;
@@ -20,11 +21,15 @@ import static by.com.clothify.security.service.AuthService.logErrorByAuthType;
 @Slf4j
 public class AppleAuthService {
 
+    private final AppleTokenService appleTokenService;
     private final UserRepository userRepository;
 
     public AuthResponseDto appleSigning(AppleAuthRequestDto request) {
 
         String email = "";
+
+        AppleResponseDto appleResponse = appleTokenService.makeTokenRequestToApple(request.getAppleAuthorizationCode());
+
         Optional<User> optionalUser = userRepository.findByEmail(email);
 
         if (optionalUser.isPresent()) {

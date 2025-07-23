@@ -20,12 +20,13 @@ import java.util.Date;
 import java.util.Map;
 import java.util.Optional;
 
+import static by.com.clothify.security.util.AuthConstants.APPLE_ID_URL;
+
 @Service
 @RequiredArgsConstructor
 @Slf4j
 public class AppleClientSecretService {
 
-    private static final String APPLE_ID_URL = "https://appleid.apple.com";
     // TODO: перенести в надёжное место
     private static final String APPLE_PRIVATE_KEY = "MIGTAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBHkwdwIBAQQgJh3tQ8075e9UB5BDulsdnr8uqQEf7cO2p9YfuaKp9B2gCgYIKoZIzj0DAQehRANCAAR2w225RS3s8nYA7BHPhtbwlgLzOupHXCcwEOAoiZdGPzUD9O7ag6Y1rjn/qJej7dATBxm0QdU7kLv/2ThZjABY";
 
