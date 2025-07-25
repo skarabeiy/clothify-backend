@@ -7,7 +7,6 @@ import by.com.clothify.security.model.dto.enums.AuthError;
 import by.com.clothify.security.model.dto.enums.AuthType;
 import by.com.clothify.security.model.entity.User;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,14 +17,13 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.util.Optional;
 
+import static by.com.clothify.security.util.AuthConstants.OBJECT_MAPPER;
 import static by.com.clothify.security.util.UserDetailsMapper.mapToUserDetailsDto;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
 public class AuthService {
-
-    private static final ObjectMapper MAPPER = new ObjectMapper();
 
     private final JwtService jwtService;
 
@@ -76,7 +74,7 @@ public class AuthService {
                     .errorDescription(authError.getDescription())
                     .build();
 
-            return MAPPER.writeValueAsString(authErrorDto);
+            return OBJECT_MAPPER.writeValueAsString(authErrorDto);
         } catch (JsonProcessingException e) {
             log.error(e.getMessage(), e);
             throw new RuntimeException(e);

@@ -67,6 +67,7 @@ public class AppleClientSecretService {
 
                 return secretCash.getClientSecret();
             }
+
         } catch (Exception e) {
             log.error("Failed get apple client secret");
             throw new RuntimeException(e);
