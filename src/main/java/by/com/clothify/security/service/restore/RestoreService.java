@@ -33,12 +33,16 @@ public class RestoreService {
         User user = optionalUser.get();
 
         Optional<SendCodeResponseDto> optionalFailedResponse = requestValidation(user);
-
         if (optionalFailedResponse.isPresent()) {
             return optionalFailedResponse.get();
         }
 
         String code = codeService.createCode(email);
+
+        boolean writeInfoResult = codeService.writeSendCodeRequestsInfo(email);
+        if (!writeInfoResult) {
+            return createFailedResponse(SendCodeError.EXCEEDED_SEND_ATTEMPTS_NUMBER);
+        }
 
         return null;
     }

@@ -6,4 +6,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface UserCodeRepository extends JpaRepository<UserCode, Long> {
+
+    void deleteByEmail(String email);
 }
