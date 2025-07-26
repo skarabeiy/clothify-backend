@@ -15,7 +15,6 @@ import lombok.NoArgsConstructor;
 @Schema(description = "Auth result dto")
 public class AuthResponseDto {
 
-    @Schema(example = "true")
     private boolean success;
 
     @Schema(description = "Token for access",
