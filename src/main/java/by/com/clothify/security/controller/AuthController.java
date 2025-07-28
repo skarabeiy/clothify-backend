@@ -60,7 +60,7 @@ public class AuthController {
             summary = "Refresh tokens",
             description = "If access token has expired, it issues a new pair of tokens for the refresh token"
     )
-    public AuthResponseDto refreshTokens(@RequestBody RefreshRequestDto request) {
+    public ResponseEntity<AuthResponseDto> refreshTokens(@RequestBody RefreshRequestDto request) {
         return refreshService.refreshTokens(request);
     }
 }

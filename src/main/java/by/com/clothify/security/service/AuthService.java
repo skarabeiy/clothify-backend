@@ -48,14 +48,16 @@ public class AuthService {
     public static Optional<ResponseEntity<AuthResponseDto>> getOptionalFailedAuthResponseEntity(HttpStatus status,
                                                                                                 String errorMessage) {
 
-        return Optional.of(
-                ResponseEntity.status(status)
-                        .body(getFailedAuthResponse(errorMessage))
-        );
+        return Optional.of(getFailedAuthResponseEntity(status, errorMessage));
     }
 
     public static Optional<AuthResponseDto> getOptionalFailedAuthResponse(String errorMessage) {
         return Optional.of(getFailedAuthResponse(errorMessage));
+    }
+
+    public static ResponseEntity<AuthResponseDto> getFailedAuthResponseEntity(HttpStatus status, String errorMessage) {
+        return ResponseEntity.status(status)
+                .body(getFailedAuthResponse(errorMessage));
     }
 
     public static AuthResponseDto getFailedAuthResponse(String errorMessage) {

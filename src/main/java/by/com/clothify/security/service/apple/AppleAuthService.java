@@ -11,13 +11,14 @@ import by.com.clothify.security.repository.UserRepository;
 import by.com.clothify.security.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
 
 import static by.com.clothify.security.service.AuthService.getFailedAuthResponse;
-import static by.com.clothify.security.service.AuthService.getOptionalFailedAuthResponse;
+import static by.com.clothify.security.service.AuthService.getOptionalFailedAuthResponseEntity;
 import static by.com.clothify.security.service.AuthService.logErrorByAuthType;
 
 @Service
@@ -29,7 +30,7 @@ public class AppleAuthService {
     private final UserRepository userRepository;
     private final AuthService authService;
 
-    public AuthResponseDto appleSigning(AppleAuthRequestDto request) {
+    public ResponseEntity<AuthResponseDto> appleSigning(AppleAuthRequestDto request) {
 
         try {
             String email = makeAppleRequestAndGetEmail(request);
@@ -39,7 +40,7 @@ public class AppleAuthService {
 
             if (optionalUser.isPresent()) {
 
-                Optional<AuthResponseDto> optionalFailedAuthResponse = requestValidation(optionalUser.get());
+                Optional<ResponseEntity<AuthResponseDto>> optionalFailedAuthResponse = requestValidation(optionalUser.get());
 
                 if (optionalFailedAuthResponse.isPresent()) {
                     return optionalFailedAuthResponse.get();
@@ -51,12 +52,13 @@ public class AppleAuthService {
                 user = registerNewUser(email);
             }
 
-            return authService.createAuthResponseFromUser(user);
+            return ResponseEntity.ok(authService.createAuthResponseFromUser(user));
 
         } catch (Exception e) {
             log.error("Failed apple signing for: {}", request.getEmail());
             log.error(e.getMessage(), e);
-            return getFailedAuthResponse(AuthError.AUTH_ERROR.toString());
+            return ResponseEntity.status(AuthError.AUTH_ERROR.getStatus())
+                    .body(getFailedAuthResponse(AuthError.AUTH_ERROR.toString()));
         }
     }
 
@@ -74,15 +76,17 @@ public class AppleAuthService {
         }
     }
 
-    private Optional<AuthResponseDto> requestValidation(User user) {
+    private Optional<ResponseEntity<AuthResponseDto>> requestValidation(User user) {
 
         if (AuthType.PASSWORD == user.getAuthType()) {
             logErrorByAuthType(user.getEmail(), AuthType.APPLE, user.getAuthType());
-            return getOptionalFailedAuthResponse(AppleAuthError.EMAIL_OCCUPIED_BY_PASSWORD_AUTH.toString());
+            return getOptionalFailedAuthResponseEntity(AppleAuthError.EMAIL_OCCUPIED_BY_PASSWORD_AUTH.getStatus(),
+                    AppleAuthError.EMAIL_OCCUPIED_BY_PASSWORD_AUTH.toString());
 
         } else if (AuthType.GOOGLE == user.getAuthType()) {
             logErrorByAuthType(user.getEmail(), AuthType.APPLE, user.getAuthType());
-            return getOptionalFailedAuthResponse(AppleAuthError.EMAIL_OCCUPIED_BY_GOOGLE_AUTH.toString());
+            return getOptionalFailedAuthResponseEntity(AppleAuthError.EMAIL_OCCUPIED_BY_GOOGLE_AUTH.getStatus(),
+                    AppleAuthError.EMAIL_OCCUPIED_BY_GOOGLE_AUTH.toString());
         }
 
         return Optional.empty();
