@@ -13,6 +13,7 @@ import by.com.clothify.security.repository.UserRepository;
 import by.com.clothify.security.util.Validations;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -20,7 +21,7 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 
 import static by.com.clothify.security.service.AuthService.getFailedAuthResponse;
-import static by.com.clothify.security.service.AuthService.getOptionalFailedAuthResponse;
+import static by.com.clothify.security.service.AuthService.getOptionalFailedAuthResponseEntity;
 import static by.com.clothify.security.service.AuthService.logErrorByAuthType;
 import static by.com.clothify.security.util.Validations.isEmailValid;
 
@@ -68,9 +69,9 @@ public class RegisterService {
         };
     }
 
-    public AuthResponseDto register(RegisterRequestDto request) {
+    public ResponseEntity<AuthResponseDto> register(RegisterRequestDto request) {
         try {
-            Optional<AuthResponseDto> optionalFailedAuthResponse = registerRequestValidation(request);
+            Optional<ResponseEntity<AuthResponseDto>> optionalFailedAuthResponse = registerRequestValidation(request);
 
             if (optionalFailedAuthResponse.isPresent()) {
                 return optionalFailedAuthResponse.get();
@@ -81,18 +82,24 @@ public class RegisterService {
 
             log.info("New user: {} registration", user.getEmail());
 
-            return authService.createAuthResponseFromUser(user);
+            return ResponseEntity.ok(authService.createAuthResponseFromUser(user));
+
         } catch (Exception e) {
             log.error("Failed register user: {}", request.getEmail());
             log.error(e.getMessage(), e);
-            return getFailedAuthResponse(AuthError.AUTH_ERROR.toString());
+            return ResponseEntity.status(AuthError.AUTH_ERROR.getStatus())
+                    .body(getFailedAuthResponse(AuthError.AUTH_ERROR.toString()));
         }
     }
 
-    private Optional<AuthResponseDto> registerRequestValidation(RegisterRequestDto request) {
+    // TODO: Всем ошибочным респонсам добавить соответствующие статусы
+    // TODO: Обновить документацию
+    // TODO: Проапдейтить свагер для статусов
+    private Optional<ResponseEntity<AuthResponseDto>> registerRequestValidation(RegisterRequestDto request) {
 
         if (!isEmailValid(request.getEmail())) {
-            return getOptionalFailedAuthResponse(RegisterError.EMAIL_NOT_VALID.toString());
+            return getOptionalFailedAuthResponseEntity(RegisterError.EMAIL_NOT_VALID.getStatus(),
+                    RegisterError.EMAIL_NOT_VALID.toString());
         }
 
         Optional<User> optionalUser = userRepository.findByEmail(request.getEmail());
@@ -102,15 +109,17 @@ public class RegisterService {
             AuthType authType = optionalUser.get().getAuthType();
             RegisterError registerError = getRegisterOccupiedError(authType);
             logErrorByAuthType(request.getEmail(), AuthType.PASSWORD, authType);
-            return getOptionalFailedAuthResponse(registerError.toString());
+            return getOptionalFailedAuthResponseEntity(registerError.getStatus(), registerError.toString());
         }
 
         if (!Validations.isPasswordValid(request.getPassword())) {
-            return getOptionalFailedAuthResponse(RegisterError.PASSWORD_NOT_VALID.toString());
+            return getOptionalFailedAuthResponseEntity(RegisterError.PASSWORD_NOT_VALID.getStatus(),
+                    RegisterError.PASSWORD_NOT_VALID.toString());
         }
 
         if (isPasswordsNotMatch(request)) {
-            return getOptionalFailedAuthResponse(RegisterError.PASSWORDS_NOT_MATCH.toString());
+            return getOptionalFailedAuthResponseEntity(RegisterError.PASSWORDS_NOT_MATCH.getStatus(),
+                    RegisterError.PASSWORDS_NOT_MATCH.toString());
         }
 
         return Optional.empty();

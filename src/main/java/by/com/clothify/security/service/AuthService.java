@@ -11,6 +11,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -42,6 +43,15 @@ public class AuthService {
                 .accessToken(jwtAccessToken)
                 .refreshToken(jwtRefreshToken)
                 .build();
+    }
+
+    public static Optional<ResponseEntity<AuthResponseDto>> getOptionalFailedAuthResponseEntity(HttpStatus status,
+                                                                                                String errorMessage) {
+
+        return Optional.of(
+                ResponseEntity.status(status)
+                        .body(getFailedAuthResponse(errorMessage))
+        );
     }
 
     public static Optional<AuthResponseDto> getOptionalFailedAuthResponse(String errorMessage) {
