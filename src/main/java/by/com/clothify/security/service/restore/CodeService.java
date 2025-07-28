@@ -46,7 +46,6 @@ public class CodeService {
         );
     }
 
-    // todo: проверить, почему всегда падает 401?
     private void saveCode(String email, String code) {
 
         UserCode userCode;

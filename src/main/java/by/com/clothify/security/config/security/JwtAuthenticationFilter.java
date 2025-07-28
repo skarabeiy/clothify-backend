@@ -13,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.authorization.AuthorizationDeniedException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
@@ -53,10 +54,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             final String userEmail = optionalUserEmail.get();
 
             setAuthentication(request, response, filterChain, userEmail, jwt);
+
         } catch (Exception e) {
-            log.error(AuthError.AUTH_ERROR.getDescription());
             log.error(e.getMessage(), e);
-            sendError(response, HttpStatus.UNAUTHORIZED, AuthError.AUTH_ERROR);
+            throw new RuntimeException(e);
         }
     }
 
@@ -65,10 +66,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         if (authHeader == null || !authHeader.startsWith(BEARER_HEADER)) {
             try {
                 filterChain.doFilter(request, response);
-            } catch (Exception e) {
+
+            } catch (AuthorizationDeniedException e) {
                 log.error(AuthError.UNAUTHORIZED.getDescription());
                 log.error(e.getMessage(), e);
                 sendError(response, HttpStatus.UNAUTHORIZED, AuthError.UNAUTHORIZED);
+
+            } catch (IOException | ServletException e) {
+                throw new RuntimeException(e);
             }
             return false;
         }
