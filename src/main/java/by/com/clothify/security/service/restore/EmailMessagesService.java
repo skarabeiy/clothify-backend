@@ -9,6 +9,10 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class EmailMessagesService {
 
+    public boolean sendCodeMessageToEmail(String code, String email) {
+        return sendMessageToEmail(code, email);
+    }
+
     public boolean sendMessageToEmail(String message, String email) {
         return true;
     }

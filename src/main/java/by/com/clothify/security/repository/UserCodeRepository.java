@@ -4,8 +4,10 @@ import by.com.clothify.security.model.entity.UserCode;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 public interface UserCodeRepository extends JpaRepository<UserCode, Long> {
 
-    void deleteByEmail(String email);
+    Optional<UserCode> findByEmail(String email);
 }

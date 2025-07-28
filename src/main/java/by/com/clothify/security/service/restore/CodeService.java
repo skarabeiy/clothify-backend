@@ -46,16 +46,27 @@ public class CodeService {
         );
     }
 
+    // todo: проверить, почему всегда падает 401?
     private void saveCode(String email, String code) {
 
-        userCodeRepository.deleteByEmail(email);
+        UserCode userCode;
+        Optional<UserCode> optionalUserCode = userCodeRepository.findByEmail(email);
 
-        UserCode userCode = UserCode.builder()
-                .email(email)
-                .code(code)
-                .createdAt(LocalDateTime.now())
-                .attempts(ATTEMPTS_NUMBER)
-                .build();
+        if (optionalUserCode.isPresent()) {
+            userCode = optionalUserCode.get();
+
+            userCode.setCode(code);
+            userCode.setCreatedAt(LocalDateTime.now());
+            userCode.setAttempts(ATTEMPTS_NUMBER);
+
+        } else {
+            userCode = UserCode.builder()
+                    .email(email)
+                    .code(code)
+                    .createdAt(LocalDateTime.now())
+                    .attempts(ATTEMPTS_NUMBER)
+                    .build();
+        }
 
         userCodeRepository.save(userCode);
     }

@@ -23,28 +23,42 @@ public class RestoreService {
 
     public SendCodeResponseDto sendCodeToEmail(SendCodeRequestDto request) {
 
-        final String email = request.getEmail();
-        Optional<User> optionalUser = userRepository.findByEmail(email);
+        try {
+            final String email = request.getEmail();
+            Optional<User> optionalUser = userRepository.findByEmail(email);
 
-        if (optionalUser.isEmpty()) {
-            return createFailedResponse(SendCodeError.EMAIL_NOT_FOUND);
+            if (optionalUser.isEmpty()) {
+                return createFailedResponse(SendCodeError.EMAIL_NOT_FOUND);
+            }
+
+            User user = optionalUser.get();
+
+            Optional<SendCodeResponseDto> optionalFailedResponse = requestValidation(user);
+            if (optionalFailedResponse.isPresent()) {
+                return optionalFailedResponse.get();
+            }
+
+            String code = codeService.createCode(email);
+
+            boolean writeInfoResult = codeService.writeSendCodeRequestsInfo(email);
+            if (!writeInfoResult) {
+                return createFailedResponse(SendCodeError.EXCEEDED_SEND_ATTEMPTS_NUMBER);
+            }
+
+            boolean sendResult = emailMessagesService.sendCodeMessageToEmail(code, email);
+            if (!sendResult) {
+                return createFailedResponse(SendCodeError.MESSAGE_SEND_ERROR);
+            }
+
+            return SendCodeResponseDto.builder()
+                    .success(true)
+                    .build();
+
+        } catch (Exception e) {
+            log.error("Failed send code to: {}", request.getEmail());
+            log.error(e.getMessage(), e);
+            throw new RuntimeException(e);
         }
-
-        User user = optionalUser.get();
-
-        Optional<SendCodeResponseDto> optionalFailedResponse = requestValidation(user);
-        if (optionalFailedResponse.isPresent()) {
-            return optionalFailedResponse.get();
-        }
-
-        String code = codeService.createCode(email);
-
-        boolean writeInfoResult = codeService.writeSendCodeRequestsInfo(email);
-        if (!writeInfoResult) {
-            return createFailedResponse(SendCodeError.EXCEEDED_SEND_ATTEMPTS_NUMBER);
-        }
-
-        return null;
     }
 
     private Optional<SendCodeResponseDto> requestValidation(User user) {
