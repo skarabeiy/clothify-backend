@@ -97,7 +97,6 @@ public class RegisterService {
     }
 
     // TODO: Обновить документацию
-    // TODO: Проапдейтить свагер для статусов
     private Optional<ResponseEntity<AuthResponseDto>> registerRequestValidation(RegisterRequestDto request) {
 
         if (!isEmailValid(request.getEmail())) {

@@ -25,6 +25,6 @@ public class AuthResponseDto {
             example = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0QG1haWwucnUiLCJpYXQiOjE3NTEyMDA2NzcsImV4cCI6MTc1MjA2NDY3N30.yxPjpnxqC05nEL-h8SgTkO-c1xXCULmd43l79W2-YnM")
     private String refreshToken;
 
-    @Schema(description = "Type of error", example = "PASSWORDS_NOT_MATCH")
+    @Schema(description = "Type of error", example = "null")
     private String errorMessage;
 }

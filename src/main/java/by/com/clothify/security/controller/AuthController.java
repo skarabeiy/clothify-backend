@@ -10,6 +10,9 @@ import by.com.clothify.security.service.AuthenticateService;
 import by.com.clothify.security.service.RefreshService;
 import by.com.clothify.security.service.RegisterService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -28,10 +31,38 @@ public class AuthController {
     private final AuthenticateService authenticateService;
     private final RefreshService refreshService;
 
+    // TODO: Удобная штука, но пока отложу - время + загромождение + актуальность
     @PostMapping("/check-email")
     @Operation(
             summary = "Check email availability",
-            description = "Check email validation and availability"
+            description = "Check email validation and availability",
+            responses = {
+                    @ApiResponse(responseCode = "200"),
+                    @ApiResponse(
+                            responseCode = "400",
+                            description = "Email is not valid",
+                            content = @Content(
+                                    examples = @ExampleObject(
+                                            value = """
+                                                    {
+                                                        "resultMessage": "EMAIL_NOT_VALID"
+                                                    }
+                                                    """
+                                    )
+                            )),
+                    @ApiResponse(
+                            responseCode = "409",
+                            description = "Email has already been registered in another way",
+                            content = @Content(
+                                    examples = @ExampleObject(
+                                            value = """
+                                                    {
+                                                        "resultMessage": "EMAIL_OCCUPIED_BY_PASSWORD_AUTH"
+                                                    }
+                                                    """
+                                    )
+                            ))
+            }
     )
     public ResponseEntity<CheckEmailResponseDto> checkEmail(@RequestBody CheckEmailRequestDto request) {
         return registerService.checkEmail(request);

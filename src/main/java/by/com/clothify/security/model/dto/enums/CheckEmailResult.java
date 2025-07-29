@@ -7,8 +7,8 @@ import org.springframework.http.HttpStatus;
 @Getter
 @RequiredArgsConstructor
 public enum CheckEmailResult {
-    EMAIL_NOT_VALID(HttpStatus.BAD_REQUEST),
     EMAIL_FREE(HttpStatus.OK),
+    EMAIL_NOT_VALID(HttpStatus.BAD_REQUEST),
     EMAIL_OCCUPIED_BY_PASSWORD_AUTH(HttpStatus.CONFLICT),
     EMAIL_OCCUPIED_BY_APPLE_AUTH(HttpStatus.CONFLICT),
     EMAIL_OCCUPIED_BY_GOOGLE_AUTH(HttpStatus.CONFLICT);
