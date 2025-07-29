@@ -6,6 +6,7 @@ import by.com.clothify.security.service.restore.RestoreService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,7 +25,7 @@ public class RestoreController {
             summary = "Send code to user's email",
             description = "Send code to user's email for data restore"
     )
-    public SendCodeResponseDto sendCodeToEmail(@RequestBody SendCodeRequestDto request) {
+    public ResponseEntity<SendCodeResponseDto> sendCodeToEmail(@RequestBody SendCodeRequestDto request) {
         return restoreService.sendCodeToEmail(request);
     }
 }

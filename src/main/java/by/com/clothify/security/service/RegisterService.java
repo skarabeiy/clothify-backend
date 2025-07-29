@@ -34,7 +34,7 @@ public class RegisterService {
     private final PasswordEncoder passwordEncoder;
     private final AuthService authService;
 
-    public CheckEmailResponseDto checkEmail(CheckEmailRequestDto request) {
+    public ResponseEntity<CheckEmailResponseDto> checkEmail(CheckEmailRequestDto request) {
         try {
             CheckEmailResult result = CheckEmailResult.EMAIL_FREE;
 
@@ -51,9 +51,13 @@ public class RegisterService {
                 }
             }
 
-            return CheckEmailResponseDto.builder()
-                    .resultMessage(result)
-                    .build();
+            return ResponseEntity.status(result.getStatus())
+                    .body(
+                            CheckEmailResponseDto.builder()
+                                    .resultMessage(result)
+                                    .build()
+                    );
+
         } catch (Exception e) {
             log.error("Failed check email: {}", request.getEmail());
             log.error(e.getMessage(), e);
@@ -92,7 +96,6 @@ public class RegisterService {
         }
     }
 
-    // TODO: Всем ошибочным респонсам добавить соответствующие статусы
     // TODO: Обновить документацию
     // TODO: Проапдейтить свагер для статусов
     private Optional<ResponseEntity<AuthResponseDto>> registerRequestValidation(RegisterRequestDto request) {

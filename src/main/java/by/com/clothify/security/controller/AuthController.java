@@ -33,7 +33,7 @@ public class AuthController {
             summary = "Check email availability",
             description = "Check email validation and availability"
     )
-    public CheckEmailResponseDto checkEmail(@RequestBody CheckEmailRequestDto request) {
+    public ResponseEntity<CheckEmailResponseDto> checkEmail(@RequestBody CheckEmailRequestDto request) {
         return registerService.checkEmail(request);
     }
 
@@ -51,7 +51,7 @@ public class AuthController {
             summary = "User authentication",
             description = "Return tokens if successful, and an error if not"
     )
-    public AuthResponseDto authenticate(@RequestBody AuthRequestDto request) {
+    public ResponseEntity<AuthResponseDto> authenticate(@RequestBody AuthRequestDto request) {
         return authenticateService.authenticate(request);
     }
 

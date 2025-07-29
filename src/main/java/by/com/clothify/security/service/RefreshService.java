@@ -38,10 +38,12 @@ public class RefreshService {
         } catch (SignatureException se) {
             log.error(AuthError.INVALID_TOKEN.getDescription());
             log.error(se.getMessage(), se);
-            return getFailedAuthResponseEntity(AuthError.INVALID_TOKEN.getStatus(), AuthError.INVALID_TOKEN.toString());
+            return getFailedAuthResponseEntity(AuthError.INVALID_TOKEN.getStatus(),
+                    AuthError.INVALID_TOKEN.toString());
 
         } catch (ExpiredJwtException eje) {
-            return getFailedAuthResponseEntity(AuthError.REFRESH_TOKEN_EXPIRED.getStatus(), AuthError.REFRESH_TOKEN_EXPIRED.toString());
+            return getFailedAuthResponseEntity(AuthError.REFRESH_TOKEN_EXPIRED.getStatus(),
+                    AuthError.REFRESH_TOKEN_EXPIRED.toString());
 
         } catch (Exception e) {
             log.error("Failed refresh tokens");
@@ -55,11 +57,13 @@ public class RefreshService {
         if (!jwtService.isTokenValid(refreshToken, JwtService.REFRESH_TOKEN_TYPE)) {
 
             if (jwtService.isTokenExpired(refreshToken)) {
-                return getOptionalFailedAuthResponseEntity(AuthError.REFRESH_TOKEN_EXPIRED.getStatus(), AuthError.REFRESH_TOKEN_EXPIRED.toString());
+                return getOptionalFailedAuthResponseEntity(AuthError.REFRESH_TOKEN_EXPIRED.getStatus(),
+                        AuthError.REFRESH_TOKEN_EXPIRED.toString());
             }
 
             log.error("Invalid refresh token for user: {}", userDetails.getUsername());
-            return getOptionalFailedAuthResponseEntity(AuthError.INVALID_TOKEN.getStatus(), AuthError.INVALID_TOKEN.toString());
+            return getOptionalFailedAuthResponseEntity(AuthError.INVALID_TOKEN.getStatus(),
+                    AuthError.INVALID_TOKEN.toString());
         }
 
         return Optional.empty();

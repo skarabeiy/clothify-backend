@@ -9,6 +9,7 @@ import by.com.clothify.security.model.entity.User;
 import by.com.clothify.security.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -16,8 +17,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
-import static by.com.clothify.security.service.AuthService.getFailedAuthResponse;
-import static by.com.clothify.security.service.AuthService.getOptionalFailedAuthResponse;
+import static by.com.clothify.security.service.AuthService.getFailedAuthResponseEntity;
+import static by.com.clothify.security.service.AuthService.getOptionalFailedAuthResponseEntity;
 import static by.com.clothify.security.service.AuthService.logErrorByAuthType;
 
 @Service
@@ -29,36 +30,40 @@ public class AuthenticateService {
     private final AuthenticationManager authenticationManager;
     private final AuthService authService;
 
-    public AuthResponseDto authenticate(AuthRequestDto request) {
+    public ResponseEntity<AuthResponseDto> authenticate(AuthRequestDto request) {
         try {
             Optional<User> optionalUser = userRepository.findByEmail(request.getEmail());
 
             if (optionalUser.isEmpty()) {
-                return getFailedAuthResponse(AuthenticateError.EMAIL_NOT_FOUND.toString());
+                return getFailedAuthResponseEntity(AuthenticateError.EMAIL_NOT_FOUND.getStatus(),
+                        AuthenticateError.EMAIL_NOT_FOUND.toString());
             } else {
 
                 AuthType authType = optionalUser.get().getAuthType();
                 if (AuthType.APPLE == authType) {
                     logErrorByAuthType(request.getEmail(), AuthType.PASSWORD, authType);
-                    return getFailedAuthResponse(AuthenticateError.EMAIL_OCCUPIED_BY_APPLE_AUTH.toString());
+                    return getFailedAuthResponseEntity(AuthenticateError.EMAIL_OCCUPIED_BY_APPLE_AUTH.getStatus(),
+                            AuthenticateError.EMAIL_OCCUPIED_BY_APPLE_AUTH.toString());
                 } else if (AuthType.GOOGLE == authType) {
                     logErrorByAuthType(request.getEmail(), AuthType.PASSWORD, authType);
-                    return getFailedAuthResponse(AuthenticateError.EMAIL_OCCUPIED_BY_GOOGLE_AUTH.toString());
+                    return getFailedAuthResponseEntity(AuthenticateError.EMAIL_OCCUPIED_BY_GOOGLE_AUTH.getStatus(),
+                            AuthenticateError.EMAIL_OCCUPIED_BY_GOOGLE_AUTH.toString());
                 }
             }
 
-            Optional<AuthResponseDto> optionalFailedAuthResponse = authenticateCredentials(request);
+            Optional<ResponseEntity<AuthResponseDto>> optionalFailedAuthResponse = authenticateCredentials(request);
 
             return optionalFailedAuthResponse.orElseGet(() ->
-                    authService.createAuthResponseFromUser(optionalUser.get()));
+                    ResponseEntity.ok()
+                            .body(authService.createAuthResponseFromUser(optionalUser.get())));
         } catch (Exception e) {
             log.error("User authorization failed: {}", request.getEmail());
             log.error(e.getMessage(), e);
-            return getFailedAuthResponse(AuthError.AUTH_ERROR.toString());
+            return getFailedAuthResponseEntity(AuthError.AUTH_ERROR.getStatus(), AuthError.AUTH_ERROR.toString());
         }
     }
 
-    private Optional<AuthResponseDto> authenticateCredentials(AuthRequestDto request) {
+    private Optional<ResponseEntity<AuthResponseDto>> authenticateCredentials(AuthRequestDto request) {
         try {
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
@@ -68,7 +73,8 @@ public class AuthenticateService {
             );
         } catch (BadCredentialsException bce) {
             log.error("User: {} entered incorrect credentials", request.getEmail());
-            return getOptionalFailedAuthResponse(AuthenticateError.BAD_CREDENTIALS.toString());
+            return getOptionalFailedAuthResponseEntity(AuthenticateError.BAD_CREDENTIALS.getStatus(),
+                    AuthenticateError.BAD_CREDENTIALS.toString());
         }
 
         return Optional.empty();

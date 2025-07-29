@@ -8,6 +8,7 @@ import by.com.clothify.security.model.entity.User;
 import by.com.clothify.security.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -21,7 +22,7 @@ public class RestoreService {
     private final CodeService codeService;
     private final EmailMessagesService emailMessagesService;
 
-    public SendCodeResponseDto sendCodeToEmail(SendCodeRequestDto request) {
+    public ResponseEntity<SendCodeResponseDto> sendCodeToEmail(SendCodeRequestDto request) {
 
         try {
             final String email = request.getEmail();
@@ -33,7 +34,7 @@ public class RestoreService {
 
             User user = optionalUser.get();
 
-            Optional<SendCodeResponseDto> optionalFailedResponse = requestValidation(user);
+            Optional<ResponseEntity<SendCodeResponseDto>> optionalFailedResponse = requestValidation(user);
             if (optionalFailedResponse.isPresent()) {
                 return optionalFailedResponse.get();
             }
@@ -50,9 +51,11 @@ public class RestoreService {
                 return createFailedResponse(SendCodeError.MESSAGE_SEND_ERROR);
             }
 
-            return SendCodeResponseDto.builder()
-                    .success(true)
-                    .build();
+            return ResponseEntity.ok().body(
+                    SendCodeResponseDto.builder()
+                            .success(true)
+                            .build()
+            );
 
         } catch (Exception e) {
             log.error("Failed send code to: {}", request.getEmail());
@@ -61,7 +64,7 @@ public class RestoreService {
         }
     }
 
-    private Optional<SendCodeResponseDto> requestValidation(User user) {
+    private Optional<ResponseEntity<SendCodeResponseDto>> requestValidation(User user) {
 
         if (AuthType.APPLE == user.getAuthType()) {
             return createOptionalFailedResponse(SendCodeError.EMAIL_OCCUPIED_BY_APPLE_AUTH);
@@ -74,14 +77,17 @@ public class RestoreService {
         return Optional.empty();
     }
 
-    private Optional<SendCodeResponseDto> createOptionalFailedResponse(SendCodeError error) {
+    private Optional<ResponseEntity<SendCodeResponseDto>> createOptionalFailedResponse(SendCodeError error) {
         return Optional.of(createFailedResponse(error));
     }
 
-    private SendCodeResponseDto createFailedResponse(SendCodeError error) {
-        return SendCodeResponseDto.builder()
-                .success(false)
-                .errorMessage(error)
-                .build();
+    private ResponseEntity<SendCodeResponseDto> createFailedResponse(SendCodeError error) {
+        return ResponseEntity.status(error.getStatus())
+                .body(
+                        SendCodeResponseDto.builder()
+                                .success(false)
+                                .errorMessage(error)
+                                .build()
+                );
     }
 }
