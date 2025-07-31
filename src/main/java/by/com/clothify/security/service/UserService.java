@@ -4,7 +4,7 @@ import by.com.clothify.security.model.dto.UserInformationDto;
 import by.com.clothify.security.model.entity.User;
 import by.com.clothify.security.repository.UserRepository;
 import by.com.clothify.security.util.AuthUtils;
-import by.com.clothify.security.util.DateConverter;
+import by.com.clothify.security.util.DateUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -24,7 +24,7 @@ public class UserService {
 
             user.setName(userInformationDto.getName());
             user.setGender(userInformationDto.getGender());
-            user.setDateOfBirth(DateConverter.covertToLocaleDate(userInformationDto.getDateOfBirth()));
+            user.setDateOfBirth(DateUtils.covertToLocaleDate(userInformationDto.getDateOfBirth()));
 
             userRepository.save(user);
         } catch (Exception e) {

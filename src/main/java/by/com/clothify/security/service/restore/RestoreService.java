@@ -1,7 +1,9 @@
 package by.com.clothify.security.service.restore;
 
 import by.com.clothify.security.model.dto.enums.AuthType;
-import by.com.clothify.security.model.dto.enums.SendCodeError;
+import by.com.clothify.security.model.dto.enums.restore.SendCodeError;
+import by.com.clothify.security.model.dto.restore.CheckCodeRequestDto;
+import by.com.clothify.security.model.dto.restore.CheckCodeResponseDto;
 import by.com.clothify.security.model.dto.restore.SendCodeRequestDto;
 import by.com.clothify.security.model.dto.restore.SendCodeResponseDto;
 import by.com.clothify.security.model.entity.User;
@@ -75,6 +77,11 @@ public class RestoreService {
         }
 
         return Optional.empty();
+    }
+
+    public ResponseEntity<CheckCodeResponseDto> checkCode(CheckCodeRequestDto request) {
+
+        return null;
     }
 
     private Optional<ResponseEntity<SendCodeResponseDto>> createOptionalFailedResponse(SendCodeError error) {

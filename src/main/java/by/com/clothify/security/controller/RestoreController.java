@@ -1,5 +1,7 @@
 package by.com.clothify.security.controller;
 
+import by.com.clothify.security.model.dto.restore.CheckCodeRequestDto;
+import by.com.clothify.security.model.dto.restore.CheckCodeResponseDto;
 import by.com.clothify.security.model.dto.restore.SendCodeRequestDto;
 import by.com.clothify.security.model.dto.restore.SendCodeResponseDto;
 import by.com.clothify.security.service.restore.RestoreService;
@@ -27,5 +29,14 @@ public class RestoreController {
     )
     public ResponseEntity<SendCodeResponseDto> sendCodeToEmail(@RequestBody SendCodeRequestDto request) {
         return restoreService.sendCodeToEmail(request);
+    }
+
+    @Operation(
+            summary = "Check code",
+            description = "Check code sent to email"
+    )
+    @PostMapping("/check-code")
+    public ResponseEntity<CheckCodeResponseDto> checkCode(@RequestBody CheckCodeRequestDto request) {
+        return restoreService.checkCode(request);
     }
 }

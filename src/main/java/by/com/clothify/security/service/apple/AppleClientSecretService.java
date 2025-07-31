@@ -2,6 +2,7 @@ package by.com.clothify.security.service.apple;
 
 import by.com.clothify.security.model.entity.AppleClientSecret;
 import by.com.clothify.security.repository.AppleClientSecretRepository;
+import by.com.clothify.security.util.DateUtils;
 import io.jsonwebtoken.Jwts;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -12,7 +13,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.security.KeyFactory;
 import java.security.PrivateKey;
 import java.security.spec.PKCS8EncodedKeySpec;
-import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.Base64;
@@ -59,7 +59,8 @@ public class AppleClientSecretService {
             } else {
                 AppleClientSecret secretCash = optionalSecretCash.get();
 
-                if (isClientSecretExpired(secretCash.getCreatedAt())) {
+                if (DateUtils.isDateExpired(secretCash.getCreatedAt(),
+                        clientSecretExpirationInMinutes * 60)) {
                     AppleClientSecret clientSecret = createAppleClientSecret();
                     clientSecret.setId(secretCash.getId());
                     return createSecretCash(clientSecret);
@@ -127,14 +128,5 @@ public class AppleClientSecretService {
             log.error("Failed load private key for apple");
             throw new RuntimeException(e);
         }
-    }
-
-    private boolean isClientSecretExpired(LocalDateTime createdAt) {
-        if (createdAt == null) {
-            return true;
-        }
-
-        return Duration.between(createdAt, LocalDateTime.now()).toSeconds()
-                >= (clientSecretExpirationInMinutes * 60);
     }
 }

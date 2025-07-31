@@ -1,11 +1,15 @@
 package by.com.clothify.security.service.restore;
 
+import by.com.clothify.security.model.dto.enums.restore.CheckCodeError;
+import by.com.clothify.security.model.dto.restore.CheckCodeRequestDto;
+import by.com.clothify.security.model.dto.restore.CheckCodeResponseDto;
 import by.com.clothify.security.model.entity.SendCodeRequest;
 import by.com.clothify.security.model.entity.UserCode;
 import by.com.clothify.security.repository.SendCodeRequestRepository;
 import by.com.clothify.security.repository.UserCodeRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,10 +22,13 @@ import java.util.concurrent.ThreadLocalRandom;
 @Slf4j
 public class CodeService {
 
-    private static final int ATTEMPTS_NUMBER = 4;
-    private static final int MAX_REQUESTS_NUMBER = 5;
+    @Value("${restore.code-attempts-number}")
+    private int attemptsNumber;
 
-//    TODO: Лучше поменять на redis, но пока так
+    @Value("${restore.code-max-requests-number}")
+    private int maxRequestsNumber;
+
+    //    TODO: Лучше поменять на redis, но пока так
     private final UserCodeRepository userCodeRepository;
     private final SendCodeRequestRepository sendCodeRequestRepository;
 
@@ -56,20 +63,21 @@ public class CodeService {
 
             userCode.setCode(code);
             userCode.setCreatedAt(LocalDateTime.now());
-            userCode.setAttempts(ATTEMPTS_NUMBER);
+            userCode.setAttempts(attemptsNumber);
 
         } else {
             userCode = UserCode.builder()
                     .email(email)
                     .code(code)
                     .createdAt(LocalDateTime.now())
-                    .attempts(ATTEMPTS_NUMBER)
+                    .attempts(attemptsNumber)
                     .build();
         }
 
         userCodeRepository.save(userCode);
     }
 
+    // TODO: стоит подумать над транзакшионалами
     @Transactional
     public boolean writeSendCodeRequestsInfo(String email) {
 
@@ -80,8 +88,8 @@ public class CodeService {
 
                 SendCodeRequest requestInfo = optionalRequestInfo.get();
 
-                if (requestInfo.getRequestsNumber() >= MAX_REQUESTS_NUMBER) {
-                    log.warn("User: {} exceeded the maximum number of code requests ({})", email, MAX_REQUESTS_NUMBER);
+                if (requestInfo.getRequestsNumber() >= maxRequestsNumber) {
+                    log.warn("User: {} exceeded the maximum number of code requests ({})", email, maxRequestsNumber);
                     return false;
                 }
 
@@ -109,5 +117,33 @@ public class CodeService {
                 .build();
 
         sendCodeRequestRepository.save(sendCodeRequest);
+    }
+
+    @Transactional
+    public CheckCodeResponseDto checkCode(CheckCodeRequestDto request) {
+
+        Optional<UserCode> optionalUserCode = userCodeRepository.findByEmail(request.getEmail());
+
+        if (optionalUserCode.isEmpty()) {
+            log.warn("No restore code was found for: {}", request.getEmail());
+            return getFailedCheckCodeResponse(CheckCodeError.CODE_FOR_THIS_EMAIL_NOT_FOUND);
+        }
+
+        UserCode userCode = optionalUserCode.get();
+
+        if (!userCode.getCode().equals(request.getCode())) {
+            return getFailedCheckCodeResponse(CheckCodeError.INCORRECT_CODE);
+        }
+
+
+
+        return null;
+    }
+
+    private CheckCodeResponseDto getFailedCheckCodeResponse(CheckCodeError error) {
+        return CheckCodeResponseDto.builder()
+                .success(false)
+                .errorMessage(error)
+                .build();
     }
 }

@@ -96,7 +96,6 @@ public class RegisterService {
         }
     }
 
-    // TODO: Обновить документацию
     private Optional<ResponseEntity<AuthResponseDto>> registerRequestValidation(RegisterRequestDto request) {
 
         if (!isEmailValid(request.getEmail())) {

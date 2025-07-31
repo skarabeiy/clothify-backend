@@ -1,6 +1,6 @@
 package by.com.clothify.security.model.dto.restore;
 
-import by.com.clothify.security.model.dto.enums.SendCodeError;
+import by.com.clothify.security.model.dto.enums.restore.SendCodeError;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
@@ -17,6 +17,6 @@ public class SendCodeResponseDto {
 
     private boolean success;
 
-    @Schema(description = "Type of error")
+    @Schema(description = "Type of error", example = "null")
     private SendCodeError errorMessage;
 }

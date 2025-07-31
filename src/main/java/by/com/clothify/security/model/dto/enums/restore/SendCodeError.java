@@ -1,4 +1,4 @@
-package by.com.clothify.security.model.dto.enums;
+package by.com.clothify.security.model.dto.enums.restore;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
