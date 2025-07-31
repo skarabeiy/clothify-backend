@@ -10,6 +10,7 @@ import by.com.clothify.security.model.entity.User;
 import by.com.clothify.security.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +20,21 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @Slf4j
 public class RestoreService {
+
+    @Value("${restore.code-expiration-time}")
+    private Long codeExpirationInMinutes;
+
+    @Value("${restore.code-retry-time}")
+    private Long sendCodeRetryTime;
+
+    @Value("${restore.code-attempts-number}")
+    private Integer attemptsNumber;
+
+    @Value("${restore.code-max-requests-number}")
+    private Integer maxRequestsNumber;
+
+    @Value("${restore.code-lock-time}")
+    private Long lockTime;
 
     private final UserRepository userRepository;
     private final CodeService codeService;
@@ -53,9 +69,18 @@ public class RestoreService {
                 return createFailedResponse(SendCodeError.MESSAGE_SEND_ERROR);
             }
 
+            SendCodeResponseDto.InfoDto info = SendCodeResponseDto.InfoDto.builder()
+                    .codeExpirationInMinutes(codeExpirationInMinutes)
+                    .sendCodeRetryTimeInMinutes(sendCodeRetryTime)
+                    .enterAttemptsNumber(attemptsNumber)
+                    .sendCodeRequestMaxNumber(maxRequestsNumber)
+                    .requestLockTimeInMinutes(lockTime)
+                    .build();
+
             return ResponseEntity.ok().body(
                     SendCodeResponseDto.builder()
                             .success(true)
+                            .info(info)
                             .build()
             );
 
