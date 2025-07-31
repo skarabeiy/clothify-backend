@@ -7,6 +7,7 @@ import by.com.clothify.security.model.entity.SendCodeRequest;
 import by.com.clothify.security.model.entity.UserCode;
 import by.com.clothify.security.repository.SendCodeRequestRepository;
 import by.com.clothify.security.repository.UserCodeRepository;
+import by.com.clothify.security.util.DateUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -22,11 +23,17 @@ import java.util.concurrent.ThreadLocalRandom;
 @Slf4j
 public class CodeService {
 
+    @Value("${restore.code-expiration-time}")
+    private Long codeExpirationInMinutes;
+
     @Value("${restore.code-attempts-number}")
     private int attemptsNumber;
 
     @Value("${restore.code-max-requests-number}")
     private int maxRequestsNumber;
+
+    @Value("${restore.code-lock-time}")
+    private Long lockTime;
 
     //    TODO: Лучше поменять на redis, но пока так
     private final UserCodeRepository userCodeRepository;
@@ -125,19 +132,32 @@ public class CodeService {
         Optional<UserCode> optionalUserCode = userCodeRepository.findByEmail(request.getEmail());
 
         if (optionalUserCode.isEmpty()) {
-            log.warn("No restore code was found for: {}", request.getEmail());
             return getFailedCheckCodeResponse(CheckCodeError.CODE_FOR_THIS_EMAIL_NOT_FOUND);
         }
 
         UserCode userCode = optionalUserCode.get();
 
+        if (DateUtils.isDateExpired(userCode.getCreatedAt(), codeExpirationInMinutes * 60)) {
+            userCodeRepository.delete(userCode);
+            return getFailedCheckCodeResponse(CheckCodeError.CODE_EXPIRED);
+        }
+
+        if (userCode.getAttempts() <= 0) {
+            log.warn("User: {} was blocked for {} minutes, because he entered the code incorrectly {} times.",
+                    request.getEmail(), lockTime, attemptsNumber);
+            return getFailedCheckCodeResponse(CheckCodeError.ATTEMPTS_EXCEEDED);
+        }
+
         if (!userCode.getCode().equals(request.getCode())) {
+            userCode.setAttempts(userCode.getAttempts() - 1);
             return getFailedCheckCodeResponse(CheckCodeError.INCORRECT_CODE);
         }
 
+        userCodeRepository.delete(userCode);
 
-
-        return null;
+        return CheckCodeResponseDto.builder()
+                .success(true)
+                .build();
     }
 
     private CheckCodeResponseDto getFailedCheckCodeResponse(CheckCodeError error) {

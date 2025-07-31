@@ -80,8 +80,20 @@ public class RestoreService {
     }
 
     public ResponseEntity<CheckCodeResponseDto> checkCode(CheckCodeRequestDto request) {
+        try {
+            CheckCodeResponseDto checkResult = codeService.checkCode(request);
 
-        return null;
+            if (checkResult.isSuccess()) {
+                return ResponseEntity.ok(checkResult);
+            } else {
+                return ResponseEntity.status(checkResult.getErrorMessage().getStatus()).body(checkResult);
+            }
+
+        } catch (Exception e) {
+            log.error("Failed check code for: {}", request.getEmail());
+            log.error(e.getMessage(), e);
+            throw new RuntimeException(e);
+        }
     }
 
     private Optional<ResponseEntity<SendCodeResponseDto>> createOptionalFailedResponse(SendCodeError error) {
