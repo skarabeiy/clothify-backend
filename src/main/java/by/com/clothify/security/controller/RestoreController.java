@@ -1,5 +1,7 @@
 package by.com.clothify.security.controller;
 
+import by.com.clothify.security.model.dto.restore.ChangePasswordRequestDto;
+import by.com.clothify.security.model.dto.restore.ChangePasswordResponseDto;
 import by.com.clothify.security.model.dto.restore.CheckCodeRequestDto;
 import by.com.clothify.security.model.dto.restore.CheckCodeResponseDto;
 import by.com.clothify.security.model.dto.restore.SendCodeRequestDto;
@@ -38,5 +40,14 @@ public class RestoreController {
     @PostMapping("/check-code")
     public ResponseEntity<CheckCodeResponseDto> checkCode(@RequestBody CheckCodeRequestDto request) {
         return restoreService.checkCode(request);
+    }
+
+    @Operation(
+            summary = "Change user password",
+            description = "Change user password after checking the code"
+    )
+    @PostMapping("/change-password")
+    public ResponseEntity<ChangePasswordResponseDto> changePassword(@RequestBody ChangePasswordRequestDto request) {
+        return restoreService.changePassword(request);
     }
 }

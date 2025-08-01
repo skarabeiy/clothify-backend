@@ -1,18 +1,25 @@
 package by.com.clothify.security.service.restore;
 
 import by.com.clothify.security.model.dto.enums.AuthType;
+import by.com.clothify.security.model.dto.enums.restore.ChangePasswordError;
+import by.com.clothify.security.model.dto.enums.restore.CheckCodeError;
 import by.com.clothify.security.model.dto.enums.restore.SendCodeError;
+import by.com.clothify.security.model.dto.restore.ChangePasswordRequestDto;
+import by.com.clothify.security.model.dto.restore.ChangePasswordResponseDto;
 import by.com.clothify.security.model.dto.restore.CheckCodeRequestDto;
 import by.com.clothify.security.model.dto.restore.CheckCodeResponseDto;
 import by.com.clothify.security.model.dto.restore.SendCodeRequestDto;
 import by.com.clothify.security.model.dto.restore.SendCodeResponseDto;
 import by.com.clothify.security.model.entity.User;
 import by.com.clothify.security.repository.UserRepository;
+import by.com.clothify.security.util.Validations;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -39,6 +46,7 @@ public class RestoreService {
     private final UserRepository userRepository;
     private final CodeService codeService;
     private final EmailMessagesService emailMessagesService;
+    private final PasswordEncoder passwordEncoder;
 
     public ResponseEntity<SendCodeResponseDto> sendCodeToEmail(SendCodeRequestDto request) {
 
@@ -47,7 +55,7 @@ public class RestoreService {
             Optional<User> optionalUser = userRepository.findByEmail(email);
 
             if (optionalUser.isEmpty()) {
-                return createFailedResponse(SendCodeError.EMAIL_NOT_FOUND);
+                return createFailedSendCodeResponse(SendCodeError.EMAIL_NOT_FOUND);
             }
 
             User user = optionalUser.get();
@@ -61,12 +69,12 @@ public class RestoreService {
 
             boolean writeInfoResult = codeService.writeSendCodeRequestsInfo(email);
             if (!writeInfoResult) {
-                return createFailedResponse(SendCodeError.EXCEEDED_SEND_ATTEMPTS_NUMBER);
+                return createFailedSendCodeResponse(SendCodeError.EXCEEDED_SEND_ATTEMPTS_NUMBER);
             }
 
             boolean sendResult = emailMessagesService.sendCodeMessageToEmail(code, email);
             if (!sendResult) {
-                return createFailedResponse(SendCodeError.MESSAGE_SEND_ERROR);
+                return createFailedSendCodeResponse(SendCodeError.MESSAGE_SEND_ERROR);
             }
 
             SendCodeResponseDto.InfoDto info = SendCodeResponseDto.InfoDto.builder()
@@ -94,19 +102,33 @@ public class RestoreService {
     private Optional<ResponseEntity<SendCodeResponseDto>> requestValidation(User user) {
 
         if (AuthType.APPLE == user.getAuthType()) {
-            return createOptionalFailedResponse(SendCodeError.EMAIL_OCCUPIED_BY_APPLE_AUTH);
+            return createOptionalFailedSendCodeResponse(SendCodeError.EMAIL_OCCUPIED_BY_APPLE_AUTH);
         }
 
         if (AuthType.GOOGLE == user.getAuthType()) {
-            return createOptionalFailedResponse(SendCodeError.EMAIL_OCCUPIED_BY_GOOGLE_AUTH);
+            return createOptionalFailedSendCodeResponse(SendCodeError.EMAIL_OCCUPIED_BY_GOOGLE_AUTH);
         }
 
         return Optional.empty();
     }
 
+    private Optional<ResponseEntity<SendCodeResponseDto>> createOptionalFailedSendCodeResponse(SendCodeError error) {
+        return Optional.of(createFailedSendCodeResponse(error));
+    }
+
+    private ResponseEntity<SendCodeResponseDto> createFailedSendCodeResponse(SendCodeError error) {
+        return ResponseEntity.status(error.getStatus())
+                .body(
+                        SendCodeResponseDto.builder()
+                                .success(false)
+                                .errorMessage(error)
+                                .build()
+                );
+    }
+
     public ResponseEntity<CheckCodeResponseDto> checkCode(CheckCodeRequestDto request) {
         try {
-            CheckCodeResponseDto checkResult = codeService.checkCode(request);
+            CheckCodeResponseDto checkResult = codeService.checkCode(request, true);
 
             if (checkResult.isSuccess()) {
                 return ResponseEntity.ok(checkResult);
@@ -121,17 +143,89 @@ public class RestoreService {
         }
     }
 
-    private Optional<ResponseEntity<SendCodeResponseDto>> createOptionalFailedResponse(SendCodeError error) {
-        return Optional.of(createFailedResponse(error));
+    @Transactional
+    public ResponseEntity<ChangePasswordResponseDto> changePassword(ChangePasswordRequestDto request) {
+        try {
+            final String email = request.getEmail();
+            Optional<User> optionalUser = userRepository.findByEmail(email);
+
+            if (optionalUser.isEmpty()) {
+                log.error("Failed find email: {} for change password", request.getEmail());
+                return createFailedChangePasswordResponse(ChangePasswordError.EMAIL_NOT_FOUND);
+            }
+
+            Optional<ResponseEntity<ChangePasswordResponseDto>> optionalFailedResponse
+                    = changePasswordRequestValidation(request);
+
+            if (optionalFailedResponse.isPresent()) {
+                return optionalFailedResponse.get();
+            }
+
+            User user = optionalUser.get();
+            user.setPassword(passwordEncoder.encode(request.getNewPassword()));
+            userRepository.save(user);
+
+            log.info("User: {} changed his password", request.getEmail());
+
+            return ResponseEntity.ok(
+                    ChangePasswordResponseDto.builder()
+                            .success(true)
+                            .build()
+            );
+
+        } catch (Exception e) {
+            log.error("Failed change password for: {}", request.getEmail());
+            log.error(e.getMessage(), e);
+            throw new RuntimeException(e);
+        }
     }
 
-    private ResponseEntity<SendCodeResponseDto> createFailedResponse(SendCodeError error) {
+    private Optional<ResponseEntity<ChangePasswordResponseDto>> changePasswordRequestValidation(
+            ChangePasswordRequestDto request) {
+
+        if (!Validations.isPasswordValid(request.getNewPassword())) {
+            return createOptionalFailedChangePasswordResponse(ChangePasswordError.PASSWORD_NOT_VALID);
+        }
+
+        if (!request.getNewPassword().equals(request.getNewPasswordConfirmation())) {
+            return createOptionalFailedChangePasswordResponse(ChangePasswordError.PASSWORDS_NOT_MATCH);
+        }
+
+        CheckCodeRequestDto checkCodeRequest = CheckCodeRequestDto.builder()
+                .email(request.getEmail())
+                .code(request.getCode())
+                .build();
+        CheckCodeResponseDto checkResult = codeService.checkCode(checkCodeRequest, false);
+
+        if (!checkResult.isSuccess()) {
+            return createOptionalFailedChangePasswordResponse(mapToChangePasswordError(checkResult.getErrorMessage()));
+        }
+
+        return Optional.empty();
+    }
+
+    private Optional<ResponseEntity<ChangePasswordResponseDto>> createOptionalFailedChangePasswordResponse(
+            ChangePasswordError error) {
+        return Optional.of(createFailedChangePasswordResponse(error));
+    }
+
+    private ResponseEntity<ChangePasswordResponseDto> createFailedChangePasswordResponse(ChangePasswordError error) {
         return ResponseEntity.status(error.getStatus())
                 .body(
-                        SendCodeResponseDto.builder()
+                        ChangePasswordResponseDto.builder()
                                 .success(false)
                                 .errorMessage(error)
                                 .build()
                 );
+    }
+
+    private ChangePasswordError mapToChangePasswordError(CheckCodeError checkCodeError) {
+
+        return switch (checkCodeError) {
+            case CODE_FOR_THIS_EMAIL_NOT_FOUND -> ChangePasswordError.CODE_FOR_THIS_EMAIL_NOT_FOUND;
+            case INCORRECT_CODE -> ChangePasswordError.INCORRECT_CODE;
+            case CODE_EXPIRED -> ChangePasswordError.CODE_EXPIRED;
+            case ATTEMPTS_EXCEEDED -> ChangePasswordError.ATTEMPTS_EXCEEDED;
+        };
     }
 }

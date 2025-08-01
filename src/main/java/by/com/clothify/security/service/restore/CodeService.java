@@ -127,7 +127,7 @@ public class CodeService {
     }
 
     @Transactional
-    public CheckCodeResponseDto checkCode(CheckCodeRequestDto request) {
+    public CheckCodeResponseDto checkCode(CheckCodeRequestDto request, boolean isCheck) {
 
         Optional<UserCode> optionalUserCode = userCodeRepository.findByEmail(request.getEmail());
 
@@ -142,7 +142,7 @@ public class CodeService {
             return getFailedCheckCodeResponse(CheckCodeError.CODE_EXPIRED);
         }
 
-        if (userCode.getAttempts() <= 0) {
+        if (isAttemptsExpired(userCode.getAttempts(), isCheck)) {
             log.warn("User: {} was blocked for {} minutes, because he entered the code incorrectly {} times.",
                     request.getEmail(), lockTime, attemptsNumber);
             return getFailedCheckCodeResponse(CheckCodeError.ATTEMPTS_EXCEEDED);
@@ -153,11 +153,21 @@ public class CodeService {
             return getFailedCheckCodeResponse(CheckCodeError.INCORRECT_CODE);
         }
 
-        userCodeRepository.delete(userCode);
+        if (!isCheck) {
+            userCodeRepository.delete(userCode);
+        }
 
         return CheckCodeResponseDto.builder()
                 .success(true)
                 .build();
+    }
+
+    private boolean isAttemptsExpired(Integer attemptsNumber, boolean isCheck) {
+        if (isCheck) {
+            return attemptsNumber <= 0;
+        } else {
+            return attemptsNumber < 0;
+        }
     }
 
     private CheckCodeResponseDto getFailedCheckCodeResponse(CheckCodeError error) {
