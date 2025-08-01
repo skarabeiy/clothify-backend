@@ -72,7 +72,7 @@ public class RestoreService {
                 return createFailedSendCodeResponse(SendCodeError.EXCEEDED_SEND_ATTEMPTS_NUMBER);
             }
 
-            boolean sendResult = emailMessagesService.sendCodeMessageToEmail(code, email);
+            boolean sendResult = emailMessagesService.sendCodeMessageToEmail(email, code, codeExpirationInMinutes);
             if (!sendResult) {
                 return createFailedSendCodeResponse(SendCodeError.MESSAGE_SEND_ERROR);
             }
