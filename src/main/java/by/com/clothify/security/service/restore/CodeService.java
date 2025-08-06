@@ -84,7 +84,6 @@ public class CodeService {
         userCodeRepository.save(userCode);
     }
 
-    // TODO: стоит подумать над транзакшионалами
     @Transactional
     public boolean writeSendCodeRequestsInfo(String email) {
 
@@ -150,6 +149,7 @@ public class CodeService {
 
         if (!userCode.getCode().equals(request.getCode())) {
             userCode.setAttempts(userCode.getAttempts() - 1);
+            userCodeRepository.save(userCode);
             return getFailedCheckCodeResponse(CheckCodeError.INCORRECT_CODE);
         }
 

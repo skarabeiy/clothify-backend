@@ -48,6 +48,7 @@ public class RestoreService {
     private final EmailMessagesService emailMessagesService;
     private final PasswordEncoder passwordEncoder;
 
+    @Transactional
     public ResponseEntity<SendCodeResponseDto> sendCodeToEmail(SendCodeRequestDto request) {
 
         try {
