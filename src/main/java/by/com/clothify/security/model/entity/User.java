@@ -1,7 +1,6 @@
 package by.com.clothify.security.model.entity;
 
 import by.com.clothify.security.model.dto.enums.AuthType;
-import by.com.clothify.security.model.dto.enums.Gender;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -18,11 +17,10 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "users")
+@Table(name = "auth_users")
 @Getter
 @Setter
 @Builder
@@ -45,12 +43,12 @@ public class User {
     @Column(nullable = false)
     private LocalDateTime createdAt;
 
-    private String name;
-
-    @Enumerated(EnumType.STRING)
-    private Gender gender;
-
-    private LocalDate dateOfBirth;
+//    private String name;
+//
+//    @Enumerated(EnumType.STRING)
+//    private Gender gender;
+//
+//    private LocalDate dateOfBirth;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)

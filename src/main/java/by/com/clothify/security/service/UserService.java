@@ -22,9 +22,9 @@ public class UserService {
             User user = userRepository.findByEmail(email)
                     .orElseThrow();
 
-            user.setName(userInformationDto.getName());
-            user.setGender(userInformationDto.getGender());
-            user.setDateOfBirth(DateUtils.covertToLocaleDate(userInformationDto.getDateOfBirth()));
+//            user.setName(userInformationDto.getName());
+//            user.setGender(userInformationDto.getGender());
+//            user.setDateOfBirth(DateUtils.covertToLocaleDate(userInformationDto.getDateOfBirth()));
 
             userRepository.save(user);
         } catch (Exception e) {
