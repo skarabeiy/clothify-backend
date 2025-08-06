@@ -1,5 +1,6 @@
 package by.com.clothify.security.service.restore;
 
+import by.com.clothify.security.repository.SendCodeRequestRepository;
 import by.com.clothify.security.repository.UserCodeRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,7 +18,23 @@ public class RestoreScheduler {
     @Value("${restore.code-expiration-time}")
     private Long codeExpirationInMinutes;
 
+    private final SendCodeRequestRepository sendCodeRequestRepository;
     private final UserCodeRepository userCodeRepository;
+
+    // every 2 hours
+    @Scheduled(fixedRate = 2 * 60 * 60 * 1000)
+    public void deleteAllSendCodeRequests() {
+        try {
+            log.info("Start delete all send code requests");
+            sendCodeRequestRepository.deleteAll();
+            log.info("Successfully finish delete all send code requests");
+
+        } catch (Exception e) {
+            log.error("Failed delete all send code requests");
+            log.error(e.getMessage(), e);
+            throw new RuntimeException(e);
+        }
+    }
 
     @Scheduled(cron = "0 0 4 * * WED")
     public void deleteExpiredUserCodes() {
