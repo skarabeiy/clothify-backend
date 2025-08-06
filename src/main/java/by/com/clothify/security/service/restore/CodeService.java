@@ -56,7 +56,7 @@ public class CodeService {
 
     private static String generateCode() {
         return String.valueOf(
-                ThreadLocalRandom.current().nextInt(100_000, 1_000_000)
+                ThreadLocalRandom.current().nextInt(100_000, 999_999)
         );
     }
 
