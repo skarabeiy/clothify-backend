@@ -1,7 +1,7 @@
-package by.com.clothify.security.controller;
+package by.com.clothify.account.controller;
 
 import by.com.clothify.security.model.dto.UserInformationDto;
-import by.com.clothify.security.service.UserService;
+import by.com.clothify.account.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;

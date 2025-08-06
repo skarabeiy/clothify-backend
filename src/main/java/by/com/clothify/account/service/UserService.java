@@ -1,4 +1,4 @@
-package by.com.clothify.security.service;
+package by.com.clothify.account.service;
 
 import by.com.clothify.security.model.dto.UserInformationDto;
 import by.com.clothify.security.model.entity.User;
