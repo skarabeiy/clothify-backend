@@ -26,6 +26,7 @@ public class SecurityConfig {
 
         String[] whiteList = {
                 "/auth/**",
+                "/restore/**",
                 "/v3/api-docs/**",
                 "/swagger-ui/**"
         };

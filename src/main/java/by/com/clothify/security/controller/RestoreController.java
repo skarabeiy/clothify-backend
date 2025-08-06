@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/auth/restore")
+@RequestMapping("/restore")
 @RequiredArgsConstructor
 @Tag(name = "Restore API", description = "Operations for restore user data")
 public class RestoreController {
