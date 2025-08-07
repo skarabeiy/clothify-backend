@@ -113,7 +113,7 @@ public class RegisterService {
             return getOptionalFailedAuthResponseEntity(registerError.getStatus(), registerError.toString());
         }
 
-        if (!Validations.isPasswordValid(request.getPassword())) {
+        if (Validations.isPasswordNotValid(request.getPassword())) {
             return getOptionalFailedAuthResponseEntity(RegisterError.PASSWORD_NOT_VALID.getStatus(),
                     RegisterError.PASSWORD_NOT_VALID.toString());
         }

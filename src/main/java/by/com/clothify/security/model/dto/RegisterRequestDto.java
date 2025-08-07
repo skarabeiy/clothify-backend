@@ -15,9 +15,9 @@ public class RegisterRequestDto {
     @Schema(example = "example@mail.com")
     private String email;
 
-    @Schema(example = "Test123!")
+    @Schema(example = "test1234")
     private String password;
 
-    @Schema(example = "Test123!")
+    @Schema(example = "test1234")
     private String passwordConfirmation;
 }

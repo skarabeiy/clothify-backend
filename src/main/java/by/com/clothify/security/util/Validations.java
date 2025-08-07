@@ -15,37 +15,22 @@ public final class Validations {
         return EMAIL_PATTERN.matcher(email).matches();
     }
 
-    private static final String ALLOWED_SPECIAL = "!@#$%^&*";
     private static final String REGEX_DIGIT = ".*[0-9].*";
-    private static final String REGEX_UPPER = ".*[A-Z].*";
-    private static final String REGEX_LOWER = ".*[a-z].*";
+    private static final String REGEX_LETTER = ".*[a-zA-Z].*";
 
-    public static boolean isPasswordValid(String password) {
-
+    public static boolean isPasswordNotValid(String password) {
         if (password == null || password.isEmpty()) {
-            return false;
+            return true;
         }
 
         if (password.length() < 8 || password.length() > 20) {
-            return false;
+            return true;
         }
-
-        String regexSpecial = ".*[" + Pattern.quote(ALLOWED_SPECIAL) + "].*";
 
         if (!password.matches(REGEX_DIGIT)) {
-            return false;
-        }
-        if (!password.matches(REGEX_UPPER)) {
-            return false;
-        }
-        if (!password.matches(REGEX_LOWER)) {
-            return false;
-        }
-        if (!password.matches(regexSpecial)) {
-            return false;
+            return true;
         }
 
-        String validCharsRegex = "^[a-zA-Z0-9" + Pattern.quote(ALLOWED_SPECIAL) + "]+$";
-        return password.matches(validCharsRegex);
+        return !password.matches(REGEX_LETTER);
     }
 }

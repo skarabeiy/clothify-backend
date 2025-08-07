@@ -18,9 +18,9 @@ public class ChangePasswordRequestDto {
     @Schema(description = "Code sent to the email", example = "123456")
     private String code;
 
-    @Schema(example = "Test123!")
+    @Schema(example = "test1234")
     private String newPassword;
 
-    @Schema(example = "Test123!")
+    @Schema(example = "test1234")
     private String newPasswordConfirmation;
 }

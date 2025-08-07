@@ -184,7 +184,7 @@ public class RestoreService {
     private Optional<ResponseEntity<ChangePasswordResponseDto>> changePasswordRequestValidation(
             ChangePasswordRequestDto request) {
 
-        if (!Validations.isPasswordValid(request.getNewPassword())) {
+        if (Validations.isPasswordNotValid(request.getNewPassword())) {
             return createOptionalFailedChangePasswordResponse(ChangePasswordError.PASSWORD_NOT_VALID);
         }
 
