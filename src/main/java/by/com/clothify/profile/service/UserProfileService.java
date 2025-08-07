@@ -1,5 +1,6 @@
 package by.com.clothify.profile.service;
 
+import by.com.clothify.profile.model.dto.UserProfilePatchRequestDto;
 import by.com.clothify.profile.model.dto.UserProfileRequestDto;
 import by.com.clothify.profile.model.dto.UserProfileResponseDto;
 import by.com.clothify.profile.model.entity.UserProfile;
@@ -14,6 +15,8 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
+
+import static by.com.clothify.security.util.DateUtils.covertToLocaleDate;
 
 @Service
 @RequiredArgsConstructor
@@ -44,7 +47,7 @@ public class UserProfileService {
             Optional<User> optionalUser = userRepository.findByEmail(email);
 
             if (optionalUser.isEmpty()) {
-                log.error("User with email in token not found");
+                logUserNotFound(email);
                 throw new RuntimeException();
             }
 
@@ -52,16 +55,52 @@ public class UserProfileService {
                     .user(optionalUser.get())
                     .name(userProfileRequestDto.getName())
                     .gender(userProfileRequestDto.getGender())
-                    .dateOfBirth(DateUtils.covertToLocaleDate(userProfileRequestDto.getDateOfBirth()))
+                    .dateOfBirth(covertToLocaleDate(userProfileRequestDto.getDateOfBirth()))
                     .createdAt(LocalDateTime.now())
                     .build();
 
             userProfileRepository.save(userProfile);
 
         } catch (Exception e) {
-            log.error("Failed fill information for user: {}", email);
+            log.error("Failed save user profile information for: {}", email);
             log.error(e.getMessage(), e);
             throw new RuntimeException(e);
+        }
+    }
+
+    public void patchUserProfile(UserProfilePatchRequestDto request) {
+        String email = AuthUtils.getEmail();
+
+        try {
+            Optional<UserProfile> optionalUserProfile = userProfileRepository.findUserProfileByEmail(email);
+
+            if (optionalUserProfile.isEmpty()) {
+                logUserNotFound(email);
+                throw new RuntimeException();
+            }
+
+            UserProfile userProfile = optionalUserProfile.get();
+            setUserProfileFields(userProfile, request);
+            userProfileRepository.save(userProfile);
+
+        } catch (Exception e) {
+            log.error("Failed patch user profile information for: {}", email);
+            log.error(e.getMessage(), e);
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void setUserProfileFields(UserProfile userProfile, UserProfilePatchRequestDto request) {
+        if (request.getName() != null) {
+            userProfile.setName(request.getName());
+        }
+
+        if (request.getGender() != null) {
+            userProfile.setGender(request.getGender());
+        }
+
+        if (request.getDateOfBirth() != null) {
+            userProfile.setDateOfBirth(covertToLocaleDate(request.getDateOfBirth()));
         }
     }
 
@@ -72,5 +111,9 @@ public class UserProfileService {
                 .gender(userProfile.getGender())
                 .dateOfBirth(DateUtils.convertToString(userProfile.getDateOfBirth()))
                 .build();
+    }
+
+    private void logUserNotFound(String email) {
+        log.error("User with email: {} in token not found", email);
     }
 }

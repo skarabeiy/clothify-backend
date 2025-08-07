@@ -1,5 +1,6 @@
 package by.com.clothify.profile.controller;
 
+import by.com.clothify.profile.model.dto.UserProfilePatchRequestDto;
 import by.com.clothify.profile.model.dto.UserProfileRequestDto;
 import by.com.clothify.profile.model.dto.UserProfileResponseDto;
 import by.com.clothify.profile.service.UserProfileService;
@@ -8,6 +9,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -39,5 +41,15 @@ public class UserProfileController {
     )
     public void saveUserProfile(@RequestBody UserProfileRequestDto userProfileRequestDto) {
         userProfileService.saveUserProfile(userProfileRequestDto);
+    }
+
+    @PatchMapping
+    @Operation(
+            summary = "Update user information",
+            description = "Update user information such as name, birthday and etc.",
+            security = @SecurityRequirement(name = "Bearer")
+    )
+    public void patchUserProfile(@RequestBody UserProfilePatchRequestDto request) {
+        userProfileService.patchUserProfile(request);
     }
 }
