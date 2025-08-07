@@ -13,6 +13,10 @@ public final class DateUtils {
         return LocalDate.parse(dateString, DATE_FORMATTER);
     }
 
+    public static String convertToString(LocalDate localDate) {
+        return localDate.format(DATE_FORMATTER);
+    }
+
     public static boolean isDateExpired(LocalDateTime date, Long expirationInSeconds) {
         if (date == null) {
             return true;

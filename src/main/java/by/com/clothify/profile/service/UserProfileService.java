@@ -22,8 +22,23 @@ public class UserProfileService {
     private final UserRepository userRepository;
     private final UserProfileRepository userProfileRepository;
 
+    public UserProfileDto getUserProfile() {
+        String email = AuthUtils.getEmail();
+
+        try {
+            UserProfile userProfile = userProfileRepository.findUserProfileByEmail(email).orElseThrow();
+            return mapToUserProfileDto(userProfile);
+
+        } catch (Exception e) {
+            log.error("Failed get user profile information for: {}", email);
+            log.error(e.getMessage(), e);
+            throw new RuntimeException(e);
+        }
+    }
+
     public void saveUserProfile(UserProfileDto userProfileDto) {
         String email = AuthUtils.getEmail();
+
         try {
             Optional<User> optionalUser = userRepository.findByEmail(email);
 
@@ -47,5 +62,13 @@ public class UserProfileService {
             log.error(e.getMessage(), e);
             throw new RuntimeException(e);
         }
+    }
+
+    private UserProfileDto mapToUserProfileDto(UserProfile userProfile) {
+        return UserProfileDto.builder()
+                .name(userProfile.getName())
+                .gender(userProfile.getGender())
+                .dateOfBirth(DateUtils.convertToString(userProfile.getDateOfBirth()))
+                .build();
     }
 }
