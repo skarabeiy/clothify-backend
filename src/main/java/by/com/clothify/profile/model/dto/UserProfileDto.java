@@ -1,6 +1,6 @@
-package by.com.clothify.security.model.dto;
+package by.com.clothify.profile.model.dto;
 
-import by.com.clothify.security.model.dto.enums.Gender;
+import by.com.clothify.profile.model.enums.Gender;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserInformationDto {
+public class UserProfileDto {
 
     @Schema(example = "Bob")
     private String name;

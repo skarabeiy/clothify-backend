@@ -3,4 +3,5 @@ ALTER TABLE users
     DROP COLUMN gender,
     DROP COLUMN date_of_birth;
 
-ALTER TABLE users RENAME TO auth_users;
+ALTER TABLE users
+    RENAME TO auth_users;

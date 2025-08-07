@@ -43,13 +43,6 @@ public class User {
     @Column(nullable = false)
     private LocalDateTime createdAt;
 
-//    private String name;
-//
-//    @Enumerated(EnumType.STRING)
-//    private Gender gender;
-//
-//    private LocalDate dateOfBirth;
-
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private AuthType authType;
