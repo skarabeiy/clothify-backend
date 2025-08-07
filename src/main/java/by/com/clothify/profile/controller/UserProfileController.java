@@ -1,6 +1,7 @@
 package by.com.clothify.profile.controller;
 
-import by.com.clothify.profile.model.dto.UserProfileDto;
+import by.com.clothify.profile.model.dto.UserProfileRequestDto;
+import by.com.clothify.profile.model.dto.UserProfileResponseDto;
 import by.com.clothify.profile.service.UserProfileService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -26,7 +27,7 @@ public class UserProfileController {
             description = "Return user information such as name, birthday and etc.",
             security = @SecurityRequirement(name = "Bearer")
     )
-    public UserProfileDto getUserProfile() {
+    public UserProfileResponseDto getUserProfile() {
         return userProfileService.getUserProfile();
     }
 
@@ -36,7 +37,7 @@ public class UserProfileController {
             description = "Filling information such as name and etc., after registration",
             security = @SecurityRequirement(name = "Bearer")
     )
-    public void saveUserProfile(@RequestBody UserProfileDto userProfileDto) {
-        userProfileService.saveUserProfile(userProfileDto);
+    public void saveUserProfile(@RequestBody UserProfileRequestDto userProfileRequestDto) {
+        userProfileService.saveUserProfile(userProfileRequestDto);
     }
 }

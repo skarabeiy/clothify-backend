@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserProfileDto {
+public class UserProfileRequestDto {
 
     @Schema(example = "Bob")
     private String name;

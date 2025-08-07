@@ -1,6 +1,7 @@
 package by.com.clothify.profile.service;
 
-import by.com.clothify.profile.model.dto.UserProfileDto;
+import by.com.clothify.profile.model.dto.UserProfileRequestDto;
+import by.com.clothify.profile.model.dto.UserProfileResponseDto;
 import by.com.clothify.profile.model.entity.UserProfile;
 import by.com.clothify.profile.repository.UserProfileRepository;
 import by.com.clothify.security.model.entity.User;
@@ -22,7 +23,7 @@ public class UserProfileService {
     private final UserRepository userRepository;
     private final UserProfileRepository userProfileRepository;
 
-    public UserProfileDto getUserProfile() {
+    public UserProfileResponseDto getUserProfile() {
         String email = AuthUtils.getEmail();
 
         try {
@@ -36,7 +37,7 @@ public class UserProfileService {
         }
     }
 
-    public void saveUserProfile(UserProfileDto userProfileDto) {
+    public void saveUserProfile(UserProfileRequestDto userProfileRequestDto) {
         String email = AuthUtils.getEmail();
 
         try {
@@ -49,9 +50,9 @@ public class UserProfileService {
 
             UserProfile userProfile = UserProfile.builder()
                     .user(optionalUser.get())
-                    .name(userProfileDto.getName())
-                    .gender(userProfileDto.getGender())
-                    .dateOfBirth(DateUtils.covertToLocaleDate(userProfileDto.getDateOfBirth()))
+                    .name(userProfileRequestDto.getName())
+                    .gender(userProfileRequestDto.getGender())
+                    .dateOfBirth(DateUtils.covertToLocaleDate(userProfileRequestDto.getDateOfBirth()))
                     .createdAt(LocalDateTime.now())
                     .build();
 
@@ -64,8 +65,9 @@ public class UserProfileService {
         }
     }
 
-    private UserProfileDto mapToUserProfileDto(UserProfile userProfile) {
-        return UserProfileDto.builder()
+    private UserProfileResponseDto mapToUserProfileDto(UserProfile userProfile) {
+        return UserProfileResponseDto.builder()
+                .email(userProfile.getUser().getEmail())
                 .name(userProfile.getName())
                 .gender(userProfile.getGender())
                 .dateOfBirth(DateUtils.convertToString(userProfile.getDateOfBirth()))
