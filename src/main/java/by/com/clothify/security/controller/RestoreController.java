@@ -1,5 +1,7 @@
 package by.com.clothify.security.controller;
 
+import by.com.clothify.security.model.dto.restore.ChangeEmailRequestDto;
+import by.com.clothify.security.model.dto.restore.ChangeEmailResponseDto;
 import by.com.clothify.security.model.dto.restore.ChangePasswordRequestDto;
 import by.com.clothify.security.model.dto.restore.ChangePasswordResponseDto;
 import by.com.clothify.security.model.dto.restore.CheckCodeRequestDto;
@@ -8,6 +10,7 @@ import by.com.clothify.security.model.dto.restore.SendCodeRequestDto;
 import by.com.clothify.security.model.dto.restore.SendCodeResponseDto;
 import by.com.clothify.security.service.restore.RestoreService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -49,5 +52,15 @@ public class RestoreController {
     @PostMapping("/change-password")
     public ResponseEntity<ChangePasswordResponseDto> changePassword(@RequestBody ChangePasswordRequestDto request) {
         return restoreService.changePassword(request);
+    }
+
+    @Operation(
+            summary = "Change user email",
+            description = "Change user email after checking the code",
+            security = @SecurityRequirement(name = "Bearer")
+    )
+    @PostMapping("/change-email")
+    public ResponseEntity<ChangeEmailResponseDto> changeEmail(@RequestBody ChangeEmailRequestDto request) {
+        return restoreService.changeEmail(request);
     }
 }
