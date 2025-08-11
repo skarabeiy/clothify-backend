@@ -6,7 +6,8 @@ CREATE TABLE clothes
     image            VARCHAR(255) NOT NULL,
     background_color VARCHAR(30),
     category_id      INTEGER      NOT NULL,
---     brand
+    common_brand_id  INTEGER,
+    custom_brand_id  INTEGER,
     color            VARCHAR(30)  NOT NULL,
     season           VARCHAR(10)  NOT NULL,
     price            VARCHAR(255),
@@ -18,7 +19,14 @@ CREATE TABLE clothes
             ON DELETE CASCADE,
 
     CONSTRAINT fk_category
-        FOREIGN KEY (auth_user_id)
-            REFERENCES auth_users (id)
-            ON DELETE CASCADE
+        FOREIGN KEY (category_id)
+            REFERENCES categories (id),
+
+    CONSTRAINT fk_common_brand
+        FOREIGN KEY (common_brand_id)
+            REFERENCES common_brands (id),
+
+    CONSTRAINT fk_custom_brand
+        FOREIGN KEY (custom_brand_id)
+            REFERENCES custom_brands (id)
 );
