@@ -10,7 +10,6 @@ import by.com.clothify.security.model.dto.restore.SendCodeRequestDto;
 import by.com.clothify.security.model.dto.restore.SendCodeResponseDto;
 import by.com.clothify.security.service.restore.RestoreService;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -56,8 +55,7 @@ public class RestoreController {
 
     @Operation(
             summary = "Change user email",
-            description = "Change user email after checking the code",
-            security = @SecurityRequirement(name = "Bearer")
+            description = "Change user email after checking the code"
     )
     @PostMapping("/change-email")
     public ResponseEntity<ChangeEmailResponseDto> changeEmail(@RequestBody ChangeEmailRequestDto request) {

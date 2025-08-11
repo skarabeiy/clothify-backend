@@ -1,4 +1,4 @@
-INSERT INTO categories (name)
+INSERT INTO clothes_categories (name)
 VALUES ('Tops and T-shirts'),
        ('Blouses and Shirts'),
        ('Pants and jeans'),
