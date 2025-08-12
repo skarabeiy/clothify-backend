@@ -13,6 +13,7 @@ public interface ClothesCategoryRepository extends JpaRepository<ClothesCategory
     @Query("SELECT cat FROM ClothesCategory cat " +
             "JOIN FETCH Clothes c ON cat.id = c.category.id " +
             "JOIN FETCH User u ON c.user.id = u.id " +
-            "WHERE u.email = :email")
+            "WHERE u.email = :email " +
+            "ORDER BY cat.position")
     List<ClothesCategory> findUserCategories(String email);
 }

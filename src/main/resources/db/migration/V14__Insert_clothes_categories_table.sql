@@ -1,13 +1,13 @@
-INSERT INTO clothes_categories (name)
-VALUES ('Tops and T-shirts'),
-       ('Blouses and Shirts'),
-       ('Pants and jeans'),
-       ('Skirts and shorts'),
-       ('Dresses and overalls'),
-       ('Sweatshirts and hoodies'),
-       ('Jackets'),
-       ('Outwear'),
-       ('Shoes'),
-       ('Underwear and Pajamas'),
-       ('Swimwear'),
-       ('Accessories');
+INSERT INTO clothes_categories (name, position)
+VALUES ('Tops and T-shirts', 1),
+       ('Blouses and Shirts', 2),
+       ('Pants and jeans', 3),
+       ('Skirts and shorts', 4),
+       ('Dresses and overalls', 5),
+       ('Sweatshirts and hoodies', 6),
+       ('Jackets', 7),
+       ('Outwear', 8),
+       ('Shoes', 9),
+       ('Underwear and Pajamas', 10),
+       ('Swimwear', 11),
+       ('Accessories', 12);
