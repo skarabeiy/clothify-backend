@@ -6,7 +6,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 
 @SpringBootApplication
 @EnableScheduling
-// TODO подумать про индексы для таблиц
+// TODO подумать над кешированием
 public class ClothifyApplication {
     public static void main(String[] args) {
         SpringApplication.run(ClothifyApplication.class, args);
