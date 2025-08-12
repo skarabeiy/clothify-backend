@@ -12,9 +12,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ClothesCategoryDto {
 
-    @Schema(example = "1")
+    @Schema(example = "null")
     private Long id;
 
-    @Schema(example = "Tops and T-shirts")
+    @Schema(example = "All")
     private String name;
 }

@@ -1,12 +1,21 @@
 package by.com.clothify.security.util;
 
 import by.com.clothify.security.model.dto.UserDetailsDto;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.context.SecurityContextHolder;
 
+@Slf4j
 public final class AuthUtils {
 
     public static String getEmail() {
-        return getUserDetails().getUsername();
+        try {
+            return getUserDetails().getUsername();
+
+        } catch (Exception e) {
+            log.error("Failed get username from JWT token");
+            log.error(e.getMessage(), e);
+            throw new RuntimeException(e);
+        }
     }
 
     public static UserDetailsDto getUserDetails() {
