@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,7 +27,7 @@ public class ClothesController {
             description = "Return users clothes by clothes ID",
             security = @SecurityRequirement(name = "Bearer")
     )
-    public ClothesDto getClothesById(
+    public ResponseEntity<ClothesDto> getClothesById(
             @Parameter(description = "Clothe ID", example = "1")
             @PathVariable Long id
     ) {

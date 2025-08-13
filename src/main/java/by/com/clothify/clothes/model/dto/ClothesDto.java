@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.lang.Nullable;
 
 @Data
 @Builder
@@ -23,6 +24,7 @@ public class ClothesDto {
     private String image;
 
     @Schema(example = "null")
+    @Nullable
     private String backgroundColor;
 
     private ClothesCategoryDto category;

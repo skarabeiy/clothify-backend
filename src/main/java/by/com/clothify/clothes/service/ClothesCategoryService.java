@@ -1,5 +1,6 @@
 package by.com.clothify.clothes.service;
 
+import by.com.clothify.clothes.mapper.ClothesCategoryMapper;
 import by.com.clothify.clothes.model.dto.ClothesCategoryDto;
 import by.com.clothify.clothes.model.entity.ClothesCategory;
 import by.com.clothify.clothes.repository.ClothesCategoryRepository;
@@ -25,7 +26,7 @@ public class ClothesCategoryService {
             List<ClothesCategory> categories = clothesCategoryRepository.findUserCategories(email);
 
             List<ClothesCategoryDto> res = categories.stream()
-                    .map(this::mapToCategoryDto)
+                    .map(ClothesCategoryMapper::mapToCategoryDto)
                     .collect(Collectors.toList());
 
             res.addFirst(
@@ -42,12 +43,5 @@ public class ClothesCategoryService {
             log.error(e.getMessage(), e);
             throw new RuntimeException(e);
         }
-    }
-
-    private ClothesCategoryDto mapToCategoryDto(ClothesCategory category) {
-        return ClothesCategoryDto.builder()
-                .id(category.getId())
-                .name(category.getName())
-                .build();
     }
 }

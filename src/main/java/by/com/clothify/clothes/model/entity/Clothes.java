@@ -2,11 +2,26 @@ package by.com.clothify.clothes.model.entity;
 
 import by.com.clothify.clothes.model.enums.Season;
 import by.com.clothify.security.model.entity.User;
-
-import jakarta.persistence.*;
-import lombok.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "clothes")
@@ -59,4 +74,8 @@ public class Clothes {
     private String price;
 
     private LocalDate dateOfPurchase;
+
+    private LocalDateTime createdAt;
+
+    private LocalDateTime updatedAt;
 }
