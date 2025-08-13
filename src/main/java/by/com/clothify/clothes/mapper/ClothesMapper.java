@@ -2,7 +2,7 @@ package by.com.clothify.clothes.mapper;
 
 import by.com.clothify.clothes.model.dto.ClothesDto;
 import by.com.clothify.clothes.model.entity.Clothes;
-import by.com.clothify.security.util.DateUtils;
+import by.com.clothify.common.util.DateUtils;
 
 public final class ClothesMapper {
 

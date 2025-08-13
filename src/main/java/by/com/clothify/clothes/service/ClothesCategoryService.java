@@ -4,7 +4,7 @@ import by.com.clothify.clothes.mapper.ClothesCategoryMapper;
 import by.com.clothify.clothes.model.dto.ClothesCategoryDto;
 import by.com.clothify.clothes.model.entity.ClothesCategory;
 import by.com.clothify.clothes.repository.ClothesCategoryRepository;
-import by.com.clothify.security.util.AuthUtils;
+import by.com.clothify.common.util.AuthUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

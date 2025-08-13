@@ -1,5 +1,7 @@
 package by.com.clothify.profile.service;
 
+import by.com.clothify.common.util.AuthUtils;
+import by.com.clothify.common.util.DateUtils;
 import by.com.clothify.profile.model.dto.UserProfilePatchRequestDto;
 import by.com.clothify.profile.model.dto.UserProfileRequestDto;
 import by.com.clothify.profile.model.dto.UserProfileResponseDto;
@@ -7,8 +9,6 @@ import by.com.clothify.profile.model.entity.UserProfile;
 import by.com.clothify.profile.repository.UserProfileRepository;
 import by.com.clothify.security.model.entity.User;
 import by.com.clothify.security.repository.UserRepository;
-import by.com.clothify.security.util.AuthUtils;
-import by.com.clothify.security.util.DateUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -16,7 +16,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
-import static by.com.clothify.security.util.DateUtils.covertToLocaleDate;
+import static by.com.clothify.common.util.DateUtils.covertToLocaleDate;
 
 @Service
 @RequiredArgsConstructor

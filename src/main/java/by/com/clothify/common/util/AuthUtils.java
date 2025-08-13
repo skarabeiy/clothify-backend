@@ -1,4 +1,4 @@
-package by.com.clothify.security.util;
+package by.com.clothify.common.util;
 
 import by.com.clothify.security.model.dto.UserDetailsDto;
 import lombok.extern.slf4j.Slf4j;

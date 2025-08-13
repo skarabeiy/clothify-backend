@@ -1,5 +1,6 @@
 package by.com.clothify.security.service.restore;
 
+import by.com.clothify.common.util.DateUtils;
 import by.com.clothify.security.model.dto.enums.restore.CheckCodeError;
 import by.com.clothify.security.model.dto.restore.CheckCodeRequestDto;
 import by.com.clothify.security.model.dto.restore.CheckCodeResponseDto;
@@ -7,7 +8,6 @@ import by.com.clothify.security.model.entity.SendCodeRequest;
 import by.com.clothify.security.model.entity.UserCode;
 import by.com.clothify.security.repository.SendCodeRequestRepository;
 import by.com.clothify.security.repository.UserCodeRepository;
-import by.com.clothify.security.util.DateUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;

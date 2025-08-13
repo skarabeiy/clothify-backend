@@ -1,8 +1,8 @@
 package by.com.clothify.security.service.apple;
 
+import by.com.clothify.common.util.DateUtils;
 import by.com.clothify.security.model.entity.AppleClientSecret;
 import by.com.clothify.security.repository.AppleClientSecretRepository;
-import by.com.clothify.security.util.DateUtils;
 import io.jsonwebtoken.Jwts;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

@@ -1,4 +1,4 @@
-package by.com.clothify.security.util;
+package by.com.clothify.common.util;
 
 import java.time.Duration;
 import java.time.LocalDate;

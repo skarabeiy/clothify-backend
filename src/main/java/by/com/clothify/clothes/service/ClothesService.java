@@ -3,7 +3,7 @@ package by.com.clothify.clothes.service;
 import by.com.clothify.clothes.model.dto.ClothesDto;
 import by.com.clothify.clothes.model.entity.Clothes;
 import by.com.clothify.clothes.repository.ClothesRepository;
-import by.com.clothify.security.util.AuthUtils;
+import by.com.clothify.common.util.AuthUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
