@@ -17,6 +17,6 @@ public interface ClothesRepository extends JpaRepository<Clothes, Long> {
     @Query("SELECT c FROM Clothes c " +
             "WHERE c.user.email = :email " +
             "AND (:categoryId IS NULL OR c.category.id = :categoryId) " +
-            "ORDER BY c.updatedAt, c.createdAt")
+            "ORDER BY c.updatedAt DESC")
     Page<Clothes> findByCategoryIdAndEmail(Long categoryId, String email, Pageable pageable);
 }
