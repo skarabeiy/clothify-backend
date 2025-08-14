@@ -1,7 +1,7 @@
 package by.com.clothify.clothes.contoller;
 
 import by.com.clothify.clothes.model.dto.ClothesDto;
-import by.com.clothify.clothes.model.dto.FileUploadRequest;
+import by.com.clothify.clothes.model.dto.UploadedClothesDto;
 import by.com.clothify.clothes.service.ClothesService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -67,9 +67,9 @@ public class ClothesController {
             description = "",
             security = @SecurityRequirement(name = "Bearer")
     )
-    public void save(
+    public void saveClothes(
             @Parameter(description = "")
-            @ModelAttribute FileUploadRequest request
+            @ModelAttribute UploadedClothesDto uploadedClothes
     ) {
         System.out.println(1);
     }

@@ -10,9 +10,13 @@ import org.springframework.web.multipart.MultipartFile;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class FileUploadRequest {
+public class UploadedClothesDto {
 
     private String name;
 
-    private MultipartFile file;
+    private MultipartFile imageFile;
+
+    private String backgroundColor;
+
+    private Long categoryId;
 }
