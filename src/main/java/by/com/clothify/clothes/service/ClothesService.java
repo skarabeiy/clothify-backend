@@ -1,11 +1,15 @@
 package by.com.clothify.clothes.service;
 
+import by.com.clothify.clothes.mapper.ClothesMapper;
 import by.com.clothify.clothes.model.dto.ClothesDto;
 import by.com.clothify.clothes.model.entity.Clothes;
 import by.com.clothify.clothes.repository.ClothesRepository;
 import by.com.clothify.common.util.AuthUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -36,6 +40,22 @@ public class ClothesService {
 
         } catch (Exception e) {
             log.error("Failed get clothes by id = {} for user: {}", id, email);
+            log.error(e.getMessage(), e);
+            throw new RuntimeException(e);
+        }
+    }
+
+    public Page<ClothesDto> getClothesByCategoryId(Long categoryId, int page, int size) {
+
+        final String email = AuthUtils.getEmail();
+
+        try {
+            Pageable pageable = PageRequest.of(page, size);
+            return clothesRepository.findByCategoryIdAndEmail(categoryId, email, pageable)
+                    .map(ClothesMapper::mapToClothesDto);
+
+        } catch (Exception e) {
+            log.error("Failed get clothes by category id = {}, for user: {}", categoryId, email);
             log.error(e.getMessage(), e);
             throw new RuntimeException(e);
         }

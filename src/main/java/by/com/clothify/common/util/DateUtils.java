@@ -14,6 +14,10 @@ public final class DateUtils {
     }
 
     public static String convertToString(LocalDate localDate) {
+        if (localDate == null) {
+            return null;
+        }
+
         return localDate.format(DATE_FORMATTER);
     }
 
