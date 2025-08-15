@@ -10,8 +10,8 @@ public final class ClothesBrandMapper {
     public static ClothesBrandDto mapToClothesBrandDto(Clothes clothes) {
 
         return ClothesBrandDto.builder()
-                .id(clothes.getClothesBrand().getId())
-                .name(clothes.getClothesBrand().getName())
+                .id(clothes.getBrand().getId())
+                .name(clothes.getBrand().getName())
                 .build();
     }
 }

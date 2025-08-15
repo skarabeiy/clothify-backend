@@ -61,7 +61,7 @@ public class Clothes {
 
     @ManyToOne
     @JoinColumn(name = "clothes_brand_id", nullable = false)
-    private ClothesBrand clothesBrand;
+    private ClothesBrand brand;
 
     @Column(nullable = false, length = 30)
     private String color;

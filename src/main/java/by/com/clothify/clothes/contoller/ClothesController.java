@@ -67,10 +67,10 @@ public class ClothesController {
             description = "Accepts multipart/form-data and save clothes",
             security = @SecurityRequirement(name = "Bearer")
     )
-    public void saveClothes(
+    public ClothesDto saveClothes(
             @Parameter(description = "Clothes that need to be saved")
             @ModelAttribute UploadedClothesDto uploadedClothes
     ) {
-        clothesService.saveClothes(uploadedClothes);
+        return clothesService.saveClothes(uploadedClothes);
     }
 }

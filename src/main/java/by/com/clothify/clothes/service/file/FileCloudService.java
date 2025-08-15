@@ -14,19 +14,21 @@ import java.util.Map;
 @Slf4j
 public class FileCloudService {
 
+    private static final Map<String, String> OPTIONS = Map.of(
+            "folder", "clothify"
+    );
+
     private final Cloudinary cloudinary;
 
     @SuppressWarnings("unchecked")
     public UploadFileResponseDto uploadFileToCloud(MultipartFile file) {
 
         try {
-            Map<String, String> options = Map.of(
-                    "folder", "clothify"
-            );
+
 
             Map<String, Object> uploadResult = (Map<String, Object>) cloudinary.uploader().upload(
                     file.getBytes(),
-                    options
+                    OPTIONS
             );
             return UploadFileResponseDto.builder()
                     .publicId(uploadResult.get("public_id").toString())

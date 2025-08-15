@@ -1,7 +1,10 @@
 package by.com.clothify.clothes.mapper;
 
 import by.com.clothify.clothes.model.dto.ClothesDto;
+import by.com.clothify.clothes.model.dto.UploadedClothesDto;
 import by.com.clothify.clothes.model.entity.Clothes;
+import by.com.clothify.clothes.model.entity.ClothesBrand;
+import by.com.clothify.clothes.model.entity.ClothesCategory;
 import by.com.clothify.common.util.DateUtils;
 
 public final class ClothesMapper {
@@ -19,6 +22,28 @@ public final class ClothesMapper {
                 .season(clothes.getSeason())
                 .price(clothes.getPrice())
                 .dateOfPurchase(DateUtils.convertToString(clothes.getDateOfPurchase()))
+                .build();
+    }
+
+    public static Clothes mapToClothes(UploadedClothesDto uploadedClothes) {
+
+        return Clothes.builder()
+                .name(uploadedClothes.getName())
+                .backgroundColor(uploadedClothes.getBackgroundColor())
+                .category(
+                        ClothesCategory.builder()
+                                .id(uploadedClothes.getCategoryId())
+                                .build()
+                )
+                .brand(
+                        ClothesBrand.builder()
+                                .id(uploadedClothes.getBrandId())
+                                .build()
+                )
+                .color(uploadedClothes.getColor())
+                .season(uploadedClothes.getSeason())
+                .price(uploadedClothes.getPrice())
+                .dateOfPurchase(DateUtils.covertToLocaleDate(uploadedClothes.getDateOfPurchase()))
                 .build();
     }
 }
