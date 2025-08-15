@@ -9,6 +9,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableScheduling
 @EnableSpringDataWebSupport(pageSerializationMode = EnableSpringDataWebSupport.PageSerializationMode.VIA_DTO)
 // TODO подумать над кешированием
+// TODO пересмотреть индексы
 public class ClothifyApplication {
     public static void main(String[] args) {
         SpringApplication.run(ClothifyApplication.class, args);

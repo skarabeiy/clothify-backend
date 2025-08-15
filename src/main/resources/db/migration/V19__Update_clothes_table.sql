@@ -5,6 +5,6 @@ ALTER TABLE clothes
 ALTER TABLE clothes
     ADD CONSTRAINT fk_image
         FOREIGN KEY (image_id)
-            REFERENCES files
+            REFERENCES images
             ON DELETE CASCADE;
 
