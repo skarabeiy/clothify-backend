@@ -1,4 +1,4 @@
-package by.com.clothify.clothes.service;
+package by.com.clothify.clothes.service.clothes;
 
 import by.com.clothify.clothes.mapper.ClothesCategoryMapper;
 import by.com.clothify.clothes.model.dto.ClothesCategoryDto;

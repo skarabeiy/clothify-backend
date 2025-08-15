@@ -1,7 +1,7 @@
 package by.com.clothify.clothes.contoller;
 
 import by.com.clothify.clothes.model.dto.ClothesCategoryDto;
-import by.com.clothify.clothes.service.ClothesCategoryService;
+import by.com.clothify.clothes.service.clothes.ClothesCategoryService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;

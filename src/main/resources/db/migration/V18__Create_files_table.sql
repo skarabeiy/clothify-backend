@@ -1,0 +1,6 @@
+CREATE TABLE files
+(
+    id      SERIAL PRIMARY KEY,
+    file_id VARCHAR(255) NOT NULL UNIQUE,
+    url     VARCHAR(255) NOT NULL
+);

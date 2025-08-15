@@ -2,7 +2,7 @@ package by.com.clothify.clothes.contoller;
 
 import by.com.clothify.clothes.model.dto.ClothesDto;
 import by.com.clothify.clothes.model.dto.UploadedClothesDto;
-import by.com.clothify.clothes.service.ClothesService;
+import by.com.clothify.clothes.service.clothes.ClothesService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
