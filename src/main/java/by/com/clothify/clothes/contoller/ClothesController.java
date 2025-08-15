@@ -63,14 +63,14 @@ public class ClothesController {
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @Operation(
-            summary = "",
-            description = "",
+            summary = "Save user clothes",
+            description = "Accepts multipart/form-data and save clothes",
             security = @SecurityRequirement(name = "Bearer")
     )
     public void saveClothes(
-            @Parameter(description = "")
+            @Parameter(description = "Clothes that need to be saved")
             @ModelAttribute UploadedClothesDto uploadedClothes
     ) {
-        System.out.println(1);
+        clothesService.saveClothes(uploadedClothes);
     }
 }
