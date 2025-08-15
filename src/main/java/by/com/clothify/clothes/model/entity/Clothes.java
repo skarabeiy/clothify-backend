@@ -6,11 +6,13 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -46,8 +48,9 @@ public class Clothes {
     @JoinColumn(name = "auth_user_id", nullable = false)
     private User user;
 
-    @Column(nullable = false)
-    private String image;
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "image_id", referencedColumnName = "id", nullable = false)
+    private Image image;
 
     @Column(length = 30)
     private String backgroundColor;
@@ -57,12 +60,8 @@ public class Clothes {
     private ClothesCategory category;
 
     @ManyToOne
-    @JoinColumn(name = "common_clothes_brand_id")
-    private CommonClothesBrand commonBrand;
-
-    @ManyToOne
-    @JoinColumn(name = "custom_clothes_brand_id")
-    private CustomClothesBrand customBrand;
+    @JoinColumn(name = "clothes_brand_id", nullable = false)
+    private ClothesBrand clothesBrand;
 
     @Column(nullable = false, length = 30)
     private String color;

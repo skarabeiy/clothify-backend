@@ -11,7 +11,7 @@ public final class ClothesMapper {
         return ClothesDto.builder()
                 .id(clothes.getId())
                 .name(clothes.getName())
-                .image(clothes.getImage())
+                .image(clothes.getImage().getUrl())
                 .backgroundColor(clothes.getBackgroundColor())
                 .category(ClothesCategoryMapper.mapToCategoryDto(clothes.getCategory()))
                 .brand(ClothesBrandMapper.mapToClothesBrandDto(clothes))
