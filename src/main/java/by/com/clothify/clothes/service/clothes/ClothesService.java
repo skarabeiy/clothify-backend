@@ -2,11 +2,11 @@ package by.com.clothify.clothes.service.clothes;
 
 import by.com.clothify.clothes.mapper.ClothesMapper;
 import by.com.clothify.clothes.model.dto.ClothesDto;
-import by.com.clothify.clothes.model.dto.UploadFileResponseDto;
 import by.com.clothify.clothes.model.dto.UploadedClothesDto;
 import by.com.clothify.clothes.model.entity.Clothes;
+import by.com.clothify.clothes.model.entity.Image;
 import by.com.clothify.clothes.repository.ClothesRepository;
-import by.com.clothify.clothes.service.file.FileCloudService;
+import by.com.clothify.clothes.service.file.ImageService;
 import by.com.clothify.common.util.AuthUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,7 +25,7 @@ import static by.com.clothify.clothes.mapper.ClothesMapper.mapToClothesDto;
 @Slf4j
 public class ClothesService {
 
-    private final FileCloudService fileCloudService;
+    private final ImageService imageService;
     private final ClothesRepository clothesRepository;
 
     public ResponseEntity<ClothesDto> getClothesById(Long id) {
@@ -67,7 +67,7 @@ public class ClothesService {
 
     public void saveClothes(UploadedClothesDto uploadedClothes) {
 
-        UploadFileResponseDto fileResponse = fileCloudService.uploadFileToCloud(uploadedClothes.getImageFile());
+        Image image = imageService.saveImage(uploadedClothes.getImageFile());
         System.out.println(1);
     }
 }
