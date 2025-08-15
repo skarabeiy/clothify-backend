@@ -17,6 +17,7 @@ public class UploadedClothesDto {
     @Schema(example = "Jacket")
     private String name;
 
+    @Schema(description = "From-data file", requiredMode = Schema.RequiredMode.REQUIRED)
     private MultipartFile imageFile;
 
     @Schema(example = "#FFFFFF")
