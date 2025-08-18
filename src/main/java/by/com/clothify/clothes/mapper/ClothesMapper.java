@@ -17,7 +17,7 @@ public final class ClothesMapper {
                 .image(clothes.getImage().getUrl())
                 .backgroundColor(clothes.getBackgroundColor())
                 .category(ClothesCategoryMapper.mapToCategoryDto(clothes.getCategory()))
-                .brand(ClothesBrandMapper.mapToClothesBrandDto(clothes))
+                .brand(ClothesBrandMapper.mapToClothesBrandDto(clothes.getBrand()))
                 .color(clothes.getColor())
                 .season(clothes.getSeason())
                 .price(clothes.getPrice())
