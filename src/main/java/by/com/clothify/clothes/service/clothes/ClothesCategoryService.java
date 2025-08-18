@@ -7,6 +7,7 @@ import by.com.clothify.clothes.repository.ClothesCategoryRepository;
 import by.com.clothify.common.util.AuthUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,10 +20,12 @@ public class ClothesCategoryService {
 
     private final ClothesCategoryRepository clothesCategoryRepository;
 
+    @Cacheable(value = "getAllClothesCategories")
     public List<ClothesCategoryDto> getAllClothesCategories() {
 
         try {
             List<ClothesCategory> categories = clothesCategoryRepository.findAll();
+            log.info("Get all clothes categories");
 
             return mapToCategoryDtoList(categories);
 
