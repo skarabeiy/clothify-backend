@@ -2,6 +2,7 @@ package by.com.clothify.clothes.model.entity;
 
 import by.com.clothify.clothes.model.enums.Season;
 import by.com.clothify.security.model.entity.User;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -48,7 +49,7 @@ public class Clothes {
     @JoinColumn(name = "auth_user_id", nullable = false)
     private User user;
 
-    @OneToOne(fetch = FetchType.EAGER)
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     @JoinColumn(name = "image_id", referencedColumnName = "id", nullable = false)
     private Image image;
 

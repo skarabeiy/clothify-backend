@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -72,5 +73,18 @@ public class ClothesController {
             @ModelAttribute UploadedClothesDto uploadedClothes
     ) {
         return clothesService.saveClothes(uploadedClothes);
+    }
+
+    @DeleteMapping("/{id}")
+    @Operation(
+            summary = "Delete user clothes",
+            description = "Delete user clothes by ID",
+            security = @SecurityRequirement(name = "Bearer")
+    )
+    public ResponseEntity<Void> deleteClothesById(
+            @Parameter(description = "Clothe ID", example = "1")
+            @PathVariable Long id
+    ) {
+        return clothesService.deleteClothesById(id);
     }
 }

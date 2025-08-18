@@ -8,6 +8,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -33,5 +35,10 @@ public class ImageService {
             log.error(e.getMessage(), e);
             throw new RuntimeException(e);
         }
+    }
+
+    public Optional<Image> getImageByClothesIdAndEmail(Long clothesId, String email) {
+
+        return imageRepository.findByClothesIdAndEmail(clothesId, email);
     }
 }

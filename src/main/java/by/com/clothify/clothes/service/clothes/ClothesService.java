@@ -6,6 +6,7 @@ import by.com.clothify.clothes.model.dto.UploadedClothesDto;
 import by.com.clothify.clothes.model.entity.Clothes;
 import by.com.clothify.clothes.model.entity.Image;
 import by.com.clothify.clothes.repository.ClothesRepository;
+import by.com.clothify.clothes.service.file.FileCloudService;
 import by.com.clothify.clothes.service.file.ImageService;
 import by.com.clothify.common.util.AuthUtils;
 import by.com.clothify.security.model.entity.User;
@@ -32,6 +33,7 @@ public class ClothesService {
     private final ImageService imageService;
     private final ClothesRepository clothesRepository;
     private final UserRepository userRepository;
+    private final FileCloudService fileCloudService;
 
     public ResponseEntity<ClothesDto> getClothesById(Long id) {
 
@@ -93,6 +95,31 @@ public class ClothesService {
 
         } catch (Exception e) {
             log.error("Failed save clothes: {} for user: {}", uploadedClothes.getName(), email);
+            log.error(e.getMessage(), e);
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Transactional
+    public ResponseEntity<Void> deleteClothesById(Long id) {
+
+        final String email = AuthUtils.getEmail();
+
+        try {
+            Optional<Image> optionalImage = imageService.getImageByClothesIdAndEmail(id, email);
+
+            if (optionalImage.isEmpty()) {
+                return ResponseEntity.notFound().build();
+            }
+
+            clothesRepository.deleteByIdAndUser_Email(id, email);
+
+            fileCloudService.deleteFileFromCloud(optionalImage.get().getPublicId());
+
+            return ResponseEntity.ok().build();
+
+        } catch (Exception e) {
+            log.error("Failed delete clothes with ID = {} for user: {}", id, email);
             log.error(e.getMessage(), e);
             throw new RuntimeException(e);
         }
