@@ -19,15 +19,28 @@ public class ClothesCategoryService {
 
     private final ClothesCategoryRepository clothesCategoryRepository;
 
+    public List<ClothesCategoryDto> getAllClothesCategories() {
+
+        try {
+            List<ClothesCategory> categories = clothesCategoryRepository.findAll();
+
+            return mapToCategoryDtoList(categories);
+
+        } catch (Exception e) {
+            log.error("Failed get all clothes categories");
+            log.error(e.getMessage(), e);
+            throw new RuntimeException(e);
+        }
+    }
+
     public List<ClothesCategoryDto> getUserClothesCategories() {
 
-        String email = AuthUtils.getEmail();
+        final String email = AuthUtils.getEmail();
+
         try {
             List<ClothesCategory> categories = clothesCategoryRepository.findUserCategories(email);
 
-            List<ClothesCategoryDto> res = categories.stream()
-                    .map(ClothesCategoryMapper::mapToCategoryDto)
-                    .collect(Collectors.toList());
+            List<ClothesCategoryDto> res = mapToCategoryDtoList(categories);
 
             res.addFirst(
                     ClothesCategoryDto.builder()
@@ -43,5 +56,12 @@ public class ClothesCategoryService {
             log.error(e.getMessage(), e);
             throw new RuntimeException(e);
         }
+    }
+
+    private static List<ClothesCategoryDto> mapToCategoryDtoList(List<ClothesCategory> categories) {
+
+        return categories.stream()
+                .map(ClothesCategoryMapper::mapToCategoryDto)
+                .collect(Collectors.toList());
     }
 }

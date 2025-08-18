@@ -22,6 +22,16 @@ public class ClothesCategoryController {
 
     @GetMapping
     @Operation(
+            summary = "Get all clothes categories",
+            description = "Return list of all clothes categories",
+            security = @SecurityRequirement(name = "Bearer")
+    )
+    public List<ClothesCategoryDto> getAllClothesCategories() {
+        return clothesCategoryService.getAllClothesCategories();
+    }
+
+    @GetMapping("/for-user")
+    @Operation(
             summary = "Get user clothes categories",
             description = "Return list of clothing categories that user has",
             security = @SecurityRequirement(name = "Bearer")
