@@ -1,6 +1,7 @@
 package by.com.clothify.clothes.contoller;
 
 import by.com.clothify.clothes.model.dto.ClothesDto;
+import by.com.clothify.clothes.model.dto.PatchedClothesDto;
 import by.com.clothify.clothes.model.dto.UploadedClothesDto;
 import by.com.clothify.clothes.service.clothes.ClothesService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -14,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -73,6 +75,19 @@ public class ClothesController {
             @ModelAttribute UploadedClothesDto uploadedClothes
     ) {
         return clothesService.saveClothes(uploadedClothes);
+    }
+
+    @PatchMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @Operation(
+            summary = "SWAGGER WORK BADLY. Update user clothes",
+            description = "SWAGGER WORK BADLY. Update filled fields for user clothes",
+            security = @SecurityRequirement(name = "Bearer")
+    )
+    public ClothesDto patchClothes(
+            @Parameter(description = "SWAGGER WORK BADLY. Clothes that need to be update")
+            @ModelAttribute PatchedClothesDto patchedClothes
+    ) {
+        return null;
     }
 
     @DeleteMapping("/{id}")
