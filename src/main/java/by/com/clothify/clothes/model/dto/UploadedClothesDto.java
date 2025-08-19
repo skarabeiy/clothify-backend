@@ -15,7 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 @NoArgsConstructor
 public class UploadedClothesDto {
 
-    @Schema(example = "Jacket")
+    @Schema(example = "Jacket", requiredMode = Schema.RequiredMode.REQUIRED)
     private String name;
 
     @Schema(description = "From-data file", requiredMode = Schema.RequiredMode.REQUIRED)
@@ -25,15 +25,16 @@ public class UploadedClothesDto {
     @Nullable
     private String backgroundColor;
 
-    @Schema(example = "1")
+    @Schema(example = "1", requiredMode = Schema.RequiredMode.REQUIRED)
     private Long categoryId;
 
-    @Schema(example = "1")
+    @Schema(example = "1", requiredMode = Schema.RequiredMode.REQUIRED)
     private Long brandId;
 
-    @Schema(description = "Clothing color", example = "#FF0000")
+    @Schema(description = "Clothing color", example = "#FF0000", requiredMode = Schema.RequiredMode.REQUIRED)
     private String color;
 
+    @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
     private Season season;
 
     @Schema(example = "120$")
