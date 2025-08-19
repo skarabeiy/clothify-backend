@@ -12,6 +12,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
+import static by.com.clothify.clothes.mapper.ClothesBrandMapper.mapToClothesBrandDto;
+
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -19,6 +23,23 @@ public class ClothesBrandService {
 
     private final UserRepository userRepository;
     private final ClothesBrandRepository clothesBrandRepository;
+
+    public List<ClothesBrandDto> getUserClothesBrands() {
+
+        final String email = AuthUtils.getEmail();
+
+        try {
+            return clothesBrandRepository.findUserClothesBrand(email)
+                    .stream()
+                    .map(ClothesBrandMapper::mapToClothesBrandDto)
+                    .toList();
+
+        } catch (Exception e) {
+            log.error("Failed get user clothes brands for: {}", email);
+            log.error(e.getMessage(), e);
+            throw new RuntimeException(e);
+        }
+    }
 
     public ClothesBrandDto saveCustomClothesBrand(ClothesBrandRequestDto request) {
 
@@ -35,7 +56,7 @@ public class ClothesBrandService {
 
             clothesBrand = clothesBrandRepository.save(clothesBrand);
 
-            return ClothesBrandMapper.mapToClothesBrandDto(clothesBrand);
+            return mapToClothesBrandDto(clothesBrand);
 
         } catch (Exception e) {
             log.error("Failed save custom brand: {} for user: {}", request.getName(), email);
