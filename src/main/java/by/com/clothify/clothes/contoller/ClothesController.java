@@ -83,11 +83,11 @@ public class ClothesController {
             description = "SWAGGER WORK BADLY. Update filled fields for user clothes",
             security = @SecurityRequirement(name = "Bearer")
     )
-    public ClothesDto patchClothes(
+    public ResponseEntity<ClothesDto> patchClothes(
             @Parameter(description = "SWAGGER WORK BADLY. Clothes that need to be update")
             @ModelAttribute PatchedClothesDto patchedClothes
     ) {
-        return null;
+        return clothesService.patchClothes(patchedClothes);
     }
 
     @DeleteMapping("/{id}")

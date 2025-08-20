@@ -2,13 +2,17 @@ package by.com.clothify.clothes.service.clothes;
 
 import by.com.clothify.clothes.mapper.ClothesMapper;
 import by.com.clothify.clothes.model.dto.ClothesDto;
+import by.com.clothify.clothes.model.dto.PatchedClothesDto;
 import by.com.clothify.clothes.model.dto.UploadedClothesDto;
 import by.com.clothify.clothes.model.entity.Clothes;
+import by.com.clothify.clothes.model.entity.ClothesBrand;
+import by.com.clothify.clothes.model.entity.ClothesCategory;
 import by.com.clothify.clothes.model.entity.Image;
 import by.com.clothify.clothes.repository.ClothesRepository;
 import by.com.clothify.clothes.service.file.FileCloudService;
 import by.com.clothify.clothes.service.file.ImageService;
 import by.com.clothify.common.util.AuthUtils;
+import by.com.clothify.common.util.DateUtils;
 import by.com.clothify.security.model.entity.User;
 import by.com.clothify.security.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -97,6 +101,81 @@ public class ClothesService {
             log.error("Failed save clothes: {} for user: {}", uploadedClothes.getName(), email);
             log.error(e.getMessage(), e);
             throw new RuntimeException(e);
+        }
+    }
+
+    @Transactional
+    public ResponseEntity<ClothesDto> patchClothes(PatchedClothesDto patchedClothes) {
+
+        final String email = AuthUtils.getEmail();
+
+        try {
+            Optional<Clothes> optionalClothes = clothesRepository.findByIdAndUser_Email(patchedClothes.getId(), email);
+
+            if (optionalClothes.isEmpty()) {
+                return ResponseEntity.notFound().build();
+            }
+
+            Clothes clothes = optionalClothes.get();
+
+            if (patchedClothes.getImageFile() != null) {
+                Image image = imageService.saveImage(patchedClothes.getImageFile());
+                clothes.setImage(image);
+            }
+
+            setPatchedClothesFields(clothes, patchedClothes);
+
+            clothes = clothesRepository.save(clothes);
+
+            return ResponseEntity.ok(mapToClothesDto(clothes));
+
+        } catch (Exception e) {
+            log.error("Failed patch clothes with ID = {} for user: {}", patchedClothes.getId(), email);
+            log.error(e.getMessage(), e);
+            throw new RuntimeException(e);
+        }
+    }
+
+    private static void setPatchedClothesFields(Clothes clothes, PatchedClothesDto patchedClothes) {
+
+        if (patchedClothes.getName() != null) {
+            clothes.setName(patchedClothes.getName());
+        }
+
+        if (patchedClothes.getBackgroundColor() != null) {
+            clothes.setBackgroundColor(patchedClothes.getBackgroundColor());
+        }
+
+        if (patchedClothes.getCategoryId() != null) {
+            clothes.setCategory(
+                    ClothesCategory.builder()
+                            .id(patchedClothes.getCategoryId())
+                            .build()
+            );
+        }
+
+        if (patchedClothes.getBrandId() != null) {
+            clothes.setBrand(
+                    ClothesBrand.builder()
+                            .id(patchedClothes.getBrandId())
+                            .build()
+            );
+        }
+
+        if (patchedClothes.getColor() != null) {
+            clothes.setColor(patchedClothes.getColor());
+        }
+
+        if (patchedClothes.getSeason() != null) {
+            clothes.setSeason(patchedClothes.getSeason());
+        }
+
+        if (patchedClothes.getPrice() != null) {
+            clothes.setPrice(patchedClothes.getPrice());
+        }
+
+        if (patchedClothes.getDateOfPurchase() != null) {
+            clothes.setDateOfPurchase(DateUtils.covertToLocaleDate(patchedClothes.getDateOfPurchase()));
         }
     }
 
