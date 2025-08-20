@@ -9,7 +9,6 @@ import by.com.clothify.clothes.model.entity.ClothesBrand;
 import by.com.clothify.clothes.model.entity.ClothesCategory;
 import by.com.clothify.clothes.model.entity.Image;
 import by.com.clothify.clothes.repository.ClothesRepository;
-import by.com.clothify.clothes.service.file.FileCloudService;
 import by.com.clothify.clothes.service.file.ImageService;
 import by.com.clothify.common.util.AuthUtils;
 import by.com.clothify.common.util.DateUtils;
@@ -37,7 +36,6 @@ public class ClothesService {
     private final ImageService imageService;
     private final ClothesRepository clothesRepository;
     private final UserRepository userRepository;
-    private final FileCloudService fileCloudService;
 
     public ResponseEntity<ClothesDto> getClothesById(Long id) {
 
@@ -119,7 +117,7 @@ public class ClothesService {
             Clothes clothes = optionalClothes.get();
 
             if (patchedClothes.getImageFile() != null) {
-                Image image = imageService.saveImage(patchedClothes.getImageFile());
+                Image image = imageService.updateImage(clothes.getImage(), patchedClothes.getImageFile());
                 clothes.setImage(image);
             }
 
@@ -193,7 +191,7 @@ public class ClothesService {
 
             clothesRepository.deleteByIdAndUser_Email(id, email);
 
-            fileCloudService.deleteFileFromCloud(optionalImage.get().getPublicId());
+            imageService.deleteImageFromCloud(optionalImage.get().getPublicId());
 
             return ResponseEntity.ok().build();
 

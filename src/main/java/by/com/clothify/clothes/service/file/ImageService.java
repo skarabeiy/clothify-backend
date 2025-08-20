@@ -18,6 +18,11 @@ public class ImageService {
     private final FileCloudService fileCloudService;
     private final ImageRepository imageRepository;
 
+    public Optional<Image> getImageByClothesIdAndEmail(Long clothesId, String email) {
+
+        return imageRepository.findByClothesIdAndEmail(clothesId, email);
+    }
+
     public Image saveImage(MultipartFile file) {
 
         try {
@@ -31,14 +36,36 @@ public class ImageService {
             return imageRepository.save(image);
 
         } catch (Exception e) {
-            log.error("Failed save file: {}", file);
+            log.error("Failed save file: {}", file.getName());
             log.error(e.getMessage(), e);
             throw new RuntimeException(e);
         }
     }
 
-    public Optional<Image> getImageByClothesIdAndEmail(Long clothesId, String email) {
+    public Image updateImage(Image oldImage, MultipartFile file) {
 
-        return imageRepository.findByClothesIdAndEmail(clothesId, email);
+        try {
+            UploadFileResponseDto uploadFileResponse = fileCloudService.uploadFileToCloud(file);
+
+            final String oldPublicId = oldImage.getPublicId();
+
+            oldImage.setPublicId(uploadFileResponse.getPublicId());
+            oldImage.setUrl(uploadFileResponse.getFileUrl());
+
+            Image newImage = imageRepository.save(oldImage);
+
+            deleteImageFromCloud(oldPublicId);
+
+            return newImage;
+
+        } catch (Exception e) {
+            log.error("Failed update old image with ID = {} to new image: {}", oldImage.getId(), file.getName());
+            log.error(e.getMessage(), e);
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void deleteImageFromCloud(String publicId) {
+        fileCloudService.deleteFileFromCloud(publicId);
     }
 }
