@@ -123,6 +123,8 @@ public class ClothesService {
 
             setPatchedClothesFields(clothes, patchedClothes);
 
+            clothes.setUpdatedAt(LocalDateTime.now());
+
             clothes = clothesRepository.save(clothes);
 
             return ResponseEntity.ok(mapToClothesDto(clothes));
