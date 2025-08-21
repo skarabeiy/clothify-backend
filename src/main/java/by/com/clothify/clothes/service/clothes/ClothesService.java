@@ -65,7 +65,7 @@ public class ClothesService {
 
         try {
             Pageable pageable = PageRequest.of(page, size);
-            return clothesRepository.findByCategoryIdAndEmail(filter.getCategoryId(), email, pageable)
+            return clothesRepository.findFilteredClothes(email, pageable, filter)
                     .map(ClothesMapper::mapToClothesDto);
 
         } catch (Exception e) {
