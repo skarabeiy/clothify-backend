@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
 import java.util.Set;
 
 @RestController
@@ -125,5 +126,15 @@ public class ClothesController {
             @PathVariable Long id
     ) {
         return clothesService.deleteClothesById(id);
+    }
+
+    @GetMapping("/names")
+    @Operation(
+            summary = "Get user clothes names",
+            description = "Return all user clothes names",
+            security = @SecurityRequirement(name = "Bearer")
+    )
+    public List<String> getClothesNames() {
+        return clothesService.getClothesNames();
     }
 }

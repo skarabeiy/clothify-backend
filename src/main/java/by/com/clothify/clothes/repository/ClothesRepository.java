@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -26,4 +27,9 @@ public interface ClothesRepository extends JpaRepository<Clothes, Long> {
     Page<Clothes> findFilteredClothes(String email, Pageable pageable, ClothesFilterDto filter);
 
     void deleteByIdAndUser_Email(Long id, String email);
+
+    @Query("SELECT c.name FROM Clothes c " +
+            "WHERE c.user.email = :email " +
+            "ORDER BY c.updatedAt DESC")
+    List<String> findClothesNames(String email);
 }

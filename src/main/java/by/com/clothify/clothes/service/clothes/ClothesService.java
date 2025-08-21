@@ -25,6 +25,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 import static by.com.clothify.clothes.mapper.ClothesMapper.mapToClothesDto;
@@ -200,6 +201,20 @@ public class ClothesService {
 
         } catch (Exception e) {
             log.error("Failed delete clothes with ID = {} for user: {}", id, email);
+            log.error(e.getMessage(), e);
+            throw new RuntimeException(e);
+        }
+    }
+
+    public List<String> getClothesNames() {
+
+        final String email = AuthUtils.getEmail();
+
+        try {
+            return clothesRepository.findClothesNames(email);
+
+        } catch (Exception e) {
+            log.error("Failed get clothes names for user: {}", email);
             log.error(e.getMessage(), e);
             throw new RuntimeException(e);
         }
