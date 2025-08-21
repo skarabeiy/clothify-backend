@@ -2,6 +2,7 @@ package by.com.clothify.clothes.service.clothes;
 
 import by.com.clothify.clothes.mapper.ClothesMapper;
 import by.com.clothify.clothes.model.dto.ClothesDto;
+import by.com.clothify.clothes.model.dto.ClothesFilterDto;
 import by.com.clothify.clothes.model.dto.PatchedClothesDto;
 import by.com.clothify.clothes.model.dto.UploadedClothesDto;
 import by.com.clothify.clothes.model.entity.Clothes;
@@ -58,17 +59,17 @@ public class ClothesService {
         }
     }
 
-    public Page<ClothesDto> getClothesByCategoryId(Long categoryId, int page, int size) {
+    public Page<ClothesDto> getFilteredClothes(ClothesFilterDto filter, int page, int size) {
 
         final String email = AuthUtils.getEmail();
 
         try {
             Pageable pageable = PageRequest.of(page, size);
-            return clothesRepository.findByCategoryIdAndEmail(categoryId, email, pageable)
+            return clothesRepository.findByCategoryIdAndEmail(filter.getCategoryId(), email, pageable)
                     .map(ClothesMapper::mapToClothesDto);
 
         } catch (Exception e) {
-            log.error("Failed get clothes by category id = {}, for user: {}", categoryId, email);
+            log.error("Failed get clothes by category id = {}, for user: {}", filter.getCategoryId(), email);
             log.error(e.getMessage(), e);
             throw new RuntimeException(e);
         }

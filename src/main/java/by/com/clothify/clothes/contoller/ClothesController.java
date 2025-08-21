@@ -1,8 +1,10 @@
 package by.com.clothify.clothes.contoller;
 
 import by.com.clothify.clothes.model.dto.ClothesDto;
+import by.com.clothify.clothes.model.dto.ClothesFilterDto;
 import by.com.clothify.clothes.model.dto.PatchedClothesDto;
 import by.com.clothify.clothes.model.dto.UploadedClothesDto;
+import by.com.clothify.clothes.model.enums.Season;
 import by.com.clothify.clothes.service.clothes.ClothesService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -21,6 +23,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.Set;
 
 @RestController
 @RequestMapping("/clothes")
@@ -43,13 +47,13 @@ public class ClothesController {
         return clothesService.getClothesById(id);
     }
 
-    @GetMapping("/by-category")
+    @GetMapping
     @Operation(
-            summary = "Get user clothes by category",
-            description = "Return user clothes by category ID with pagination",
+            summary = "Get user clothes by filters",
+            description = "Return user clothes by filters (category ID, colors and others) with pagination",
             security = @SecurityRequirement(name = "Bearer")
     )
-    public Page<ClothesDto> getClothesByCategoryId(
+    public Page<ClothesDto> getFilteredClothes(
             @Parameter(description = "If the category ID is not specified, all the clothes will be returned. " +
                     "If specified, only the clothes that belong to the specified category.", example = "null")
             @RequestParam(name = "categoryId", required = false) Long categoryId,
@@ -58,10 +62,30 @@ public class ClothesController {
             @RequestParam(name = "page", required = false, defaultValue = "0") int page,
 
             @Parameter(description = "Items number per page")
-            @RequestParam(name = "size", required = false, defaultValue = "10") int size
+            @RequestParam(name = "size", required = false, defaultValue = "10") int size,
+
+            @Parameter(description = "List of colors to filter")
+            @RequestParam(name = "colors", required = false) Set<String> colors,
+
+            @Parameter(description = "List of brand IDs to filter")
+            @RequestParam(name = "brandIds", required = false) Set<Long> brandIds,
+
+            @Parameter(description = "Season to filter", example = "null")
+            @RequestParam(name = "season", required = false) Season season,
+
+            @Parameter(description = "List of clothes names to filter")
+            @RequestParam(name = "names", required = false) Set<String> names
     ) {
 
-        return clothesService.getClothesByCategoryId(categoryId, page, size);
+        ClothesFilterDto filter = ClothesFilterDto.builder()
+                .categoryId(categoryId)
+                .colors(colors)
+                .brandIds(brandIds)
+                .season(season)
+                .names(names)
+                .build();
+
+        return clothesService.getFilteredClothes(filter, page, size);
     }
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
