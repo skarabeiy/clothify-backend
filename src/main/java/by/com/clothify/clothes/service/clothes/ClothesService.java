@@ -211,7 +211,9 @@ public class ClothesService {
         final String email = AuthUtils.getEmail();
 
         try {
-            return clothesRepository.findClothesNames(email);
+            return clothesRepository.findClothesNames(email).stream()
+                    .distinct()
+                    .toList();
 
         } catch (Exception e) {
             log.error("Failed get clothes names for user: {}", email);
