@@ -10,6 +10,8 @@ import java.util.List;
 @Repository
 public interface ClothesCategoryRepository extends JpaRepository<ClothesCategory, Long> {
 
+    List<ClothesCategory> findAllByOrderByPosition();
+
     @Query("SELECT cat FROM ClothesCategory cat " +
             "JOIN FETCH Clothes c ON cat.id = c.category.id " +
             "WHERE c.user.email = :email " +

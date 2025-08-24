@@ -24,7 +24,7 @@ public class ClothesCategoryService {
     public List<ClothesCategoryDto> getAllClothesCategories() {
 
         try {
-            List<ClothesCategory> categories = clothesCategoryRepository.findAll();
+            List<ClothesCategory> categories = clothesCategoryRepository.findAllByOrderByPosition();
             log.info("Get all clothes categories");
 
             return mapToCategoryDtoList(categories);
