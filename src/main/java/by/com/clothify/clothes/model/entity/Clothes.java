@@ -75,7 +75,9 @@ public class Clothes {
 
     private LocalDate dateOfPurchase;
 
+    @Column(nullable = false)
     private LocalDateTime createdAt;
 
+    @Column(nullable = false)
     private LocalDateTime updatedAt;
 }
