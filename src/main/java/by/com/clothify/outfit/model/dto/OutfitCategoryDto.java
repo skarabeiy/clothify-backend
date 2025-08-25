@@ -14,9 +14,9 @@ import java.io.Serializable;
 @NoArgsConstructor
 public class OutfitCategoryDto implements Serializable {
 
-    @Schema(example = "null")
+    @Schema(example = "1")
     private Long id;
 
-    @Schema(example = "All")
+    @Schema(example = "Casual")
     private String name;
 }

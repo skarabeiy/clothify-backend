@@ -23,6 +23,7 @@ public class SavedOutfitDto {
     @Nullable
     private String backgroundColor;
 
+    @Schema(example = "1")
     private Long categoryId;
 
     private Season season;
