@@ -1,4 +1,4 @@
-package by.com.clothify.clothes.model.enums;
+package by.com.clothify.common.model.enums;
 
 public enum Season {
     WINTER,

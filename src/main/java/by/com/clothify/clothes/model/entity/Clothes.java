@@ -1,6 +1,6 @@
 package by.com.clothify.clothes.model.entity;
 
-import by.com.clothify.clothes.model.enums.Season;
+import by.com.clothify.common.model.enums.Season;
 import by.com.clothify.security.model.entity.User;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;

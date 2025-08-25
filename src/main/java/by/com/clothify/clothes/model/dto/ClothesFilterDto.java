@@ -1,6 +1,6 @@
 package by.com.clothify.clothes.model.dto;
 
-import by.com.clothify.clothes.model.enums.Season;
+import by.com.clothify.common.model.enums.Season;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
