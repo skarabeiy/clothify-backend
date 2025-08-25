@@ -20,7 +20,7 @@ public class ClothesDto {
     @Schema(example = "Jacket")
     private String name;
 
-    @Schema(example = "image")
+    @Schema(example = "url to cloud with image")
     private String image;
 
     @Schema(example = "null")
