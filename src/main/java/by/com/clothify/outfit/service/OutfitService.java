@@ -36,12 +36,7 @@ public class OutfitService {
         try {
             User user = userRepository.findByEmail(email).orElseThrow();
 
-            Outfit outfit = OutfitMapper.mapToOutfit(savedOutfitDto);
-            outfit.setUser(user);
-
-            LocalDateTime now = LocalDateTime.now();
-            outfit.setCreatedAt(now);
-            outfit.setUpdatedAt(now);
+            Outfit outfit = createOutfit(savedOutfitDto, user);
 
             outfit = outfitRepository.save(outfit);
             final Long outfitId = outfit.getId();
@@ -59,5 +54,17 @@ public class OutfitService {
             log.error(e.getMessage(), e);
             throw new RuntimeException(e);
         }
+    }
+
+    private static Outfit createOutfit(SavedOutfitDto savedOutfitDto, User user) {
+
+        Outfit outfit = OutfitMapper.mapToOutfit(savedOutfitDto);
+        outfit.setUser(user);
+
+        LocalDateTime now = LocalDateTime.now();
+        outfit.setCreatedAt(now);
+        outfit.setUpdatedAt(now);
+
+        return outfit;
     }
 }
