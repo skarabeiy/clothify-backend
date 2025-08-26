@@ -46,10 +46,10 @@ public class OutfitClothes {
     @JoinColumn(name = "clothes_id", nullable = false)
     private Clothes clothes;
 
-    @Column(nullable = false)
+    @Column(name = "position_x", nullable = false)
     private Double positionX;
 
-    @Column(nullable = false)
+    @Column(name = "position_y", nullable = false)
     private Double positionY;
 
     private Double scale;

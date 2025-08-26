@@ -1,6 +1,7 @@
 package by.com.clothify.outfit.service;
 
 import by.com.clothify.common.util.AuthUtils;
+import by.com.clothify.outfit.mapper.OutfitClothesMapper;
 import by.com.clothify.outfit.mapper.OutfitMapper;
 import by.com.clothify.outfit.model.dto.OutfitDto;
 import by.com.clothify.outfit.model.dto.SavedOutfitDto;
@@ -43,15 +44,15 @@ public class OutfitService {
             outfit.setUpdatedAt(now);
 
             outfit = outfitRepository.save(outfit);
+            final Long outfitId = outfit.getId();
 
             List<OutfitClothes> outfitClothes = savedOutfitDto.getClothes().stream()
-                    .map(clothes -> OutfitClothes.builder()
-                            .build())
+                    .map(outfitClothesDto -> OutfitClothesMapper.mapToOutfitClothes(outfitClothesDto, outfitId))
                     .toList();
 
-            outfitClothesRepository.saveAll(outfitClothes);
+            outfitClothes = outfitClothesRepository.saveAll(outfitClothes);
 
-            return null;
+            return OutfitMapper.mapToOutfitDto(outfit, outfitClothes);
 
         } catch (Exception e) {
             log.error("Failed save outfit: {} for user: {}", savedOutfitDto.getName(), email);
