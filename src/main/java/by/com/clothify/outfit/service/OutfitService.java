@@ -13,11 +13,13 @@ import by.com.clothify.security.model.entity.User;
 import by.com.clothify.security.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -27,6 +29,29 @@ public class OutfitService {
     private final UserRepository userRepository;
     private final OutfitRepository outfitRepository;
     private final OutfitClothesRepository outfitClothesRepository;
+
+    public ResponseEntity<OutfitDto> getOutfitById(Long id) {
+
+        final String email = AuthUtils.getEmail();
+
+        try {
+            Optional<Outfit> optionalOutfit = outfitRepository.findByIdAndUser_Email(id, email);
+
+            if (optionalOutfit.isEmpty()) {
+                log.error("Can't find outfit by id = {} for user: {}", id, email);
+                return ResponseEntity.notFound().build();
+            }
+
+            return ResponseEntity.ok(
+                    OutfitMapper.mapToOutfitDto(optionalOutfit.get(), optionalOutfit.get().getOutfitClothes())
+            );
+
+        } catch (Exception e) {
+            log.error("Failed get outfit by id = {} for user: {}", id, email);
+            log.error(e.getMessage(), e);
+            throw new RuntimeException(e);
+        }
+    }
 
     @Transactional
     public OutfitDto saveOutfit(SavedOutfitDto savedOutfitDto) {

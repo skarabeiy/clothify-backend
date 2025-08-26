@@ -12,6 +12,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableCaching
 // TODO подумать над кешированием
 // TODO пересмотреть индексы
+// TODO пересмотреть дебагом запросы
 public class ClothifyApplication {
     public static void main(String[] args) {
         SpringApplication.run(ClothifyApplication.class, args);

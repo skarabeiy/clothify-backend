@@ -38,7 +38,7 @@ public class ClothesController {
     @GetMapping("/{id}")
     @Operation(
             summary = "Get user clothes by ID",
-            description = "Return users clothes by clothes ID",
+            description = "Return user clothes by clothes ID",
             security = @SecurityRequirement(name = "Bearer")
     )
     public ResponseEntity<ClothesDto> getClothesById(
