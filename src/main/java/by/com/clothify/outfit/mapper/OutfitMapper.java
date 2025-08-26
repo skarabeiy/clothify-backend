@@ -10,6 +10,11 @@ import java.util.List;
 
 public class OutfitMapper {
 
+    public static OutfitDto mapToOutfitDto(Outfit outfit) {
+
+        return mapToOutfitDto(outfit, outfit.getOutfitClothes());
+    }
+
     public static OutfitDto mapToOutfitDto(Outfit outfit, List<OutfitClothes> outfitClothes) {
 
         return OutfitDto.builder()

@@ -4,6 +4,7 @@ import by.com.clothify.common.util.AuthUtils;
 import by.com.clothify.outfit.mapper.OutfitClothesMapper;
 import by.com.clothify.outfit.mapper.OutfitMapper;
 import by.com.clothify.outfit.model.dto.OutfitDto;
+import by.com.clothify.outfit.model.dto.OutfitFilterDto;
 import by.com.clothify.outfit.model.dto.SavedOutfitDto;
 import by.com.clothify.outfit.model.entity.Outfit;
 import by.com.clothify.outfit.model.entity.OutfitClothes;
@@ -13,6 +14,9 @@ import by.com.clothify.security.model.entity.User;
 import by.com.clothify.security.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -42,12 +46,27 @@ public class OutfitService {
                 return ResponseEntity.notFound().build();
             }
 
-            return ResponseEntity.ok(
-                    OutfitMapper.mapToOutfitDto(optionalOutfit.get(), optionalOutfit.get().getOutfitClothes())
-            );
+            return ResponseEntity.ok(OutfitMapper.mapToOutfitDto(optionalOutfit.get()));
 
         } catch (Exception e) {
             log.error("Failed get outfit by id = {} for user: {}", id, email);
+            log.error(e.getMessage(), e);
+            throw new RuntimeException(e);
+        }
+    }
+
+    public Page<OutfitDto> getFilteredOutfits(OutfitFilterDto filter, int page, int size) {
+
+        final String email = AuthUtils.getEmail();
+
+        try {
+            Pageable pageable = PageRequest.of(page, size);
+
+            return outfitRepository.findFilteredOutfits(email, pageable, filter)
+                    .map(OutfitMapper::mapToOutfitDto);
+
+        } catch (Exception e) {
+            log.error("Failed get outfits by category id = {}, for user: {}", filter.getCategoryId(), email);
             log.error(e.getMessage(), e);
             throw new RuntimeException(e);
         }

@@ -1,6 +1,7 @@
 package by.com.clothify.outfit.controller;
 
 import by.com.clothify.outfit.model.dto.OutfitDto;
+import by.com.clothify.outfit.model.dto.OutfitFilterDto;
 import by.com.clothify.outfit.model.dto.SavedOutfitDto;
 import by.com.clothify.outfit.service.OutfitService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -8,12 +9,14 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -35,6 +38,31 @@ public class OutfitController {
             @PathVariable Long id
     ) {
         return outfitService.getOutfitById(id);
+    }
+
+    @GetMapping
+    @Operation(
+            summary = "Get user outfits by filters",
+            description = "Return user outfits by filters (category ID, season and others) with pagination",
+            security = @SecurityRequirement(name = "Bearer")
+    )
+    public Page<OutfitDto> getFilteredOutfits(
+            @Parameter(description = "If the category ID is not specified, all the outfits will be returned. " +
+                    "If specified, only the outfits that belong to the specified category.", example = "null")
+            @RequestParam(name = "categoryId", required = false) Long categoryId,
+
+            @Parameter(description = "Page number", example = "0")
+            @RequestParam(name = "page", required = false, defaultValue = "0") int page,
+
+            @Parameter(description = "Items number per page")
+            @RequestParam(name = "size", required = false, defaultValue = "8") int size
+    ) {
+
+        OutfitFilterDto filter = OutfitFilterDto.builder()
+                .categoryId(categoryId)
+                .build();
+
+        return outfitService.getFilteredOutfits(filter, page, size);
     }
 
     @PostMapping
