@@ -1,5 +1,6 @@
 package by.com.clothify.outfit.service;
 
+import by.com.clothify.common.util.AuthUtils;
 import by.com.clothify.outfit.mapper.OutfitCategoryMapper;
 import by.com.clothify.outfit.model.dto.OutfitCategoryDto;
 import by.com.clothify.outfit.model.entity.OutfitCategory;
@@ -30,6 +31,31 @@ public class OutfitCategoryService {
 
         } catch (Exception e) {
             log.error("Failed get all outfit categories");
+            log.error(e.getMessage(), e);
+            throw new RuntimeException(e);
+        }
+    }
+
+    public List<OutfitCategoryDto> getUserOutfitCategories() {
+
+        final String email = AuthUtils.getEmail();
+
+        try {
+            List<OutfitCategory> categories = outfitCategoryRepository.findUserCategories(email);
+
+            List<OutfitCategoryDto> res = mapToCategoryDtoList(categories);
+
+            res.addFirst(
+                    OutfitCategoryDto.builder()
+                            .id(null)
+                            .name("All")
+                            .build()
+            );
+
+            return res;
+
+        } catch (Exception e) {
+            log.error("Failed get outfit categories for: {}", email);
             log.error(e.getMessage(), e);
             throw new RuntimeException(e);
         }

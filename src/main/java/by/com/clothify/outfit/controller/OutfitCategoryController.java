@@ -29,4 +29,14 @@ public class OutfitCategoryController {
     public List<OutfitCategoryDto> getAllOutfitCategories() {
         return outfitCategoryService.getAllOutfitCategories();
     }
+
+    @GetMapping("/for-user")
+    @Operation(
+            summary = "Get user outfit categories",
+            description = "Return list of outfit categories that user has",
+            security = @SecurityRequirement(name = "Bearer")
+    )
+    public List<OutfitCategoryDto> getUserOutfitCategories() {
+        return outfitCategoryService.getUserOutfitCategories();
+    }
 }
