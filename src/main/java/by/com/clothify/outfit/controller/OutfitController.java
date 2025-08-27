@@ -78,6 +78,10 @@ public class OutfitController {
         return outfitService.saveOutfit(savedOutfitDto);
     }
 
+    public ResponseEntity<OutfitDto> patchOutfit() {
+        return null;
+    }
+
     @DeleteMapping("/{id}")
     @Operation(
             summary = "Delete user outfit",
