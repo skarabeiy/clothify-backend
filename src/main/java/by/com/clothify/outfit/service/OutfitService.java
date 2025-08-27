@@ -127,4 +127,20 @@ public class OutfitService {
             throw new RuntimeException(e);
         }
     }
+
+    public List<String> getOutfitNames() {
+
+        final String email = AuthUtils.getEmail();
+
+        try {
+            return outfitRepository.findOutfitNames(email).stream()
+                    .distinct()
+                    .toList();
+
+        } catch (Exception e) {
+            log.error("Failed get outfit names for user: {}", email);
+            log.error(e.getMessage(), e);
+            throw new RuntimeException(e);
+        }
+    }
 }

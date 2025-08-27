@@ -20,6 +20,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/outfits")
 @RequiredArgsConstructor
@@ -87,5 +89,15 @@ public class OutfitController {
             @PathVariable Long id
     ) {
         return outfitService.deleteOutfitById(id);
+    }
+
+    @GetMapping("/names")
+    @Operation(
+            summary = "Get user outfit names",
+            description = "Return all user outfit names",
+            security = @SecurityRequirement(name = "Bearer")
+    )
+    public List<String> getOutfitNames() {
+        return outfitService.getOutfitNames();
     }
 }
