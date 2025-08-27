@@ -20,4 +20,6 @@ public interface OutfitRepository extends JpaRepository<Outfit, Long> {
             "AND (:#{#filter.categoryId} IS NULL OR o.category.id = :#{#filter.categoryId}) " +
             "ORDER BY o.updatedAt DESC")
     Page<Outfit> findFilteredOutfits(String email, Pageable pageable, OutfitFilterDto filter);
+
+    void deleteByIdAndUser_Email(Long id, String email);
 }

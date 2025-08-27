@@ -2,6 +2,7 @@ package by.com.clothify.outfit.model.entity;
 
 import by.com.clothify.common.model.enums.Season;
 import by.com.clothify.security.model.entity.User;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -60,6 +61,6 @@ public class Outfit {
 
     private LocalDateTime updatedAt;
 
-    @OneToMany(mappedBy = "outfit")
+    @OneToMany(mappedBy = "outfit", cascade = CascadeType.REMOVE)
     private List<OutfitClothes> outfitClothes;
 }

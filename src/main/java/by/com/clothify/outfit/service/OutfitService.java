@@ -111,4 +111,20 @@ public class OutfitService {
 
         return outfit;
     }
+
+    @Transactional
+    public ResponseEntity<Void> deleteOutfitById(Long id) {
+
+        final String email = AuthUtils.getEmail();
+
+        try {
+            outfitRepository.deleteByIdAndUser_Email(id, email);
+            return ResponseEntity.ok().build();
+
+        } catch (Exception e) {
+            log.error("Failed delete outfit with ID = {} for user: {}", id, email);
+            log.error(e.getMessage(), e);
+            throw new RuntimeException(e);
+        }
+    }
 }

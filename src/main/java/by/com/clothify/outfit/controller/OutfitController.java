@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -73,5 +74,18 @@ public class OutfitController {
     )
     public OutfitDto saveOutfit(@RequestBody SavedOutfitDto savedOutfitDto) {
         return outfitService.saveOutfit(savedOutfitDto);
+    }
+
+    @DeleteMapping("/{id}")
+    @Operation(
+            summary = "Delete user outfit",
+            description = "Delete user outfit by ID",
+            security = @SecurityRequirement(name = "Bearer")
+    )
+    public ResponseEntity<Void> deleteOutfitById(
+            @Parameter(description = "Outfit ID", example = "1")
+            @PathVariable Long id
+    ) {
+        return outfitService.deleteOutfitById(id);
     }
 }
