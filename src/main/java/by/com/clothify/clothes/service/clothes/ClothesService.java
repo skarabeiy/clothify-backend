@@ -44,7 +44,7 @@ public class ClothesService {
         final String email = AuthUtils.getEmail();
 
         try {
-            Optional<Clothes> optionalClothes = clothesRepository.findByIdAndUser_Email(id, email);
+            Optional<Clothes> optionalClothes = clothesRepository.findByIdAndEmail(id, email);
 
             if (optionalClothes.isEmpty()) {
                 log.error("Can't find clothes by id = {} for user: {}", id, email);
@@ -110,7 +110,7 @@ public class ClothesService {
         final String email = AuthUtils.getEmail();
 
         try {
-            Optional<Clothes> optionalClothes = clothesRepository.findByIdAndUser_Email(patchedClothes.getId(), email);
+            Optional<Clothes> optionalClothes = clothesRepository.findByIdAndEmail(patchedClothes.getId(), email);
 
             if (optionalClothes.isEmpty()) {
                 return ResponseEntity.notFound().build();

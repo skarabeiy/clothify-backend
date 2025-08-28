@@ -15,5 +15,5 @@ public interface UserProfileRepository extends JpaRepository<UserProfile, Long> 
             JOIN FETCH up.user u
             WHERE u.email = :email
             """)
-    Optional<UserProfile> findByUserAndEmail(String email);
+    Optional<UserProfile> findByEmail(String email);
 }
