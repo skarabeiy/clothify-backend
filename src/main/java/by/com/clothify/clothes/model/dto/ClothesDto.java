@@ -1,6 +1,7 @@
 package by.com.clothify.clothes.model.dto;
 
 import by.com.clothify.common.model.enums.Season;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -12,6 +13,7 @@ import org.springframework.lang.Nullable;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class ClothesDto {
 
     @Schema(example = "1")

@@ -9,6 +9,16 @@ import by.com.clothify.common.util.DateUtils;
 
 public final class ClothesMapper {
 
+    public static ClothesDto mapToPageClothesDto(Clothes clothes) {
+
+        return ClothesDto.builder()
+                .id(clothes.getId())
+                .name(clothes.getName())
+                .image(clothes.getImage().getUrl())
+                .backgroundColor(clothes.getBackgroundColor())
+                .build();
+    }
+
     public static ClothesDto mapToClothesDto(Clothes clothes) {
 
         return ClothesDto.builder()

@@ -45,22 +45,22 @@ public class Clothes {
     @Column(nullable = false)
     private String name;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "auth_user_id", nullable = false)
     private User user;
 
-    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     @JoinColumn(name = "image_id", referencedColumnName = "id", nullable = false)
     private Image image;
 
     @Column(length = 30)
     private String backgroundColor;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "clothes_category_id", nullable = false)
     private ClothesCategory category;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "clothes_brand_id", nullable = false)
     private ClothesBrand brand;
 
