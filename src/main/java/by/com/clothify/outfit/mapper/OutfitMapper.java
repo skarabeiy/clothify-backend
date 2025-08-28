@@ -10,6 +10,20 @@ import java.util.List;
 
 public class OutfitMapper {
 
+    public static OutfitDto mapToPageOutfitDto(Outfit outfit) {
+
+        return OutfitDto.builder()
+                .id(outfit.getId())
+                .name(outfit.getName())
+                .backgroundColor(outfit.getBackgroundColor())
+                .clothes(
+                        outfit.getOutfitClothes().stream()
+                                .map(OutfitClothesMapper::mapToOutfitClothesDto)
+                                .toList()
+                )
+                .build();
+    }
+
     public static OutfitDto mapToOutfitDto(Outfit outfit) {
 
         return mapToOutfitDto(outfit, outfit.getOutfitClothes());

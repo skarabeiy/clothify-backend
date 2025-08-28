@@ -1,6 +1,7 @@
 package by.com.clothify.outfit.model.dto;
 
 import by.com.clothify.common.model.enums.Season;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -14,6 +15,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class OutfitDto {
 
     @Schema(example = "1")

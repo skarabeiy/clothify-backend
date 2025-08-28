@@ -16,10 +16,12 @@ public interface OutfitRepository extends JpaRepository<Outfit, Long> {
 
     Optional<Outfit> findByIdAndUser_Email(Long id, String email);
 
-    @Query("SELECT o FROM Outfit o " +
-            "WHERE o.user.email = :email " +
-            "AND (:#{#filter.categoryId} IS NULL OR o.category.id = :#{#filter.categoryId}) " +
-            "ORDER BY o.updatedAt DESC")
+    @Query("""
+            SELECT o FROM Outfit o
+            JOIN FETCH o.outfitClothes
+            WHERE o.user.email = :email
+            AND (:#{#filter.categoryId} IS NULL OR o.category.id = :#{#filter.categoryId})
+            ORDER BY o.updatedAt DESC""")
     Page<Outfit> findFilteredOutfits(String email, Pageable pageable, OutfitFilterDto filter);
 
     void deleteByIdAndUser_Email(Long id, String email);
