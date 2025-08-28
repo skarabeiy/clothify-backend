@@ -5,8 +5,11 @@ import by.com.clothify.outfit.mapper.OutfitClothesMapper;
 import by.com.clothify.outfit.mapper.OutfitMapper;
 import by.com.clothify.outfit.model.dto.OutfitDto;
 import by.com.clothify.outfit.model.dto.OutfitFilterDto;
+import by.com.clothify.outfit.model.dto.PatchedOutfitDto;
+import by.com.clothify.outfit.model.dto.SavedOutfitClothesDto;
 import by.com.clothify.outfit.model.dto.SavedOutfitDto;
 import by.com.clothify.outfit.model.entity.Outfit;
+import by.com.clothify.outfit.model.entity.OutfitCategory;
 import by.com.clothify.outfit.model.entity.OutfitClothes;
 import by.com.clothify.outfit.repository.OutfitClothesRepository;
 import by.com.clothify.outfit.repository.OutfitRepository;
@@ -24,6 +27,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+
+import static by.com.clothify.outfit.mapper.OutfitMapper.mapToOutfitDto;
 
 @Service
 @RequiredArgsConstructor
@@ -46,7 +51,7 @@ public class OutfitService {
                 return ResponseEntity.notFound().build();
             }
 
-            return ResponseEntity.ok(OutfitMapper.mapToOutfitDto(optionalOutfit.get()));
+            return ResponseEntity.ok(mapToOutfitDto(optionalOutfit.get()));
 
         } catch (Exception e) {
             log.error("Failed get outfit by id = {} for user: {}", id, email);
@@ -83,15 +88,12 @@ public class OutfitService {
             Outfit outfit = createOutfit(savedOutfitDto, user);
 
             outfit = outfitRepository.save(outfit);
-            final Long outfitId = outfit.getId();
 
-            List<OutfitClothes> outfitClothes = savedOutfitDto.getClothes().stream()
-                    .map(outfitClothesDto -> OutfitClothesMapper.mapToOutfitClothes(outfitClothesDto, outfitId))
-                    .toList();
+            List<OutfitClothes> outfitClothes = mapToOutfitClothesList(savedOutfitDto.getClothes(), outfit.getId());
 
             outfitClothes = outfitClothesRepository.saveAll(outfitClothes);
 
-            return OutfitMapper.mapToOutfitDto(outfit, outfitClothes);
+            return mapToOutfitDto(outfit, outfitClothes);
 
         } catch (Exception e) {
             log.error("Failed save outfit: {} for user: {}", savedOutfitDto.getName(), email);
@@ -110,6 +112,80 @@ public class OutfitService {
         outfit.setUpdatedAt(now);
 
         return outfit;
+    }
+
+    private static List<OutfitClothes> mapToOutfitClothesList(List<SavedOutfitClothesDto> dtoList, Long outfitId) {
+
+        return dtoList.stream()
+                .map(outfitClothesDto -> OutfitClothesMapper.mapToOutfitClothes(outfitClothesDto, outfitId))
+                .toList();
+    }
+
+    @Transactional
+    public ResponseEntity<OutfitDto> patchOutfit(PatchedOutfitDto patchedOutfitDto) {
+
+        final String email = AuthUtils.getEmail();
+
+        try {
+            Optional<Outfit> optionalOutfit = outfitRepository.findByIdAndUser_Email(patchedOutfitDto.getId(), email);
+
+            if (optionalOutfit.isEmpty()) {
+                return ResponseEntity.notFound().build();
+            }
+
+            Outfit outfit = optionalOutfit.get();
+
+            setPatchedOutfitFields(outfit, patchedOutfitDto);
+
+            outfit = outfitRepository.save(outfit);
+
+            OutfitDto outfitDto = mapToOutfitDto(outfit);
+
+            return ResponseEntity.ok(outfitDto);
+
+        } catch (Exception e) {
+            log.error("Failed patch outfit with ID = {} for user: {}", patchedOutfitDto.getId(), email);
+            log.error(e.getMessage(), e);
+            throw new RuntimeException(e);
+        }
+    }
+
+    private static void setPatchedOutfitFields(Outfit outfit, PatchedOutfitDto patchedOutfitDto) {
+
+        if (patchedOutfitDto.getName() != null) {
+            outfit.setName(patchedOutfitDto.getName());
+        }
+
+        if (patchedOutfitDto.getBackgroundColor() != null) {
+            outfit.setBackgroundColor(patchedOutfitDto.getBackgroundColor());
+        }
+
+        if (patchedOutfitDto.getCategoryId() != null) {
+            outfit.setCategory(
+                    OutfitCategory.builder()
+                            .id(patchedOutfitDto.getCategoryId())
+                            .build()
+            );
+        }
+
+        if (patchedOutfitDto.getSeason() != null) {
+            outfit.setSeason(patchedOutfitDto.getSeason());
+        }
+
+        outfit.setUpdatedAt(LocalDateTime.now());
+    }
+
+    private void addOutfitClothes(PatchedOutfitDto patchedOutfitDto, OutfitDto outfitDto) {
+
+        if (patchedOutfitDto.getAddedClothes() != null && !patchedOutfitDto.getAddedClothes().isEmpty()) {
+
+            List<OutfitClothes> outfitClothes = mapToOutfitClothesList(
+                    patchedOutfitDto.getAddedClothes(),
+                    outfitDto.getId()
+            );
+
+            outfitClothes = outfitClothesRepository.saveAll(outfitClothes);
+        }
     }
 
     @Transactional

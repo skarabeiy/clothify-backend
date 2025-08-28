@@ -2,6 +2,7 @@ package by.com.clothify.outfit.controller;
 
 import by.com.clothify.outfit.model.dto.OutfitDto;
 import by.com.clothify.outfit.model.dto.OutfitFilterDto;
+import by.com.clothify.outfit.model.dto.PatchedOutfitDto;
 import by.com.clothify.outfit.model.dto.SavedOutfitDto;
 import by.com.clothify.outfit.service.OutfitService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -13,6 +14,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -78,8 +80,14 @@ public class OutfitController {
         return outfitService.saveOutfit(savedOutfitDto);
     }
 
-    public ResponseEntity<OutfitDto> patchOutfit() {
-        return null;
+    @PatchMapping
+    @Operation(
+            summary = "Update user outfit",
+            description = "Update filled fields for user outfit. Also add/update/delete clothes in outfit",
+            security = @SecurityRequirement(name = "Bearer")
+    )
+    public ResponseEntity<OutfitDto> patchOutfit(@RequestBody PatchedOutfitDto patchedOutfitDto) {
+        return outfitService.patchOutfit(patchedOutfitDto);
     }
 
     @DeleteMapping("/{id}")
