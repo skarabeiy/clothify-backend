@@ -6,7 +6,6 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -40,8 +39,8 @@ public class UserProfile {
     @EqualsAndHashCode.Include
     private Long id;
 
-    @OneToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "auth_user_id", referencedColumnName = "id", nullable = false)
+    @OneToOne
+    @JoinColumn(name = "auth_user_id", referencedColumnName = "id", unique = true, nullable = false)
     private User user;
 
     private String name;

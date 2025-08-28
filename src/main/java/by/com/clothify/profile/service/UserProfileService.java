@@ -30,7 +30,7 @@ public class UserProfileService {
         String email = AuthUtils.getEmail();
 
         try {
-            UserProfile userProfile = userProfileRepository.findByUser_Email(email).orElseThrow();
+            UserProfile userProfile = userProfileRepository.findByUserAndEmail(email).orElseThrow();
             return mapToUserProfileDto(userProfile);
 
         } catch (Exception e) {
@@ -72,7 +72,7 @@ public class UserProfileService {
         String email = AuthUtils.getEmail();
 
         try {
-            Optional<UserProfile> optionalUserProfile = userProfileRepository.findByUser_Email(email);
+            Optional<UserProfile> optionalUserProfile = userProfileRepository.findByUserAndEmail(email);
 
             if (optionalUserProfile.isEmpty()) {
                 logUserNotFound(email);
