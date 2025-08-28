@@ -3,6 +3,7 @@ package by.com.clothify.clothes.model.entity;
 import by.com.clothify.security.model.entity.User;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -39,7 +40,7 @@ public class ClothesBrand {
     @Column(nullable = false)
     private boolean isCustom;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "auth_user_id")
     private User user;
 }
