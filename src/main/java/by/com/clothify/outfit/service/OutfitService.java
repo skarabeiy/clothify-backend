@@ -101,9 +101,11 @@ public class OutfitService {
 
             List<OutfitClothes> outfitClothes = mapToOutfitClothesList(savedOutfitDto.getClothes(), outfit.getId());
 
-            outfitClothes = outfitClothesRepository.saveAll(outfitClothes);
+            outfitClothesRepository.saveAll(outfitClothes);
 
-            return mapToOutfitDto(outfit, outfitClothes);
+            List<OutfitClothes> savedOutfitClothes = outfitClothesRepository.findAllByOutfitId(outfit.getId());
+
+            return mapToOutfitDto(outfit, savedOutfitClothes);
 
         } catch (Exception e) {
             log.error("Failed save outfit: {} for user: {}", savedOutfitDto.getName(), email);
