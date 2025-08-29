@@ -26,8 +26,7 @@ public interface ClothesRepository extends JpaRepository<Clothes, Long> {
     Optional<Clothes> findByIdAndEmail(Long id, String email);
 
     @Query("""
-            SELECT c FROM Clothes c
-            JOIN FETCH c.image
+            SELECT c.id FROM Clothes c
             WHERE c.user.email = :email
             AND (:#{#filter.categoryId} IS NULL OR c.category.id = :#{#filter.categoryId})
             AND (COALESCE(:#{#filter.colors}, NULL) IS NULL OR c.color IN :#{#filter.colors})
@@ -36,7 +35,14 @@ public interface ClothesRepository extends JpaRepository<Clothes, Long> {
             AND (COALESCE(:#{#filter.names}, NULL) IS NULL OR c.name IN :#{#filter.names})
             ORDER BY c.updatedAt DESC
             """)
-    Page<Clothes> findFilteredClothes(String email, Pageable pageable, ClothesFilterDto filter);
+    Page<Long> findFilteredClothesIds(String email, Pageable pageable, ClothesFilterDto filter);
+
+    @Query("""
+            SELECT c FROM Clothes c
+            JOIN FETCH c.image
+            WHERE c.id IN :ids
+            """)
+    List<Clothes> findClothesByIds(List<Long> ids);
 
     void deleteByIdAndUser_Email(Long id, String email);
 
