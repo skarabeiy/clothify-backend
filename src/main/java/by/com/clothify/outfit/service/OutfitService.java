@@ -18,6 +18,7 @@ import by.com.clothify.security.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -67,8 +68,17 @@ public class OutfitService {
         try {
             Pageable pageable = PageRequest.of(page, size);
 
-            return outfitRepository.findFilteredOutfits(email, pageable, filter)
-                    .map(OutfitMapper::mapToPageOutfitDto);
+            Page<Long> outfitIds = outfitRepository.findFilteredOutfitIds(email, pageable, filter);
+
+            if (outfitIds.isEmpty()) {
+                return Page.empty(pageable);
+            }
+
+            List<OutfitDto> outfits = outfitRepository.findOutfitsByIds(outfitIds.getContent()).stream()
+                    .map(OutfitMapper::mapToPageOutfitDto)
+                    .toList();
+
+            return new PageImpl<>(outfits, pageable, outfitIds.getTotalElements());
 
         } catch (Exception e) {
             log.error("Failed get outfits by category id = {}, for user: {}", filter.getCategoryId(), email);
