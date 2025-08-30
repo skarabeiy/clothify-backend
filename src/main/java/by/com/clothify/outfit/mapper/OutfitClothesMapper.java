@@ -34,7 +34,7 @@ public class OutfitClothesMapper {
                 )
                 .clothes(
                         Clothes.builder()
-                                .id(savedOutfitClothesDto.getId())
+                                .id(savedOutfitClothesDto.getClothingId())
                                 .build()
                 )
                 .positionX(savedOutfitClothesDto.getPositionX())

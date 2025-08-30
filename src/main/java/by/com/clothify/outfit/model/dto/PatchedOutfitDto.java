@@ -37,7 +37,7 @@ public class PatchedOutfitDto {
 
     private List<SavedOutfitClothesDto> addedClothes;
 
-    private List<SavedOutfitClothesDto> updatedClothes;
+    private List<PatchedOutfitClothesDto> updatedClothes;
 
-    private List<SavedOutfitClothesDto> deletedClothes;
+    private List<DeletedOutfitClothesDto> deletedClothes;
 }

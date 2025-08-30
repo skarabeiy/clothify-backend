@@ -151,6 +151,8 @@ public class OutfitService {
 
             outfit = outfitRepository.save(outfit);
 
+            addOutfitClothes(patchedOutfitDto, outfit);
+
             OutfitDto outfitDto = mapToOutfitDto(outfit);
 
             return ResponseEntity.ok(outfitDto);
@@ -187,17 +189,21 @@ public class OutfitService {
         outfit.setUpdatedAt(LocalDateTime.now());
     }
 
-    private void addOutfitClothes(PatchedOutfitDto patchedOutfitDto, OutfitDto outfitDto) {
+    private void addOutfitClothes(PatchedOutfitDto patchedOutfitDto, Outfit outfit) {
 
         if (patchedOutfitDto.getAddedClothes() != null && !patchedOutfitDto.getAddedClothes().isEmpty()) {
 
             List<OutfitClothes> outfitClothes = mapToOutfitClothesList(
                     patchedOutfitDto.getAddedClothes(),
-                    outfitDto.getId()
+                    outfit.getId()
             );
 
-            outfitClothes = outfitClothesRepository.saveAll(outfitClothes);
+            outfitClothesRepository.saveAll(outfitClothes);
         }
+    }
+
+    private void patchOutfitClothes() {
+
     }
 
     @Transactional

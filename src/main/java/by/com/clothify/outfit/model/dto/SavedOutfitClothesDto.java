@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 public class SavedOutfitClothesDto {
 
     @Schema(example = "1")
-    private Long id;
+    private Long clothingId;
 
     @Schema(description = "position of the clothing image center on the screen in relative x", example = "0.45")
     private Double positionX;
