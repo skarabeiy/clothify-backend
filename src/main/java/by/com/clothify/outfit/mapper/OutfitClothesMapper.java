@@ -13,7 +13,7 @@ public class OutfitClothesMapper {
     public static OutfitClothesDto mapToOutfitClothesDto(OutfitClothes outfitClothes) {
 
         return OutfitClothesDto.builder()
-                .id(outfitClothes.getId().getClothesId())
+                .id(outfitClothes.getClothes().getId())
                 .name(outfitClothes.getClothes().getName())
                 .image(outfitClothes.getClothes().getImage().getUrl())
                 .positionX(outfitClothes.getPositionX())
@@ -27,12 +27,6 @@ public class OutfitClothesMapper {
     public static OutfitClothes mapToOutfitClothes(SavedOutfitClothesDto savedOutfitClothesDto, Long outfitId) {
 
         return OutfitClothes.builder()
-                .id(
-                        OutfitClothes.Id.builder()
-                                .outfitId(outfitId)
-                                .clothesId(savedOutfitClothesDto.getId())
-                                .build()
-                )
                 .outfit(
                         Outfit.builder()
                                 .id(outfitId)
