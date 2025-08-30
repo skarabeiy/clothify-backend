@@ -14,7 +14,16 @@ import java.util.Optional;
 @Repository
 public interface OutfitRepository extends JpaRepository<Outfit, Long> {
 
-    Optional<Outfit> findByIdAndUser_Email(Long id, String email);
+    @Query("""
+            SELECT o FROM Outfit o
+            JOIN FETCH o.category
+            JOIN FETCH o.outfitClothes oc
+            JOIN FETCH oc.clothes c
+            JOIN FETCH c.image
+            WHERE o.id = :id
+            AND o.user.email = :email
+            """)
+    Optional<Outfit> findByIdAndEmail(Long id, String email);
 
     @Query("""
             SELECT o.id FROM Outfit o
