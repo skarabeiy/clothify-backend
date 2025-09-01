@@ -22,6 +22,7 @@ public interface OutfitRepository extends JpaRepository<Outfit, Long> {
             LEFT JOIN FETCH c.image
             WHERE o.id = :id
             AND o.user.email = :email
+            ORDER BY oc.addedAt DESC
             """)
     Optional<Outfit> findByIdAndEmail(Long id, String email);
 
