@@ -29,6 +29,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import static by.com.clothify.outfit.mapper.OutfitMapper.mapToOutfitDto;
 
@@ -156,6 +158,7 @@ public class OutfitService {
             deleteOutfitClothes(patchedOutfitDto, outfit.getOutfitClothes());
             addOutfitClothes(patchedOutfitDto, outfit);
 
+            // не хватает одежды, которую добавили
             OutfitDto outfitDto = mapToOutfitDto(outfit);
 
             return ResponseEntity.ok(outfitDto);
@@ -244,6 +247,15 @@ public class OutfitService {
 
         if (patchedOutfitDto.getDeletedClothes() != null && !patchedOutfitDto.getDeletedClothes().isEmpty()) {
 
+            Set<Long> outfitClothingIds = outfitClothes.stream()
+                    .map(OutfitClothes::getId)
+                    .collect(Collectors.toSet());
+
+            patchedOutfitDto.getDeletedClothes().forEach(deletedItem -> {
+                if (outfitClothingIds.contains(deletedItem.getId())) {
+                    outfitClothesRepository.deleteById(deletedItem.getId());
+                }
+            });
         }
     }
 
