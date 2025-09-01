@@ -5,6 +5,7 @@ import by.com.clothify.outfit.mapper.OutfitClothesMapper;
 import by.com.clothify.outfit.mapper.OutfitMapper;
 import by.com.clothify.outfit.model.dto.OutfitDto;
 import by.com.clothify.outfit.model.dto.OutfitFilterDto;
+import by.com.clothify.outfit.model.dto.PatchedOutfitClothesDto;
 import by.com.clothify.outfit.model.dto.PatchedOutfitDto;
 import by.com.clothify.outfit.model.dto.SavedOutfitClothesDto;
 import by.com.clothify.outfit.model.dto.SavedOutfitDto;
@@ -151,6 +152,8 @@ public class OutfitService {
 
             outfit = outfitRepository.save(outfit);
 
+            patchOutfitClothes(patchedOutfitDto, outfit.getOutfitClothes());
+            deleteOutfitClothes(patchedOutfitDto, outfit.getOutfitClothes());
             addOutfitClothes(patchedOutfitDto, outfit);
 
             OutfitDto outfitDto = mapToOutfitDto(outfit);
@@ -202,9 +205,48 @@ public class OutfitService {
         }
     }
 
-    private void patchOutfitClothes() {
+    private void patchOutfitClothes(PatchedOutfitDto patchedOutfitDto, List<OutfitClothes> outfitClothes) {
 
+        if (patchedOutfitDto.getUpdatedClothes() != null && !patchedOutfitDto.getUpdatedClothes().isEmpty()) {
+
+        }
     }
+
+    private static void setPatchedOutfitClothingFields(PatchedOutfitClothesDto patchedOutfitClothesDto,
+                                                       OutfitClothes outfitClothes) {
+
+        if (patchedOutfitClothesDto.getClothingId() != null) {
+            outfitClothes.getClothes().setId(patchedOutfitClothesDto.getClothingId());
+        }
+
+        if (patchedOutfitClothesDto.getPositionX() != null) {
+            outfitClothes.setPositionX(patchedOutfitClothesDto.getPositionX());
+        }
+
+        if (patchedOutfitClothesDto.getPositionY() != null) {
+            outfitClothes.setPositionY(patchedOutfitClothesDto.getPositionY());
+        }
+
+        if (patchedOutfitClothesDto.getScale() != null) {
+            outfitClothes.setScale(patchedOutfitClothesDto.getScale());
+        }
+
+        if (patchedOutfitClothesDto.getRotation() != null) {
+            outfitClothes.setRotation(patchedOutfitClothesDto.getRotation());
+        }
+
+        if (patchedOutfitClothesDto.getZIndex() != null) {
+            outfitClothes.setZIndex(patchedOutfitClothesDto.getZIndex());
+        }
+    }
+
+    private void deleteOutfitClothes(PatchedOutfitDto patchedOutfitDto, List<OutfitClothes> outfitClothes) {
+
+        if (patchedOutfitDto.getDeletedClothes() != null && !patchedOutfitDto.getDeletedClothes().isEmpty()) {
+
+        }
+    }
+
 
     @Transactional
     public ResponseEntity<Void> deleteOutfitById(Long id) {

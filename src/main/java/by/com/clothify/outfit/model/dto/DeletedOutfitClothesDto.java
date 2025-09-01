@@ -12,6 +12,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class DeletedOutfitClothesDto {
 
-    @Schema(example = "1")
+    @Schema(example = "2")
     private Long id;
 }

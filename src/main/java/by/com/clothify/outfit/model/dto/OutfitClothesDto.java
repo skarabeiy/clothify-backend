@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 public class OutfitClothesDto {
 
     @Schema(example = "1")
-    private Long id;
+    private Long clothingId;
 
     @Schema(example = "Jacket")
     private String name;
