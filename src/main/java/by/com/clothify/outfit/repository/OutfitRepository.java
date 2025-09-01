@@ -17,9 +17,9 @@ public interface OutfitRepository extends JpaRepository<Outfit, Long> {
     @Query("""
             SELECT o FROM Outfit o
             JOIN FETCH o.category
-            JOIN FETCH o.outfitClothes oc
-            JOIN FETCH oc.clothes c
-            JOIN FETCH c.image
+            LEFT JOIN FETCH o.outfitClothes oc
+            LEFT JOIN FETCH oc.clothes c
+            LEFT JOIN FETCH c.image
             WHERE o.id = :id
             AND o.user.email = :email
             """)
@@ -35,9 +35,9 @@ public interface OutfitRepository extends JpaRepository<Outfit, Long> {
 
     @Query("""
             SELECT DISTINCT o FROM Outfit o
-            JOIN FETCH o.outfitClothes oc
-            JOIN FETCH oc.clothes c
-            JOIN FETCH c.image
+            LEFT JOIN FETCH o.outfitClothes oc
+            LEFT JOIN FETCH oc.clothes c
+            LEFT JOIN FETCH c.image
             WHERE o.id IN :ids
             """)
     List<Outfit> findOutfitsByIds(List<Long> ids);
