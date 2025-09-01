@@ -13,6 +13,7 @@ public class OutfitClothesMapper {
     public static OutfitClothesDto mapToOutfitClothesDto(OutfitClothes outfitClothes) {
 
         return OutfitClothesDto.builder()
+                .id(outfitClothes.getId())
                 .clothingId(outfitClothes.getClothes().getId())
                 .name(outfitClothes.getClothes().getName())
                 .image(outfitClothes.getClothes().getImage().getUrl())

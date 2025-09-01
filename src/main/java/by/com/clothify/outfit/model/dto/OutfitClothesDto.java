@@ -13,6 +13,9 @@ import lombok.NoArgsConstructor;
 public class OutfitClothesDto {
 
     @Schema(example = "1")
+    private Long id;
+
+    @Schema(example = "1")
     private Long clothingId;
 
     @Schema(example = "Jacket")
