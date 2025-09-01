@@ -16,10 +16,6 @@ public class PatchedOutfitClothesDto {
     @Schema(example = "1")
     private Long id;
 
-    @Schema(example = "null")
-    @Nullable
-    private Long clothingId;
-
     @Schema(description = "position of the clothing image center on the screen in relative x", example = "null")
     @Nullable
     private Double positionX;

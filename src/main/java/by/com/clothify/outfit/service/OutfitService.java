@@ -212,15 +212,23 @@ public class OutfitService {
 
         if (patchedOutfitDto.getUpdatedClothes() != null && !patchedOutfitDto.getUpdatedClothes().isEmpty()) {
 
+            patchedOutfitDto.getUpdatedClothes().forEach(item -> {
+
+                Optional<OutfitClothes> optionalOutfitClothes = outfitClothes.stream()
+                        .filter(oc -> oc.getId().equals(item.getId()))
+                        .findFirst();
+
+                if (optionalOutfitClothes.isPresent()) {
+                    setPatchedOutfitClothingFields(item, optionalOutfitClothes.get());
+                    outfitClothesRepository.save(optionalOutfitClothes.get());
+                }
+
+            });
         }
     }
 
     private static void setPatchedOutfitClothingFields(PatchedOutfitClothesDto patchedOutfitClothesDto,
                                                        OutfitClothes outfitClothes) {
-
-        if (patchedOutfitClothesDto.getClothingId() != null) {
-            outfitClothes.getClothes().setId(patchedOutfitClothesDto.getClothingId());
-        }
 
         if (patchedOutfitClothesDto.getPositionX() != null) {
             outfitClothes.setPositionX(patchedOutfitClothesDto.getPositionX());
@@ -241,6 +249,8 @@ public class OutfitService {
         if (patchedOutfitClothesDto.getZIndex() != null) {
             outfitClothes.setZIndex(patchedOutfitClothesDto.getZIndex());
         }
+
+        outfitClothes.setAddedAt(LocalDateTime.now());
     }
 
     private void deleteOutfitClothes(PatchedOutfitDto patchedOutfitDto, List<OutfitClothes> outfitClothes) {
