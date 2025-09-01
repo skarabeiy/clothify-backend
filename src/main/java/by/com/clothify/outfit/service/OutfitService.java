@@ -137,7 +137,7 @@ public class OutfitService {
     }
 
     @Transactional
-    public ResponseEntity<OutfitDto> patchOutfit(PatchedOutfitDto patchedOutfitDto) {
+    public ResponseEntity<Void> patchOutfit(PatchedOutfitDto patchedOutfitDto) {
 
         final String email = AuthUtils.getEmail();
 
@@ -158,10 +158,7 @@ public class OutfitService {
             deleteOutfitClothes(patchedOutfitDto, outfit.getOutfitClothes());
             addOutfitClothes(patchedOutfitDto, outfit);
 
-            // не хватает одежды, которую добавили
-            OutfitDto outfitDto = mapToOutfitDto(outfit);
-
-            return ResponseEntity.ok(outfitDto);
+            return ResponseEntity.ok().build();
 
         } catch (Exception e) {
             log.error("Failed patch outfit with ID = {} for user: {}", patchedOutfitDto.getId(), email);

@@ -86,7 +86,7 @@ public class OutfitController {
             description = "Update filled fields for user outfit. Also add/update/delete clothes in outfit",
             security = @SecurityRequirement(name = "Bearer")
     )
-    public ResponseEntity<OutfitDto> patchOutfit(@RequestBody PatchedOutfitDto patchedOutfitDto) {
+    public ResponseEntity<Void> patchOutfit(@RequestBody PatchedOutfitDto patchedOutfitDto) {
         return outfitService.patchOutfit(patchedOutfitDto);
     }
 
