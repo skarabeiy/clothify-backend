@@ -13,6 +13,8 @@ import by.com.clothify.clothes.repository.ClothesRepository;
 import by.com.clothify.clothes.service.file.ImageService;
 import by.com.clothify.common.util.AuthUtils;
 import by.com.clothify.common.util.DateUtils;
+import by.com.clothify.outfit.model.entity.Outfit;
+import by.com.clothify.outfit.repository.OutfitRepository;
 import by.com.clothify.security.model.entity.User;
 import by.com.clothify.security.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -39,6 +41,7 @@ public class ClothesService {
     private final ImageService imageService;
     private final ClothesRepository clothesRepository;
     private final UserRepository userRepository;
+    private final OutfitRepository outfitRepository;
 
     public ResponseEntity<ClothesDto> getClothesById(Long id) {
 
@@ -51,6 +54,9 @@ public class ClothesService {
                 log.error("Can't find clothes by id = {} for user: {}", id, email);
                 return ResponseEntity.notFound().build();
             }
+
+            List<Long> outfitIds = outfitRepository.findAllByClothingId(optionalClothes.get().getId());
+            List<Outfit> outfits = outfitRepository.findOutfitsByIds(outfitIds);
 
             return ResponseEntity.ok(mapToClothesDto(optionalClothes.get()));
 

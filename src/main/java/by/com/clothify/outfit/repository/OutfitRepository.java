@@ -53,4 +53,13 @@ public interface OutfitRepository extends JpaRepository<Outfit, Long> {
             "WHERE o.user.email = :email " +
             "ORDER BY o.updatedAt DESC")
     List<String> findOutfitNames(String email);
+
+    @Query("""
+            SELECT o.id FROM Outfit o
+            JOIN o.outfitClothes oc
+            JOIN oc.clothes c
+            WHERE c.id = :clothingId
+            ORDER BY o.updatedAt DESC
+            """)
+    List<Long> findAllByClothingId(Long clothingId);
 }
