@@ -32,6 +32,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static by.com.clothify.clothes.mapper.ClothesMapper.mapToClothesDto;
+import static by.com.clothify.clothes.mapper.ClothesMapper.mapToClothesWithOutfitsDto;
 
 @Service
 @RequiredArgsConstructor
@@ -58,7 +59,7 @@ public class ClothesService {
             List<Long> outfitIds = outfitRepository.findAllByClothingId(optionalClothes.get().getId());
             List<Outfit> outfits = outfitRepository.findOutfitsByIds(outfitIds);
 
-            return ResponseEntity.ok(mapToClothesDto(optionalClothes.get()));
+            return ResponseEntity.ok(mapToClothesWithOutfitsDto(optionalClothes.get(), outfits));
 
         } catch (Exception e) {
             log.error("Failed get clothes by id = {} for user: {}", id, email);

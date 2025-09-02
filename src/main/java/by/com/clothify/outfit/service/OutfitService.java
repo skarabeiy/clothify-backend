@@ -77,9 +77,9 @@ public class OutfitService {
                 return Page.empty(pageable);
             }
 
-            List<OutfitDto> outfits = outfitRepository.findOutfitsByIds(outfitIds.getContent()).stream()
-                    .map(OutfitMapper::mapToPageOutfitDto)
-                    .toList();
+            List<OutfitDto> outfits = OutfitMapper.mapToListOfPageOutfitDto(
+                    outfitRepository.findOutfitsByIds(outfitIds.getContent())
+            );
 
             return new PageImpl<>(outfits, pageable, outfitIds.getTotalElements());
 

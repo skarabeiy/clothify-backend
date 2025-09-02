@@ -1,6 +1,7 @@
 package by.com.clothify.clothes.model.dto;
 
 import by.com.clothify.common.model.enums.Season;
+import by.com.clothify.outfit.model.dto.OutfitDto;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
@@ -8,6 +9,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.lang.Nullable;
+
+import java.util.List;
 
 @Data
 @Builder
@@ -43,4 +46,6 @@ public class ClothesDto {
 
     @Schema(example = "02.09.2024")
     private String dateOfPurchase;
+
+    private List<OutfitDto> outfits;
 }

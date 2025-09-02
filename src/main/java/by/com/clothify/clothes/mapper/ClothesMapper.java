@@ -6,6 +6,10 @@ import by.com.clothify.clothes.model.entity.Clothes;
 import by.com.clothify.clothes.model.entity.ClothesBrand;
 import by.com.clothify.clothes.model.entity.ClothesCategory;
 import by.com.clothify.common.util.DateUtils;
+import by.com.clothify.outfit.mapper.OutfitMapper;
+import by.com.clothify.outfit.model.entity.Outfit;
+
+import java.util.List;
 
 public final class ClothesMapper {
 
@@ -17,6 +21,15 @@ public final class ClothesMapper {
                 .image(clothes.getImage().getUrl())
                 .backgroundColor(clothes.getBackgroundColor())
                 .build();
+    }
+
+    public static ClothesDto mapToClothesWithOutfitsDto(Clothes clothes, List<Outfit> outfits) {
+
+        ClothesDto clothesDto = mapToClothesDto(clothes);
+
+        clothesDto.setOutfits(OutfitMapper.mapToListOfPageOutfitDto(outfits));
+
+        return clothesDto;
     }
 
     public static ClothesDto mapToClothesDto(Clothes clothes) {
