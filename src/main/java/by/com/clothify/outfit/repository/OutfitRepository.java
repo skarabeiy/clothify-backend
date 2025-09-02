@@ -28,8 +28,12 @@ public interface OutfitRepository extends JpaRepository<Outfit, Long> {
 
     @Query("""
             SELECT o.id FROM Outfit o
+            LEFT JOIN o.outfitClothes oc
             WHERE o.user.email = :email
             AND (:#{#filter.categoryId} IS NULL OR o.category.id = :#{#filter.categoryId})
+            AND (COALESCE(:#{#filter.clothingBrandIds}, NULL) IS NULL OR oc.clothes.brand.id IN :#{#filter.clothingBrandIds})
+            AND (:#{#filter.season} IS NULL OR o.season = :#{#filter.season})
+            AND (COALESCE(:#{#filter.names}, NULL) IS NULL OR o.name IN :#{#filter.names})
             ORDER BY o.updatedAt DESC
             """)
     Page<Long> findFilteredOutfitIds(String email, Pageable pageable, OutfitFilterDto filter);

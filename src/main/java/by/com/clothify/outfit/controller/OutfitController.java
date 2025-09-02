@@ -1,5 +1,6 @@
 package by.com.clothify.outfit.controller;
 
+import by.com.clothify.common.model.enums.Season;
 import by.com.clothify.outfit.model.dto.OutfitDto;
 import by.com.clothify.outfit.model.dto.OutfitFilterDto;
 import by.com.clothify.outfit.model.dto.PatchedOutfitDto;
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/outfits")
@@ -60,11 +62,23 @@ public class OutfitController {
             @RequestParam(name = "page", required = false, defaultValue = "0") int page,
 
             @Parameter(description = "Items number per page")
-            @RequestParam(name = "size", required = false, defaultValue = "8") int size
+            @RequestParam(name = "size", required = false, defaultValue = "8") int size,
+
+            @Parameter(description = "List of clothing brand IDs to filter")
+            @RequestParam(name = "brandIds", required = false) Set<Long> brandIds,
+
+            @Parameter(description = "Season to filter", example = "null")
+            @RequestParam(name = "season", required = false) Season season,
+
+            @Parameter(description = "List of outfits names to filter")
+            @RequestParam(name = "names", required = false) Set<String> names
     ) {
 
         OutfitFilterDto filter = OutfitFilterDto.builder()
                 .categoryId(categoryId)
+                .clothingBrandIds(brandIds)
+                .season(season)
+                .names(names)
                 .build();
 
         return outfitService.getFilteredOutfits(filter, page, size);
