@@ -6,4 +6,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface OutfitPlanRepository extends JpaRepository<OutfitPlan, Long> {
+
+    void deleteByIdAndUser_Email(Long id, String email);
 }

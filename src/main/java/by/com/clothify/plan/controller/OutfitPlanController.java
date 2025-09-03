@@ -9,6 +9,8 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -47,5 +49,18 @@ public class OutfitPlanController {
     )
     public void addOutfitPlan(@RequestBody SavedOutfitPlanDto savedOutfitPlanDto) {
         outfitPlanService.addOutfitPlan(savedOutfitPlanDto);
+    }
+
+    @DeleteMapping("/{id}")
+    @Operation(
+            summary = "Delete user outfit plan",
+            description = "Delete user outfit plan by ID",
+            security = @SecurityRequirement(name = "Bearer")
+    )
+    public ResponseEntity<Void> deleteOutfitPlanById(
+            @Parameter(description = "Outfit Plan ID", example = "1")
+            @PathVariable Long id
+    ) {
+        return outfitPlanService.deleteOutfitPlanById(id);
     }
 }
