@@ -1,6 +1,7 @@
 package by.com.clothify.plan.model.entity;
 
 import by.com.clothify.outfit.model.entity.Outfit;
+import by.com.clothify.security.model.entity.User;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -42,4 +43,8 @@ public class OutfitPlan {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "outfit_id", nullable = false)
     private Outfit outfit;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "auth_user_id", nullable = false)
+    private User user;
 }
