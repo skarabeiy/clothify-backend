@@ -17,8 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
-
-import static by.com.clothify.plan.mapper.OutfitPlanMapper.mapToListOfOutfitPlanDto;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -28,7 +27,7 @@ public class OutfitPlanService {
     private final UserRepository userRepository;
     private final OutfitPlanRepository outfitPlanRepository;
 
-    public List<OutfitPlanDto> getOutfitPlansByTimePeriod(TimePeriod timePeriod) {
+    public Map<String, List<OutfitPlanDto>> getOutfitPlansByTimePeriod(TimePeriod timePeriod) {
 
         final String email = AuthUtils.getEmail();
 
@@ -44,13 +43,13 @@ public class OutfitPlanService {
         }
     }
 
-    private List<OutfitPlanDto> getTodayOutfitPlans(String email) {
+    private Map<String, List<OutfitPlanDto>> getTodayOutfitPlans(String email) {
 
         List<OutfitPlan> outfitPlans = outfitPlanRepository.findByPlannedDateAndEmail(LocalDate.now(), email);
-        return mapToListOfOutfitPlanDto(outfitPlans);
+        return OutfitPlanMapper.mapToMapOfOutfitPlanDto(outfitPlans);
     }
 
-    private List<OutfitPlanDto> getWeekOutfitPlans(String email) {
+    private Map<String, List<OutfitPlanDto>> getWeekOutfitPlans(String email) {
 
         return null;
     }

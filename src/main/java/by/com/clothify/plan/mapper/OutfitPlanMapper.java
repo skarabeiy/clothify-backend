@@ -8,9 +8,22 @@ import by.com.clothify.plan.model.dto.SavedOutfitPlanDto;
 import by.com.clothify.plan.model.entity.OutfitPlan;
 import by.com.clothify.security.model.entity.User;
 
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 public final class OutfitPlanMapper {
+
+    public static Map<String, List<OutfitPlanDto>> mapToMapOfOutfitPlanDto(List<OutfitPlan> outfitPlans) {
+
+        return mapToListOfOutfitPlanDto(outfitPlans).stream()
+                .collect(Collectors.groupingBy(
+                        OutfitPlanDto::getDate,
+                        LinkedHashMap::new,
+                        Collectors.toList()
+                ));
+    }
 
     public static List<OutfitPlanDto> mapToListOfOutfitPlanDto(List<OutfitPlan> outfitPlans) {
 

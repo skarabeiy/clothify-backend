@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/outfit-plans")
@@ -34,7 +35,7 @@ public class OutfitPlanController {
             description = "Get user outfit plans by time period type",
             security = @SecurityRequirement(name = "Bearer")
     )
-    public List<OutfitPlanDto> getOutfitPlansByTimePeriod(
+    public Map<String, List<OutfitPlanDto>> getOutfitPlansByTimePeriod(
             @Parameter(description = "Time period type", example = "TODAY")
             @PathVariable(name = "time-period") TimePeriod timePeriod
     ) {
