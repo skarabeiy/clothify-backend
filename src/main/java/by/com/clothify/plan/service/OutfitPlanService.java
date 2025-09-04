@@ -15,7 +15,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.List;
+
+import static by.com.clothify.plan.mapper.OutfitPlanMapper.mapToListOfOutfitPlanDto;
 
 @Service
 @RequiredArgsConstructor
@@ -27,8 +30,29 @@ public class OutfitPlanService {
 
     public List<OutfitPlanDto> getOutfitPlansByTimePeriod(TimePeriod timePeriod) {
 
-        log.info(timePeriod.name());
-        return List.of();
+        final String email = AuthUtils.getEmail();
+
+        try {
+            return TimePeriod.TODAY == timePeriod
+                    ? getTodayOutfitPlans(email)
+                    : getWeekOutfitPlans(email);
+
+        } catch (Exception e) {
+            log.error("Failed get {} outfit plans for user: {}", timePeriod, email);
+            log.error(e.getMessage(), e);
+            throw new RuntimeException(e);
+        }
+    }
+
+    private List<OutfitPlanDto> getTodayOutfitPlans(String email) {
+
+        List<OutfitPlan> outfitPlans = outfitPlanRepository.findByPlannedDateAndEmail(LocalDate.now(), email);
+        return mapToListOfOutfitPlanDto(outfitPlans);
+    }
+
+    private List<OutfitPlanDto> getWeekOutfitPlans(String email) {
+
+        return null;
     }
 
     public void addOutfitPlan(SavedOutfitPlanDto savedOutfitPlanDto) {

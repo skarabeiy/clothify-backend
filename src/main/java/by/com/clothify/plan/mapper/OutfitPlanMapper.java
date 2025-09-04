@@ -1,12 +1,32 @@
 package by.com.clothify.plan.mapper;
 
 import by.com.clothify.common.util.DateUtils;
+import by.com.clothify.outfit.mapper.OutfitMapper;
 import by.com.clothify.outfit.model.entity.Outfit;
+import by.com.clothify.plan.model.dto.OutfitPlanDto;
 import by.com.clothify.plan.model.dto.SavedOutfitPlanDto;
 import by.com.clothify.plan.model.entity.OutfitPlan;
 import by.com.clothify.security.model.entity.User;
 
-public class OutfitPlanMapper {
+import java.util.List;
+
+public final class OutfitPlanMapper {
+
+    public static List<OutfitPlanDto> mapToListOfOutfitPlanDto(List<OutfitPlan> outfitPlans) {
+
+        return outfitPlans.stream()
+                .map(OutfitPlanMapper::mapToOutfitPlanDto)
+                .toList();
+    }
+
+    public static OutfitPlanDto mapToOutfitPlanDto(OutfitPlan outfitPlan) {
+
+        return OutfitPlanDto.builder()
+                .id(outfitPlan.getId())
+                .date(DateUtils.convertToString(outfitPlan.getPlannedDate()))
+                .outfit(OutfitMapper.mapToPageOutfitDto(outfitPlan.getOutfit()))
+                .build();
+    }
 
     public static OutfitPlan mapToOutfitPlan(SavedOutfitPlanDto savedOutfitPlanDto, Long userId) {
 
