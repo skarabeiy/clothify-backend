@@ -24,12 +24,12 @@ import java.util.Map;
 @RestController
 @RequestMapping("/outfit-plans")
 @RequiredArgsConstructor
-@Tag(name = "Outfit plan API", description = "Operations for outfit plans")
+@Tag(name = "Outfit Plan API", description = "Operations for outfit plans")
 public class OutfitPlanController {
 
     private final OutfitPlanService outfitPlanService;
 
-    @GetMapping("/{time-period}")
+    @GetMapping("/by-time-period/{time-period}")
     @Operation(
             summary = "Get outfit plans by time period",
             description = "Get user outfit plans by time period type",
@@ -40,6 +40,22 @@ public class OutfitPlanController {
             @PathVariable(name = "time-period") TimePeriod timePeriod
     ) {
         return outfitPlanService.getOutfitPlansByTimePeriod(timePeriod);
+    }
+
+    @GetMapping("/by-month/{month}/{year}")
+    @Operation(
+            summary = "Get monthly outfit plans",
+            description = "Get user outfit plans for month",
+            security = @SecurityRequirement(name = "Bearer")
+    )
+    public List<OutfitPlanDto> getMonthlyOutfitPlans(
+            @Parameter(description = "Month number (January = 1)", example = "9")
+            @PathVariable Integer month,
+
+            @Parameter(description = "Year number", example = "2025")
+            @PathVariable Integer year
+    ) {
+        return outfitPlanService.getMonthlyOutfitPlans(month, year);
     }
 
     @PostMapping

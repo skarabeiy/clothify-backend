@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.YearMonth;
 import java.util.List;
 import java.util.Map;
 
@@ -74,6 +75,25 @@ public class OutfitPlanService {
         } catch (Exception e) {
             log.error("Failed save outfit plan with outfit ID = {} for user: {}",
                     savedOutfitPlanDto.getOutfitId(), email);
+            log.error(e.getMessage(), e);
+            throw new RuntimeException(e);
+        }
+    }
+
+    public List<OutfitPlanDto> getMonthlyOutfitPlans(Integer month, Integer year) {
+
+        final String email = AuthUtils.getEmail();
+
+        try {
+            YearMonth yearMonth = YearMonth.of(year, month);
+            LocalDate firstDay = yearMonth.atDay(1);
+            LocalDate lastDay = yearMonth.atEndOfMonth();
+
+            List<OutfitPlan> outfitPlans = outfitPlanRepository.findByDatePeriodAndEmail(firstDay, lastDay, email);
+            return OutfitPlanMapper.mapToListOfOutfitPlanDto(outfitPlans);
+
+        } catch (Exception e) {
+            log.error("Failed get outfit plans for {}.{}, for user: {}", month, year, email);
             log.error(e.getMessage(), e);
             throw new RuntimeException(e);
         }
