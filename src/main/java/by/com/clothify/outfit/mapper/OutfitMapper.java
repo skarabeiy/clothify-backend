@@ -8,7 +8,7 @@ import by.com.clothify.outfit.model.entity.OutfitClothes;
 
 import java.util.List;
 
-public class OutfitMapper {
+public final class OutfitMapper {
 
     public static List<OutfitDto> mapToListOfPageOutfitDto(List<Outfit> outfits) {
 

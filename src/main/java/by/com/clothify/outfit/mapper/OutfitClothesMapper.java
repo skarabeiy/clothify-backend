@@ -8,7 +8,7 @@ import by.com.clothify.outfit.model.entity.OutfitClothes;
 
 import java.time.LocalDateTime;
 
-public class OutfitClothesMapper {
+public final class OutfitClothesMapper {
 
     public static OutfitClothesDto mapToOutfitClothesDto(OutfitClothes outfitClothes) {
 

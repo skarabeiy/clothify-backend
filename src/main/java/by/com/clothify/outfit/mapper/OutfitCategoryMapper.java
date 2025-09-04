@@ -3,7 +3,7 @@ package by.com.clothify.outfit.mapper;
 import by.com.clothify.outfit.model.dto.OutfitCategoryDto;
 import by.com.clothify.outfit.model.entity.OutfitCategory;
 
-public class OutfitCategoryMapper {
+public final class OutfitCategoryMapper {
 
     public static OutfitCategoryDto mapToCategoryDto(OutfitCategory category) {
 
