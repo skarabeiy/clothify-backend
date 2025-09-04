@@ -15,9 +15,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
+
+import static by.com.clothify.plan.mapper.OutfitPlanMapper.mapToMapOfOutfitPlanDto;
 
 @Service
 @RequiredArgsConstructor
@@ -46,12 +49,17 @@ public class OutfitPlanService {
     private Map<String, List<OutfitPlanDto>> getTodayOutfitPlans(String email) {
 
         List<OutfitPlan> outfitPlans = outfitPlanRepository.findByPlannedDateAndEmail(LocalDate.now(), email);
-        return OutfitPlanMapper.mapToMapOfOutfitPlanDto(outfitPlans);
+        return mapToMapOfOutfitPlanDto(outfitPlans);
     }
 
     private Map<String, List<OutfitPlanDto>> getWeekOutfitPlans(String email) {
 
-        return null;
+        LocalDate now = LocalDate.now();
+        LocalDate startOfWeek = now.with(DayOfWeek.MONDAY);
+        LocalDate endOfWeek = now.with(DayOfWeek.SUNDAY);
+
+        List<OutfitPlan> outfitPlans = outfitPlanRepository.findByWeekAndEmail(startOfWeek, endOfWeek, email);
+        return mapToMapOfOutfitPlanDto(outfitPlans);
     }
 
     public void addOutfitPlan(SavedOutfitPlanDto savedOutfitPlanDto) {

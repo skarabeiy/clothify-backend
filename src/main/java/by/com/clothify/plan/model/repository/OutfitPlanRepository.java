@@ -22,5 +22,18 @@ public interface OutfitPlanRepository extends JpaRepository<OutfitPlan, Long> {
             """)
     List<OutfitPlan> findByPlannedDateAndEmail(LocalDate plannedDate, String email);
 
+    @Query("""
+            SELECT op FROM OutfitPlan op
+            JOIN FETCH op.outfit o
+            LEFT JOIN FETCH o.outfitClothes oc
+            LEFT JOIN FETCH oc.clothes c
+            LEFT JOIN FETCH c.image
+            WHERE op.user.email = :email
+            AND op.plannedDate BETWEEN :startOfWeek AND :endOfWeek
+            ORDER BY op.plannedDate
+            """)
+    List<OutfitPlan> findByWeekAndEmail(LocalDate startOfWeek, LocalDate endOfWeek, String email);
+
+
     void deleteByIdAndUser_Email(Long id, String email);
 }
