@@ -1,4 +1,4 @@
-package by.com.clothify.plan.model.repository;
+package by.com.clothify.plan.repository;
 
 import by.com.clothify.plan.model.entity.OutfitPlan;
 import org.springframework.data.jpa.repository.JpaRepository;

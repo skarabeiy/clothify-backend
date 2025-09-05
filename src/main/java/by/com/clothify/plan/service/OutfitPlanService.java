@@ -6,7 +6,7 @@ import by.com.clothify.plan.model.dto.OutfitPlanDto;
 import by.com.clothify.plan.model.dto.SavedOutfitPlanDto;
 import by.com.clothify.plan.model.entity.OutfitPlan;
 import by.com.clothify.plan.model.enums.TimePeriod;
-import by.com.clothify.plan.model.repository.OutfitPlanRepository;
+import by.com.clothify.plan.repository.OutfitPlanRepository;
 import by.com.clothify.security.model.entity.User;
 import by.com.clothify.security.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
