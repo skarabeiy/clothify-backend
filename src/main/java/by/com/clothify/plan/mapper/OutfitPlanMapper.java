@@ -28,8 +28,17 @@ public final class OutfitPlanMapper {
     public static List<OutfitPlanDto> mapToListOfOutfitPlanDto(List<OutfitPlan> outfitPlans) {
 
         return outfitPlans.stream()
-                .map(OutfitPlanMapper::mapToOutfitPlanDto)
+                .map(OutfitPlanMapper::mapToPageOutfitPlanDto)
                 .toList();
+    }
+
+    public static OutfitPlanDto mapToPageOutfitPlanDto(OutfitPlan outfitPlan) {
+
+        return OutfitPlanDto.builder()
+                .id(outfitPlan.getId())
+                .date(DateUtils.convertToString(outfitPlan.getPlannedDate()))
+                .outfit(OutfitMapper.mapToPageOutfitDto(outfitPlan.getOutfit()))
+                .build();
     }
 
     public static OutfitPlanDto mapToOutfitPlanDto(OutfitPlan outfitPlan) {
@@ -37,7 +46,7 @@ public final class OutfitPlanMapper {
         return OutfitPlanDto.builder()
                 .id(outfitPlan.getId())
                 .date(DateUtils.convertToString(outfitPlan.getPlannedDate()))
-                .outfit(OutfitMapper.mapToPageOutfitDto(outfitPlan.getOutfit()))
+                .outfit(OutfitMapper.mapToOutfitDto(outfitPlan.getOutfit()))
                 .build();
     }
 

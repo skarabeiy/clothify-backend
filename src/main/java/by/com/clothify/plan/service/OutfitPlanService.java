@@ -21,6 +21,7 @@ import java.time.YearMonth;
 import java.util.List;
 import java.util.Map;
 
+import static by.com.clothify.common.util.DateUtils.covertToLocaleDate;
 import static by.com.clothify.plan.mapper.OutfitPlanMapper.mapToMapOfOutfitPlanDto;
 
 @Service
@@ -94,6 +95,24 @@ public class OutfitPlanService {
 
         } catch (Exception e) {
             log.error("Failed get outfit plans for {}.{}, for user: {}", month, year, email);
+            log.error(e.getMessage(), e);
+            throw new RuntimeException(e);
+        }
+    }
+
+    public List<OutfitPlanDto> getOutfitPlansByDate(String date) {
+
+        final String email = AuthUtils.getEmail();
+
+        try {
+            List<OutfitPlan> outfitPlans = outfitPlanRepository
+                    .findByPlannedDateAndEmailWithFullOutfitInfo(covertToLocaleDate(date), email);
+            return outfitPlans.stream()
+                    .map(OutfitPlanMapper::mapToOutfitPlanDto)
+                    .toList();
+
+        } catch (Exception e) {
+            log.error("Failed get outfit plans by date = {}, for user: {}", date, email);
             log.error(e.getMessage(), e);
             throw new RuntimeException(e);
         }

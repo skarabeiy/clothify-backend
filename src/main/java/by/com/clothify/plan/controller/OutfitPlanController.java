@@ -58,6 +58,19 @@ public class OutfitPlanController {
         return outfitPlanService.getMonthlyOutfitPlans(month, year);
     }
 
+    @GetMapping("/by-date/{date}")
+    @Operation(
+            summary = "Get outfit plans by date",
+            description = "Get user outfit plans by date",
+            security = @SecurityRequirement(name = "Bearer")
+    )
+    public List<OutfitPlanDto> getOutfitPlansByDate(
+            @Parameter(description = "Date in dd.MM.yyyy format", example = "03.09.2025")
+            @PathVariable String date
+    ) {
+        return outfitPlanService.getOutfitPlansByDate(date);
+    }
+
     @PostMapping
     @Operation(
             summary = "Add outfit plan",

@@ -25,6 +25,18 @@ public interface OutfitPlanRepository extends JpaRepository<OutfitPlan, Long> {
     @Query("""
             SELECT op FROM OutfitPlan op
             JOIN FETCH op.outfit o
+            JOIN FETCH o.category
+            LEFT JOIN FETCH o.outfitClothes oc
+            LEFT JOIN FETCH oc.clothes c
+            LEFT JOIN FETCH c.image
+            WHERE op.user.email = :email
+            AND op.plannedDate = :plannedDate
+            """)
+    List<OutfitPlan> findByPlannedDateAndEmailWithFullOutfitInfo(LocalDate plannedDate, String email);
+
+    @Query("""
+            SELECT op FROM OutfitPlan op
+            JOIN FETCH op.outfit o
             LEFT JOIN FETCH o.outfitClothes oc
             LEFT JOIN FETCH oc.clothes c
             LEFT JOIN FETCH c.image
