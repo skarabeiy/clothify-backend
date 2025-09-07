@@ -10,7 +10,9 @@ import by.com.clothify.security.model.entity.User;
 import by.com.clothify.security.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -32,6 +34,22 @@ public class CollectionService {
 
         } catch (Exception e) {
             log.error("Failed save collection: {} for user: {}", savedCollectionDto.getName(), email);
+            log.error(e.getMessage(), e);
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Transactional
+    public ResponseEntity<Void> deleteCollectionById(Long id) {
+
+        final String email = AuthUtils.getEmail();
+
+        try {
+            collectionRepository.deleteByIdAndUser_Email(id, email);
+            return ResponseEntity.ok().build();
+
+        } catch (Exception e) {
+            log.error("Failed delete collection with ID = {} for user: {}", id, email);
             log.error(e.getMessage(), e);
             throw new RuntimeException(e);
         }
