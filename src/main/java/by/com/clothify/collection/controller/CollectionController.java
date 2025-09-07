@@ -1,6 +1,7 @@
 package by.com.clothify.collection.controller;
 
 import by.com.clothify.collection.model.dto.CollectionDto;
+import by.com.clothify.collection.model.dto.PatchedCollectionDto;
 import by.com.clothify.collection.model.dto.SavedCollectionDto;
 import by.com.clothify.collection.service.CollectionService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -10,6 +11,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -32,6 +34,16 @@ public class CollectionController {
     )
     public CollectionDto saveCollection(@RequestBody SavedCollectionDto savedCollectionDto) {
         return collectionService.saveCollection(savedCollectionDto);
+    }
+
+    @PatchMapping
+    @Operation(
+            summary = "Update user collection",
+            description = "Update filled fields for user collection",
+            security = @SecurityRequirement(name = "Bearer")
+    )
+    public ResponseEntity<CollectionDto> patchCollection(@RequestBody PatchedCollectionDto patchedCollectionDto) {
+        return collectionService.patchCollection(patchedCollectionDto);
     }
 
     @DeleteMapping("/{id}")
