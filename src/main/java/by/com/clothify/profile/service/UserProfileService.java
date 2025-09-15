@@ -30,8 +30,15 @@ public class UserProfileService {
         String email = AuthUtils.getEmail();
 
         try {
-            UserProfile userProfile = userProfileRepository.findByEmail(email).orElseThrow();
-            return mapToUserProfileDto(userProfile);
+            Optional<UserProfile> optionalUserProfile = userProfileRepository.findByEmail(email);
+
+            if (optionalUserProfile.isEmpty()) {
+                return UserProfileResponseDto.builder()
+                        .email(email)
+                        .build();
+            }
+
+            return mapToUserProfileDto(optionalUserProfile.get());
 
         } catch (Exception e) {
             log.error("Failed get user profile information for: {}", email);
