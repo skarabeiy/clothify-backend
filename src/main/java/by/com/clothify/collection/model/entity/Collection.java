@@ -1,8 +1,8 @@
 package by.com.clothify.collection.model.entity;
 
-import by.com.clothify.clothes.model.entity.Clothes;
 import by.com.clothify.collection.model.enums.CollectionType;
 import by.com.clothify.security.model.entity.User;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -12,9 +12,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -57,11 +56,6 @@ public class Collection {
     @Column(nullable = false)
     private LocalDateTime updatedAt;
 
-    @ManyToMany
-    @JoinTable(
-            name = "collection_clothes",
-            joinColumns = @JoinColumn(name = "collection_id"),
-            inverseJoinColumns = @JoinColumn(name = "clothes_id")
-    )
-    private List<Clothes> clothes;
+    @OneToMany(mappedBy = "collection", cascade = CascadeType.REMOVE)
+    private List<CollectionClothes> collectionClothes;
 }
