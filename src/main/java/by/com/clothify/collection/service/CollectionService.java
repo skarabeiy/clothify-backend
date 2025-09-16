@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 import static by.com.clothify.collection.mapper.CollectionMapper.mapToCollectionDto;
@@ -28,6 +29,8 @@ import static by.com.clothify.collection.mapper.CollectionMapper.mapToCollection
 @RequiredArgsConstructor
 @Slf4j
 public class CollectionService {
+
+    private static final int CLOTHING_PREVIEW_NUMBER = 4;
 
     private final UserRepository userRepository;
     private final CollectionRepository collectionRepository;
@@ -38,6 +41,14 @@ public class CollectionService {
 
         try {
             Pageable pageable = PageRequest.of(page, size);
+
+            Page<Long> collectionIds = collectionRepository.findIdsByTypeAndEmail(type, email, pageable);
+
+            if (collectionIds.isEmpty()) {
+                return Page.empty(pageable);
+            }
+
+            List<Collection> collections = collectionRepository.findByIds(collectionIds.getContent());
 
             return null;
 
