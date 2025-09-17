@@ -1,6 +1,7 @@
 package by.com.clothify.collection.model.dto;
 
 import by.com.clothify.clothes.model.dto.ClothesDto;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,6 +12,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class CollectionClothesDto {
 
     @Schema(example = "1")

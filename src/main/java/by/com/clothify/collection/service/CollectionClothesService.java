@@ -13,9 +13,13 @@ import by.com.clothify.common.util.AuthUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -26,9 +30,32 @@ public class CollectionClothesService {
     private final CollectionRepository collectionRepository;
     private final CollectionClothesRepository collectionClothesRepository;
 
-    public Page<CollectionClothesDto> getFilteredCollectionClothes(CollectionClothesFilterDto filter, int page, int size) {
+    public Page<CollectionClothesDto> getFilteredCollectionClothes(CollectionClothesFilterDto filter,
+                                                                   int page, int size) {
 
-        return null;
+        final String email = AuthUtils.getEmail();
+
+        try {
+            Pageable pageable = PageRequest.of(page, size);
+
+            Page<Long> ids = collectionClothesRepository.findFilteredCollectionClothesIds(email, pageable, filter);
+
+            if (ids.isEmpty()) {
+                return Page.empty(pageable);
+            }
+
+            List<CollectionClothesDto> collectionClothes = collectionClothesRepository
+                    .findCollectionClothesByIds(ids.getContent()).stream()
+                    .map(CollectionClothesMapper::mapToCollectionClothesDto)
+                    .toList();
+
+            return new PageImpl<>(collectionClothes, pageable, ids.getTotalElements());
+
+        } catch (Exception e) {
+            log.error("Failed get collection clothes by collection id = {}, for user: {}", filter.getCollectionId(), email);
+            log.error(e.getMessage(), e);
+            throw new RuntimeException(e);
+        }
     }
 
     public ResponseEntity<Void> saveCollectionClothes(SavedCollectionClothesDto savedClothesDto) {
