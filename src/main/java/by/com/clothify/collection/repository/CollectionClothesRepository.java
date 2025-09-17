@@ -28,4 +28,6 @@ public interface CollectionClothesRepository extends JpaRepository<CollectionClo
             WHERE cc.id IN :ids
             """)
     List<CollectionClothes> findCollectionClothesByIds(List<Long> ids);
+
+    void deleteByIdAndCollection_User_Email(Long id, String email);
 }
