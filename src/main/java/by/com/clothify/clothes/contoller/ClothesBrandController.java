@@ -18,7 +18,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/clothes-brands")
 @RequiredArgsConstructor
-@Tag(name = "Clothes Brands API", description = "Operations for clothes brands")
+@Tag(name = "07 - Clothes Brands API", description = "Operations for clothes brands")
 public class ClothesBrandController {
 
     private final ClothesBrandService clothesBrandService;

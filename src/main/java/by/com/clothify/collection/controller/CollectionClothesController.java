@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/collection-clothes")
 @RequiredArgsConstructor
-@Tag(name = "Collection Clothes API", description = "Operations for collection clothes")
+@Tag(name = "12 - Collection Clothes API", description = "Operations for collection clothes")
 public class CollectionClothesController {
 
     private final CollectionClothesService collectionClothesService;

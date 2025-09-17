@@ -30,7 +30,7 @@ import java.util.Set;
 @RestController
 @RequestMapping("/clothes")
 @RequiredArgsConstructor
-@Tag(name = "Clothes API", description = "Operations for clothes")
+@Tag(name = "05 - Clothes API", description = "Operations for clothes")
 public class ClothesController {
 
     private final ClothesService clothesService;

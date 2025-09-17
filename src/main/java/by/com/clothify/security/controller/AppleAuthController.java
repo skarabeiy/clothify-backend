@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/auth/apple")
 @RequiredArgsConstructor
-@Tag(name = "Apple Auth API", description = "Operations for apple authorization")
+@Tag(name = "02 - Apple Auth API", description = "Operations for apple authorization")
 public class AppleAuthController {
 
     private final AppleAuthService appleAuthService;

@@ -29,7 +29,7 @@ import java.util.Set;
 @RestController
 @RequestMapping("/outfits")
 @RequiredArgsConstructor
-@Tag(name = "Outfit API", description = "Operations for outfits")
+@Tag(name = "08 - Outfit API", description = "Operations for outfits")
 public class OutfitController {
 
     private final OutfitService outfitService;

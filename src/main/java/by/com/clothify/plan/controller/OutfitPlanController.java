@@ -24,7 +24,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/outfit-plans")
 @RequiredArgsConstructor
-@Tag(name = "Outfit Plan API", description = "Operations for outfit plans")
+@Tag(name = "10 - Outfit Plan API", description = "Operations for outfit plans")
 public class OutfitPlanController {
 
     private final OutfitPlanService outfitPlanService;

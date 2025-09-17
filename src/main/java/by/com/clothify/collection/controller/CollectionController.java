@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/collections")
 @RequiredArgsConstructor
-@Tag(name = "Collections API", description = "Operations for collections")
+@Tag(name = "11 - Collections API", description = "Operations for collections")
 public class CollectionController {
 
     private final CollectionService collectionService;

@@ -15,7 +15,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/outfit-categories")
 @RequiredArgsConstructor
-@Tag(name = "Outfit Categories API", description = "Operations for outfit categories")
+@Tag(name = "09 - Outfit Categories API", description = "Operations for outfit categories")
 public class OutfitCategoryController {
 
     private final OutfitCategoryService outfitCategoryService;

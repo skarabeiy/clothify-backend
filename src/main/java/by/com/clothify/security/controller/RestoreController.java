@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/restore")
 @RequiredArgsConstructor
-@Tag(name = "Restore API", description = "Operations for restore user data")
+@Tag(name = "03 - Restore API", description = "Operations for restore user data")
 public class RestoreController {
 
     private final RestoreService restoreService;
