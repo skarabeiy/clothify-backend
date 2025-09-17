@@ -1,6 +1,8 @@
 package by.com.clothify.collection.service;
 
 import by.com.clothify.collection.mapper.CollectionClothesMapper;
+import by.com.clothify.collection.model.dto.CollectionClothesDto;
+import by.com.clothify.collection.model.dto.CollectionClothesFilterDto;
 import by.com.clothify.collection.model.dto.SavedCollectionClothesDto;
 import by.com.clothify.collection.model.entity.Collection;
 import by.com.clothify.collection.model.entity.CollectionClothes;
@@ -10,6 +12,7 @@ import by.com.clothify.collection.repository.CollectionRepository;
 import by.com.clothify.common.util.AuthUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +25,11 @@ public class CollectionClothesService {
 
     private final CollectionRepository collectionRepository;
     private final CollectionClothesRepository collectionClothesRepository;
+
+    public Page<CollectionClothesDto> getFilteredCollectionClothes(CollectionClothesFilterDto filter, int page, int size) {
+
+        return null;
+    }
 
     public ResponseEntity<Void> saveCollectionClothes(SavedCollectionClothesDto savedClothesDto) {
 
