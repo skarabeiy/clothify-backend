@@ -3,6 +3,7 @@ package by.com.clothify.collection.service;
 import by.com.clothify.collection.mapper.CollectionClothesMapper;
 import by.com.clothify.collection.model.dto.CollectionClothesDto;
 import by.com.clothify.collection.model.dto.CollectionClothesFilterDto;
+import by.com.clothify.collection.model.dto.PatchedCollectionClothesDto;
 import by.com.clothify.collection.model.dto.SavedCollectionClothesDto;
 import by.com.clothify.collection.model.entity.Collection;
 import by.com.clothify.collection.model.entity.CollectionClothes;
@@ -83,6 +84,32 @@ public class CollectionClothesService {
         } catch (Exception e) {
             log.error("Failed save clothing with ID = {}, for collection with ID = {}, for user: {}",
                     savedClothesDto.getClothesId(), savedClothesDto.getCollectionId(), email);
+            log.error(e.getMessage(), e);
+            throw new RuntimeException(e);
+        }
+    }
+
+    public ResponseEntity<Void> patchCollectionClothes(PatchedCollectionClothesDto patchedClothesDto) {
+
+        final String email = AuthUtils.getEmail();
+
+        try {
+            Optional<CollectionClothes> optionalCollectionClothes = collectionClothesRepository
+                    .findByIdAndCollection_User_Email(patchedClothesDto.getId(), email);
+
+            if (optionalCollectionClothes.isEmpty()) {
+                return ResponseEntity.notFound().build();
+            }
+
+            CollectionClothes collectionClothes = optionalCollectionClothes.get();
+            collectionClothes.setIsPacked(patchedClothesDto.getPacked());
+
+            collectionClothesRepository.save(collectionClothes);
+
+            return ResponseEntity.ok().build();
+
+        } catch (Exception e) {
+            log.error("Failed patch collection clothes with ID = {} for user: {}", patchedClothesDto.getId(), email);
             log.error(e.getMessage(), e);
             throw new RuntimeException(e);
         }

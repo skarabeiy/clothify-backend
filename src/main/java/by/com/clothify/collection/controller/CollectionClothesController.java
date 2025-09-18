@@ -2,6 +2,7 @@ package by.com.clothify.collection.controller;
 
 import by.com.clothify.collection.model.dto.CollectionClothesDto;
 import by.com.clothify.collection.model.dto.CollectionClothesFilterDto;
+import by.com.clothify.collection.model.dto.PatchedCollectionClothesDto;
 import by.com.clothify.collection.model.dto.SavedCollectionClothesDto;
 import by.com.clothify.collection.service.CollectionClothesService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -13,6 +14,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -63,6 +65,18 @@ public class CollectionClothesController {
             @RequestBody SavedCollectionClothesDto savedCollectionClothesDto
     ) {
         return collectionClothesService.saveCollectionClothes(savedCollectionClothesDto);
+    }
+
+    @PatchMapping
+    @Operation(
+            summary = "Update user collection clothes",
+            description = "Update filled fields for user collection clothes",
+            security = @SecurityRequirement(name = "Bearer")
+    )
+    public ResponseEntity<Void> patchCollectionClothes(
+            @RequestBody PatchedCollectionClothesDto patchedCollectionClothesDto
+    ) {
+        return collectionClothesService.patchCollectionClothes(patchedCollectionClothesDto);
     }
 
     @DeleteMapping("/{id}")

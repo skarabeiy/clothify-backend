@@ -9,9 +9,12 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface CollectionClothesRepository extends JpaRepository<CollectionClothes, Long> {
+
+    Optional<CollectionClothes> findByIdAndCollection_User_Email(Long id, String email);
 
     @Query("""
             SELECT cc.id FROM CollectionClothes cc
