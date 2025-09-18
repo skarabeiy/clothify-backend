@@ -5,6 +5,7 @@ import by.com.clothify.collection.model.dto.CollectionClothesFilterDto;
 import by.com.clothify.collection.model.dto.PatchedCollectionClothesDto;
 import by.com.clothify.collection.model.dto.SavedCollectionClothesDto;
 import by.com.clothify.collection.service.CollectionClothesService;
+import by.com.clothify.common.model.enums.Season;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/collection-clothes")
@@ -47,11 +49,31 @@ public class CollectionClothesController {
             @RequestParam(name = "page", required = false, defaultValue = "0") int page,
 
             @Parameter(description = "Items number per page")
-            @RequestParam(name = "size", required = false, defaultValue = "10") int size
+            @RequestParam(name = "size", required = false, defaultValue = "10") int size,
+
+            @Parameter(description = "Packed status", example = "null")
+            @RequestParam(name = "packed", required = false) Boolean packed,
+
+            @Parameter(description = "List of clothes colors to filter")
+            @RequestParam(name = "colors", required = false) Set<String> colors,
+
+            @Parameter(description = "List of clothes brand IDs to filter")
+            @RequestParam(name = "brandIds", required = false) Set<Long> brandIds,
+
+            @Parameter(description = "Season to filter", example = "null")
+            @RequestParam(name = "season", required = false) Season season,
+
+            @Parameter(description = "List of clothes names to filter")
+            @RequestParam(name = "names", required = false) Set<String> names
     ) {
 
         CollectionClothesFilterDto filter = CollectionClothesFilterDto.builder()
                 .collectionId(collectionId)
+                .packed(packed)
+                .colors(colors)
+                .brandIds(brandIds)
+                .season(season)
+                .names(names)
                 .build();
 
         return collectionClothesService.getFilteredCollectionClothes(filter, page, size);
