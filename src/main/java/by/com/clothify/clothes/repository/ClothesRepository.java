@@ -41,6 +41,7 @@ public interface ClothesRepository extends JpaRepository<Clothes, Long> {
             SELECT c FROM Clothes c
             JOIN FETCH c.image
             WHERE c.id IN :ids
+            ORDER BY c.updatedAt DESC
             """)
     List<Clothes> findClothesByIds(List<Long> ids);
 

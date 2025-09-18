@@ -44,6 +44,7 @@ public interface OutfitRepository extends JpaRepository<Outfit, Long> {
             LEFT JOIN FETCH oc.clothes c
             LEFT JOIN FETCH c.image
             WHERE o.id IN :ids
+            ORDER BY o.updatedAt DESC
             """)
     List<Outfit> findOutfitsByIds(List<Long> ids);
 

@@ -30,6 +30,7 @@ public interface CollectionRepository extends JpaRepository<Collection, Long> {
             LEFT JOIN FETCH colc.clothes c
             LEFT JOIN FETCH c.image
             WHERE col.id IN :ids
+            ORDER BY col.updatedAt DESC
             """)
     List<Collection> findByIds(List<Long> ids);
 
