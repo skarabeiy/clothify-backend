@@ -33,4 +33,11 @@ public interface CollectionClothesRepository extends JpaRepository<CollectionClo
     List<CollectionClothes> findCollectionClothesByIds(List<Long> ids);
 
     void deleteByIdAndCollection_User_Email(Long id, String email);
+
+    @Query("""
+            SELECT cc.clothes.name FROM CollectionClothes cc
+            WHERE cc.collection.user.email = :email
+            ORDER BY cc.clothes.updatedAt DESC
+            """)
+    List<String> findCollectionClothesNames(String email);
 }

@@ -130,4 +130,20 @@ public class CollectionClothesService {
             throw new RuntimeException(e);
         }
     }
+
+    public List<String> getCollectionClothesNames() {
+
+        final String email = AuthUtils.getEmail();
+
+        try {
+            return collectionClothesRepository.findCollectionClothesNames(email).stream()
+                    .distinct()
+                    .toList();
+
+        } catch (Exception e) {
+            log.error("Failed get collection clothes names for user: {}", email);
+            log.error(e.getMessage(), e);
+            throw new RuntimeException(e);
+        }
+    }
 }
