@@ -47,8 +47,12 @@ public interface ClothesRepository extends JpaRepository<Clothes, Long> {
 
     void deleteByIdAndUser_Email(Long id, String email);
 
-    @Query("SELECT c.name FROM Clothes c " +
-            "WHERE c.user.email = :email " +
-            "ORDER BY c.updatedAt DESC")
+    @Query("""
+            SELECT c.name FROM Clothes c
+            WHERE c.user.email = :email
+            ORDER BY c.updatedAt DESC
+            """)
     List<String> findClothesNames(String email);
+
+    List<Clothes> findAllByUser_Email(String email);
 }
