@@ -30,6 +30,19 @@ public class CollectionController {
 
     private final CollectionService collectionService;
 
+    @GetMapping("/{id}")
+    @Operation(
+            summary = "Get user collection by ID",
+            description = "Return user collection by collection ID",
+            security = @SecurityRequirement(name = "Bearer")
+    )
+    public ResponseEntity<CollectionDto> getCollectionById(
+            @Parameter(description = "Collection ID", example = "1")
+            @PathVariable Long id
+    ) {
+        return collectionService.getCollectionById(id);
+    }
+
     @GetMapping
     @Operation(
             summary = "Get user collections by type",

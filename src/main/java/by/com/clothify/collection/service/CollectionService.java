@@ -39,6 +39,27 @@ public class CollectionService {
     private final UserRepository userRepository;
     private final CollectionRepository collectionRepository;
 
+    public ResponseEntity<CollectionDto> getCollectionById(Long id) {
+
+        final String email = AuthUtils.getEmail();
+
+        try {
+            Optional<Collection> optionalCollection = collectionRepository.findByIdAndUser_Email(id, email);
+
+            if (optionalCollection.isEmpty()) {
+                log.error("Can't find collection by id = {} for user: {}", id, email);
+                return ResponseEntity.notFound().build();
+            }
+
+            return ResponseEntity.ok(mapToCollectionDto(optionalCollection.get()));
+
+        } catch (Exception e) {
+            log.error("Failed get collection by id = {} for user: {}", id, email);
+            log.error(e.getMessage(), e);
+            throw new RuntimeException(e);
+        }
+    }
+
     public Page<CollectionDto> getCollectionsByType(CollectionType type, int page, int size) {
 
         final String email = AuthUtils.getEmail();
