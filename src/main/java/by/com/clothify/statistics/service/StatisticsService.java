@@ -8,7 +8,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -39,9 +39,8 @@ public class StatisticsService {
 
     private static BasicStatisticDto.ItemsDto getItemsStatistic(List<ClothesDto> clothes) {
 
-        Map<String, Integer> additionalInfo = new HashMap<>();
+        Map<String, Integer> additionalInfo = new LinkedHashMap<>();
 
-        // TODO: добавить сортировку по категориям
         clothes.forEach(c -> {
 
             if (additionalInfo.containsKey(c.getCategory().getName())) {

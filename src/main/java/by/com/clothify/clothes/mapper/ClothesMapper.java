@@ -48,6 +48,15 @@ public final class ClothesMapper {
                 .build();
     }
 
+    public static ClothesDto mapToStatisticClothesDto(Clothes clothes) {
+
+        return ClothesDto.builder()
+                .id(clothes.getId())
+                .name(clothes.getName())
+                .category(ClothesCategoryMapper.mapToCategoryDto(clothes.getCategory()))
+                .build();
+    }
+
     public static Clothes mapToClothes(UploadedClothesDto uploadedClothes) {
 
         return Clothes.builder()
