@@ -54,5 +54,10 @@ public interface ClothesRepository extends JpaRepository<Clothes, Long> {
             """)
     List<String> findClothesNames(String email);
 
+    @Query("""
+            SELECT c FROM Clothes c
+            JOIN FETCH c.category
+            WHERE c.user.email = :email
+            """)
     List<Clothes> findAllByUser_Email(String email);
 }
