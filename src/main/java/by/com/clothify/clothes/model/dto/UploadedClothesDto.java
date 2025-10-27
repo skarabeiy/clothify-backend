@@ -37,9 +37,9 @@ public class UploadedClothesDto {
     @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
     private Season season;
 
-    @Schema(example = "120$")
+    @Schema(example = "120.5")
     @Nullable
-    private String price;
+    private Double price;
 
     @Schema(example = "02.09.2024")
     @Nullable

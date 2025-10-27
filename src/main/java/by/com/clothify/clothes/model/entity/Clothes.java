@@ -71,7 +71,7 @@ public class Clothes {
     @Column(nullable = false, length = 10)
     private Season season;
 
-    private String price;
+    private Double price;
 
     private LocalDate dateOfPurchase;
 

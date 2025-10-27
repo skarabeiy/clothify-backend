@@ -41,8 +41,8 @@ public class ClothesDto {
 
     private Season season;
 
-    @Schema(example = "120$")
-    private String price;
+    @Schema(example = "120.5")
+    private Double price;
 
     @Schema(example = "02.09.2024")
     private String dateOfPurchase;

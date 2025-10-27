@@ -42,7 +42,7 @@ public class PatchedClothesDto {
     private Season season;
 
     @Nullable
-    private String price;
+    private Double price;
 
     @Nullable
     private String dateOfPurchase;

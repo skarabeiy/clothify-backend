@@ -10,7 +10,7 @@ CREATE TABLE clothes
     custom_clothes_brand_id INTEGER,
     color                   VARCHAR(30)  NOT NULL,
     season                  VARCHAR(10)  NOT NULL,
-    price                   VARCHAR(255),
+    price                   REAL,
     date_of_purchase        TIMESTAMP,
 
     CONSTRAINT fk_auth_user
