@@ -26,8 +26,40 @@ public class StatisticsService {
         try {
             List<ClothesDto> clothes = clothesStatisticService.getAllClothesByEmail(email);
 
+            double totalCost = 0.0;
+            Map<String, Integer> itemsAdditionalInfo = new LinkedHashMap<>();
+            String categoryName;
+
+            for (ClothesDto c : clothes) {
+
+                if (c.getPrice() != null) {
+                    totalCost = totalCost + c.getPrice();
+                }
+
+                categoryName = c.getCategory().getName();
+
+                if (itemsAdditionalInfo.containsKey(categoryName)) {
+                    itemsAdditionalInfo.put(
+                            categoryName,
+                            itemsAdditionalInfo.get(categoryName) + 1
+                    );
+                } else {
+                    itemsAdditionalInfo.put(categoryName, 1);
+                }
+            }
+
+            BasicStatisticDto.ItemsDto itemsStatistic = BasicStatisticDto.ItemsDto.builder()
+                    .totalCount(clothes.size())
+                    .additionalInfo(itemsAdditionalInfo)
+                    .build();
+
+            BasicStatisticDto.ValueDto valueStatistic = BasicStatisticDto.ValueDto.builder()
+                    .totalCost(totalCost)
+                    .build();
+
             return BasicStatisticDto.builder()
-                    .items(getItemsStatistic(clothes))
+                    .items(itemsStatistic)
+                    .value(valueStatistic)
                     .build();
 
         } catch (Exception e) {
@@ -35,28 +67,6 @@ public class StatisticsService {
             log.error(e.getMessage(), e);
             throw new RuntimeException(e);
         }
-    }
-
-    private static BasicStatisticDto.ItemsDto getItemsStatistic(List<ClothesDto> clothes) {
-
-        Map<String, Integer> additionalInfo = new LinkedHashMap<>();
-
-        clothes.forEach(c -> {
-
-            if (additionalInfo.containsKey(c.getCategory().getName())) {
-                additionalInfo.put(
-                        c.getCategory().getName(),
-                        additionalInfo.get(c.getCategory().getName()) + 1
-                );
-            } else {
-                additionalInfo.put(c.getCategory().getName(), 1);
-            }
-        });
-
-        return BasicStatisticDto.ItemsDto.builder()
-                .totalCount(clothes.size())
-                .additionalInfo(additionalInfo)
-                .build();
     }
 
     public void test() {

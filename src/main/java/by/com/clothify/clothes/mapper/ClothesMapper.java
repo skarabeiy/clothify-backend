@@ -54,6 +54,7 @@ public final class ClothesMapper {
                 .id(clothes.getId())
                 .name(clothes.getName())
                 .category(ClothesCategoryMapper.mapToCategoryDto(clothes.getCategory()))
+                .price(clothes.getPrice())
                 .build();
     }
 

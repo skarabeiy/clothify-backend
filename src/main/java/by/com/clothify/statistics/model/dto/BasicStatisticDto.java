@@ -39,8 +39,8 @@ public class BasicStatisticDto {
     @NoArgsConstructor
     public static class ValueDto {
 
-        @Schema(example = "10000")
-        private Integer totalCost;
+        @Schema(example = "10000.0")
+        private Double totalCost;
 
         @Schema(example = "{\"Tops and T-shirts\": 2000, \"Pants and jeans\": 3000, \"Shoes\": 1000, \"Outwear\": 3000, \"Jackets\": 1000}")
         private Map<String, Integer> additionalInfo;
