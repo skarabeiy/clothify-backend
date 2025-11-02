@@ -43,7 +43,7 @@ public class BasicStatisticDto {
         private Double totalCost;
 
         @Schema(example = "{\"Tops and T-shirts\": 2000, \"Pants and jeans\": 3000, \"Shoes\": 1000, \"Outwear\": 3000, \"Jackets\": 1000}")
-        private Map<String, Integer> additionalInfo;
+        private Map<String, Double> additionalInfo;
     }
 
     @Data

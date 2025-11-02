@@ -28,12 +28,17 @@ public class StatisticsService {
 
             double totalCost = 0.0;
             Map<String, Integer> itemsAdditionalInfo = new LinkedHashMap<>();
+            Map<String, Double> valueAdditionalInfo = new LinkedHashMap<>();
             String categoryName;
+            double price;
 
             for (ClothesDto c : clothes) {
 
                 if (c.getPrice() != null) {
+                    price = c.getPrice();
                     totalCost = totalCost + c.getPrice();
+                } else {
+                    price = 0.0;
                 }
 
                 categoryName = c.getCategory().getName();
@@ -43,8 +48,15 @@ public class StatisticsService {
                             categoryName,
                             itemsAdditionalInfo.get(categoryName) + 1
                     );
+
+                    valueAdditionalInfo.put(
+                            categoryName,
+                            valueAdditionalInfo.get(categoryName) + price
+                    );
                 } else {
                     itemsAdditionalInfo.put(categoryName, 1);
+
+                    valueAdditionalInfo.put(categoryName, price);
                 }
             }
 
@@ -55,6 +67,7 @@ public class StatisticsService {
 
             BasicStatisticDto.ValueDto valueStatistic = BasicStatisticDto.ValueDto.builder()
                     .totalCost(totalCost)
+                    .additionalInfo(valueAdditionalInfo)
                     .build();
 
             return BasicStatisticDto.builder()
