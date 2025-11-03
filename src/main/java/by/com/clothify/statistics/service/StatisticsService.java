@@ -51,14 +51,16 @@ public class StatisticsService {
                             categoryName,
                             itemsAdditionalInfo.get(categoryName) + 1
                     );
+                } else {
+                    itemsAdditionalInfo.put(categoryName, 1);
+                }
 
+                if (valueAdditionalInfo.containsKey(categoryName)) {
                     valueAdditionalInfo.put(
                             categoryName,
                             valueAdditionalInfo.get(categoryName) + price
                     );
                 } else {
-                    itemsAdditionalInfo.put(categoryName, 1);
-
                     valueAdditionalInfo.put(categoryName, price);
                 }
             }
@@ -73,19 +75,10 @@ public class StatisticsService {
                     .additionalInfo(valueAdditionalInfo)
                     .build();
 
-            Set<Long> userClothesInOutfitsIds = clothesStatisticService.getAllOutfitClothesByEmail(email).stream()
-                    .map(OutfitClothesDto::getClothingId)
-                    .collect(Collectors.toSet());
-
-            BasicStatisticDto.UsageDto usageStatistic = BasicStatisticDto.UsageDto.builder()
-                    .usageCount(userClothesInOutfitsIds.size())
-                    .totalCount(clothes.size())
-                    .build();
-
             return BasicStatisticDto.builder()
                     .items(itemsStatistic)
                     .value(valueStatistic)
-                    .usage(usageStatistic)
+                    .usage(getUsageStatistic(email, clothes.size()))
                     .build();
 
         } catch (Exception e) {
@@ -93,5 +86,17 @@ public class StatisticsService {
             log.error(e.getMessage(), e);
             throw new RuntimeException(e);
         }
+    }
+
+    private BasicStatisticDto.UsageDto getUsageStatistic(String email, int clothesCount) {
+
+        Set<Long> userClothesInOutfitsIds = clothesStatisticService.getAllOutfitClothesByEmail(email).stream()
+                .map(OutfitClothesDto::getClothingId)
+                .collect(Collectors.toSet());
+
+        return BasicStatisticDto.UsageDto.builder()
+                .usageCount(userClothesInOutfitsIds.size())
+                .totalCount(clothesCount)
+                .build();
     }
 }
