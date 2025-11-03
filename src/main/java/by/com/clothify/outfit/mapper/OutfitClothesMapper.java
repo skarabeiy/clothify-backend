@@ -25,6 +25,14 @@ public final class OutfitClothesMapper {
                 .build();
     }
 
+    public static OutfitClothesDto mapToStatisticOutfitClothesDto(OutfitClothes outfitClothes) {
+
+        return OutfitClothesDto.builder()
+                .id(outfitClothes.getId())
+                .clothingId(outfitClothes.getClothes().getId())
+                .build();
+    }
+
     public static OutfitClothes mapToOutfitClothes(SavedOutfitClothesDto savedOutfitClothesDto, Long outfitId) {
 
         return OutfitClothes.builder()

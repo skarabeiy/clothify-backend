@@ -17,4 +17,12 @@ public interface OutfitClothesRepository extends JpaRepository<OutfitClothes, Lo
             WHERE oc.outfit.id = :outfitId
             """)
     List<OutfitClothes> findAllByOutfitId(Long outfitId);
+
+    @Query("""
+            SELECT oc FROM OutfitClothes oc
+            JOIN FETCH oc.clothes c
+            JOIN FETCH c.user u
+            WHERE u.email = :email
+            """)
+    List<OutfitClothes> findAllByEmail(String email);
 }

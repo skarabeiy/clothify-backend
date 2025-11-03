@@ -3,6 +3,7 @@ package by.com.clothify.statistics.service;
 import by.com.clothify.clothes.model.dto.ClothesDto;
 import by.com.clothify.clothes.service.clothes.ClothesStatisticService;
 import by.com.clothify.common.util.AuthUtils;
+import by.com.clothify.outfit.model.dto.OutfitClothesDto;
 import by.com.clothify.statistics.model.dto.BasicStatisticDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -11,6 +12,8 @@ import org.springframework.stereotype.Service;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -70,9 +73,19 @@ public class StatisticsService {
                     .additionalInfo(valueAdditionalInfo)
                     .build();
 
+            Set<Long> userClothesInOutfitsIds = clothesStatisticService.getAllOutfitClothesByEmail(email).stream()
+                    .map(OutfitClothesDto::getClothingId)
+                    .collect(Collectors.toSet());
+
+            BasicStatisticDto.UsageDto usageStatistic = BasicStatisticDto.UsageDto.builder()
+                    .usageCount(userClothesInOutfitsIds.size())
+                    .totalCount(clothes.size())
+                    .build();
+
             return BasicStatisticDto.builder()
                     .items(itemsStatistic)
                     .value(valueStatistic)
+                    .usage(usageStatistic)
                     .build();
 
         } catch (Exception e) {
@@ -80,20 +93,5 @@ public class StatisticsService {
             log.error(e.getMessage(), e);
             throw new RuntimeException(e);
         }
-    }
-
-    public void test() {
-
-        // 1. items - нужно посчитать общее кол-во одежды у пользователя
-
-        // 2. items дополнительно - получить запросом одежду пользователя (интересует только тип)
-        // и посчитать по типам.
-
-        // 3. Value - посчитать общую стоимость одежды у пользователя
-
-        // 4. value дополнительно - получить всю одежду, стоимость посчитать по типам
-
-        // 5. usage - получить общее кол-во одежды + получить кол-во одежды, которая участвует в аутфитах,
-        // посчитать
     }
 }
