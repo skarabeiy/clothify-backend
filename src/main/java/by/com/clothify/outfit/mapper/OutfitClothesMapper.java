@@ -17,6 +17,7 @@ public final class OutfitClothesMapper {
                 .clothingId(outfitClothes.getClothes().getId())
                 .name(outfitClothes.getClothes().getName())
                 .image(outfitClothes.getClothes().getImage().getUrl())
+                .backgroundColor(outfitClothes.getClothes().getBackgroundColor())
                 .positionX(outfitClothes.getPositionX())
                 .positionY(outfitClothes.getPositionY())
                 .scale(outfitClothes.getScale())
@@ -25,7 +26,7 @@ public final class OutfitClothesMapper {
                 .build();
     }
 
-    public static OutfitClothesDto mapToStatisticOutfitClothesDto(OutfitClothes outfitClothes) {
+    public static OutfitClothesDto mapToBasicStatisticOutfitClothesDto(OutfitClothes outfitClothes) {
 
         return OutfitClothesDto.builder()
                 .id(outfitClothes.getId())

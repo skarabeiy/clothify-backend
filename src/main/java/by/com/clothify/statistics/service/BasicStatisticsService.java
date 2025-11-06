@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class StatisticsService {
+public class BasicStatisticsService {
 
     private final ClothesStatisticService clothesStatisticService;
 

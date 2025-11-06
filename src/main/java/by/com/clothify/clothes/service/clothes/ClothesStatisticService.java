@@ -30,7 +30,7 @@ public class ClothesStatisticService {
     public List<OutfitClothesDto> getAllOutfitClothesByEmail(String email) {
 
         return outfitClothesRepository.findAllByEmail(email).stream()
-                .map(OutfitClothesMapper::mapToStatisticOutfitClothesDto)
+                .map(OutfitClothesMapper::mapToBasicStatisticOutfitClothesDto)
                 .toList();
     }
 }

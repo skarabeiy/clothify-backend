@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.lang.Nullable;
 
 @Data
 @Builder
@@ -24,6 +25,10 @@ public class OutfitClothesDto {
 
     @Schema(example = "url to cloud with clothing image")
     private String image;
+
+    @Schema(example = "null")
+    @Nullable
+    private String backgroundColor;
 
     @Schema(description = "position of the clothing image center on the screen in relative x", example = "0.45")
     private Double positionX;
