@@ -27,7 +27,7 @@ public class BasicStatisticsService {
         final String email = AuthUtils.getEmail();
 
         try {
-            List<ClothesDto> clothes = clothesStatisticService.getAllClothesByEmail(email);
+            List<ClothesDto> clothes = clothesStatisticService.getClothesByEmailForBasic(email);
 
             double totalCost = 0.0;
             Map<String, Integer> itemsAdditionalInfo = new LinkedHashMap<>();
@@ -90,7 +90,7 @@ public class BasicStatisticsService {
 
     private BasicStatisticDto.UsageDto getUsageStatistic(String email, int clothesCount) {
 
-        Set<Long> userClothesInOutfitsIds = clothesStatisticService.getAllOutfitClothesByEmail(email).stream()
+        Set<Long> userClothesInOutfitsIds = clothesStatisticService.getOutfitClothesByEmailForBasic(email).stream()
                 .map(OutfitClothesDto::getClothingId)
                 .collect(Collectors.toSet());
 

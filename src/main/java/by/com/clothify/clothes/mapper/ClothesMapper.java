@@ -48,13 +48,23 @@ public final class ClothesMapper {
                 .build();
     }
 
-    public static ClothesDto mapToStatisticClothesDto(Clothes clothes) {
+    public static ClothesDto mapToBasicStatisticClothesDto(Clothes clothes) {
 
         return ClothesDto.builder()
                 .id(clothes.getId())
                 .name(clothes.getName())
                 .category(ClothesCategoryMapper.mapToCategoryDto(clothes.getCategory()))
                 .price(clothes.getPrice())
+                .build();
+    }
+
+    public static ClothesDto mapToAdnvancedStatisticClothesDto(Clothes clothes) {
+
+        return ClothesDto.builder()
+                .id(clothes.getId())
+                .name(clothes.getName())
+                .image(clothes.getImage().getUrl())
+                .backgroundColor(clothes.getBackgroundColor())
                 .build();
     }
 

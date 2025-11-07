@@ -20,17 +20,31 @@ public class ClothesStatisticService {
     private final ClothesRepository clothesRepository;
     private final OutfitClothesRepository outfitClothesRepository;
 
-    public List<ClothesDto> getAllClothesByEmail(String email) {
+    public List<ClothesDto> getClothesByEmailForBasic(String email) {
 
         return clothesRepository.findAllByUser_Email(email).stream()
-                .map(ClothesMapper::mapToStatisticClothesDto)
+                .map(ClothesMapper::mapToBasicStatisticClothesDto)
                 .toList();
     }
 
-    public List<OutfitClothesDto> getAllOutfitClothesByEmail(String email) {
+    public List<ClothesDto> getClothesByEmailForAdvanced(String email) {
+
+        return clothesRepository.findAllByEmailForAdvancedStatistic(email).stream()
+                .map(ClothesMapper::mapToAdnvancedStatisticClothesDto)
+                .toList();
+    }
+
+    public List<OutfitClothesDto> getOutfitClothesByEmailForBasic(String email) {
 
         return outfitClothesRepository.findAllByEmail(email).stream()
                 .map(OutfitClothesMapper::mapToBasicStatisticOutfitClothesDto)
+                .toList();
+    }
+
+    public List<OutfitClothesDto> getOutfitClothesByEmailForAdvanced(String email) {
+
+        return outfitClothesRepository.findAllByEmailWithSorting(email).stream()
+                .map(OutfitClothesMapper::mapToAdnvancedStatisticOutfitClothesDto)
                 .toList();
     }
 }

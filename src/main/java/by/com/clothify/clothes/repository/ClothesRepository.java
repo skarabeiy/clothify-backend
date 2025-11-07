@@ -61,4 +61,13 @@ public interface ClothesRepository extends JpaRepository<Clothes, Long> {
             ORDER BY c.category.position
             """)
     List<Clothes> findAllByUser_Email(String email);
+
+    @Query("""
+            SELECT c FROM Clothes c
+            JOIN FETCH c.image
+            WHERE c.user.email = :email
+            ORDER BY c.updatedAt
+            LIMIT 3
+            """)
+    List<Clothes> findAllByEmailForAdvancedStatistic(String email);
 }
