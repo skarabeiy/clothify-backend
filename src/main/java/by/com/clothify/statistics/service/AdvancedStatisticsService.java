@@ -19,6 +19,8 @@ import java.util.Map;
 @Slf4j
 public class AdvancedStatisticsService {
 
+    private static final Integer ITEMS_NUMBER = 3;
+
     private final ClothesStatisticService clothesStatisticService;
 
     public AdvancedStatisticDto getAdvancedStatistic() {
@@ -61,7 +63,18 @@ public class AdvancedStatisticsService {
                     .toList();
 
             List<ClothesDto> mostWornClothes = new ArrayList<>();
+
+            for (int i = 0; i < ITEMS_NUMBER; i++) {
+
+                mostWornClothes.add(findClothingById(clothingIdSortedByUsages.get(i), userClothes));
+            }
+
             List<ClothesDto> leastWornClothes = new ArrayList<>();
+
+            for (int i = userClothes.size() - 1; i > userClothes.size() - 1 - ITEMS_NUMBER; i--) {
+
+                leastWornClothes.add(findClothingById(clothingIdSortedByUsages.get(i), userClothes));
+            }
 
             return AdvancedStatisticDto.builder()
                     .mostWornItems(mostWornClothes)
@@ -73,5 +86,13 @@ public class AdvancedStatisticsService {
             log.error(e.getMessage(), e);
             throw new RuntimeException(e);
         }
+    }
+
+    private static ClothesDto findClothingById(Long clothingId, List<ClothesDto> clothes) {
+
+        return clothes.stream()
+                .filter(c -> c.getId().equals(clothingId))
+                .findFirst()
+                .orElseThrow();
     }
 }
