@@ -34,16 +34,6 @@ public final class OutfitClothesMapper {
                 .build();
     }
 
-    public static OutfitClothesDto mapToAdnvancedStatisticOutfitClothesDto(OutfitClothes outfitClothes) {
-
-        return OutfitClothesDto.builder()
-                .id(outfitClothes.getId())
-                .clothingId(outfitClothes.getClothes().getId())
-                .image(outfitClothes.getClothes().getImage().getUrl())
-                .backgroundColor(outfitClothes.getClothes().getBackgroundColor())
-                .build();
-    }
-
     public static OutfitClothes mapToOutfitClothes(SavedOutfitClothesDto savedOutfitClothesDto, Long outfitId) {
 
         return OutfitClothes.builder()

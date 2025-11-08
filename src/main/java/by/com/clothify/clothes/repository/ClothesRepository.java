@@ -67,7 +67,6 @@ public interface ClothesRepository extends JpaRepository<Clothes, Long> {
             JOIN FETCH c.image
             WHERE c.user.email = :email
             ORDER BY c.updatedAt
-            LIMIT 3
             """)
     List<Clothes> findAllByEmailForAdvancedStatistic(String email);
 }

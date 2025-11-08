@@ -34,17 +34,10 @@ public class ClothesStatisticService {
                 .toList();
     }
 
-    public List<OutfitClothesDto> getOutfitClothesByEmailForBasic(String email) {
+    public List<OutfitClothesDto> getOutfitClothesByEmail(String email) {
 
         return outfitClothesRepository.findAllByEmail(email).stream()
                 .map(OutfitClothesMapper::mapToBasicStatisticOutfitClothesDto)
-                .toList();
-    }
-
-    public List<OutfitClothesDto> getOutfitClothesByEmailForAdvanced(String email) {
-
-        return outfitClothesRepository.findAllByEmailWithSorting(email).stream()
-                .map(OutfitClothesMapper::mapToAdnvancedStatisticOutfitClothesDto)
                 .toList();
     }
 }

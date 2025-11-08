@@ -90,7 +90,7 @@ public class BasicStatisticsService {
 
     private BasicStatisticDto.UsageDto getUsageStatistic(String email, int clothesCount) {
 
-        Set<Long> userClothesInOutfitsIds = clothesStatisticService.getOutfitClothesByEmailForBasic(email).stream()
+        Set<Long> userClothesInOutfitsIds = clothesStatisticService.getOutfitClothesByEmail(email).stream()
                 .map(OutfitClothesDto::getClothingId)
                 .collect(Collectors.toSet());
 

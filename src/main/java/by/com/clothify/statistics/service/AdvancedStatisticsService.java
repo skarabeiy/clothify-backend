@@ -10,10 +10,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -27,53 +26,41 @@ public class AdvancedStatisticsService {
         final String email = AuthUtils.getEmail();
 
         try {
-            List<OutfitClothesDto> outfitClothes = clothesStatisticService.getOutfitClothesByEmailForAdvanced(email);
 
-            Map<Long, Integer> clothesFrequency = new LinkedHashMap<>();
+            List<ClothesDto> userClothes = clothesStatisticService.getClothesByEmailForAdvanced(email);
+            List<OutfitClothesDto> outfitClothes = clothesStatisticService.getOutfitClothesByEmail(email);
+
+            Map<Long, Integer> clothesUsages = new HashMap<>();
             Long clothingId;
 
             for (OutfitClothesDto oc : outfitClothes) {
 
                 clothingId = oc.getClothingId();
 
-                if (clothesFrequency.containsKey(clothingId)) {
-                    clothesFrequency.put(clothingId, clothesFrequency.get(clothingId) + 1);
+                if (clothesUsages.containsKey(clothingId)) {
+                    clothesUsages.put(
+                            clothingId,
+                            clothesUsages.get(clothingId) + 1
+                    );
                 } else {
-                    clothesFrequency.put(clothingId, 1);
+                    clothesUsages.put(clothingId, 1);
                 }
             }
 
-            clothesFrequency = clothesFrequency.entrySet()
-                    .stream()
-                    .sorted(Map.Entry.<Long, Integer>comparingByValue().reversed())
-                    .limit(3)
-                    .collect(Collectors.toMap(
-                            Map.Entry::getKey,
-                            Map.Entry::getValue,
-                            (e1, e2) -> e1,
-                            LinkedHashMap::new
-                    ));
+            for (ClothesDto c : userClothes) {
 
-            List<ClothesDto> userClothes = clothesStatisticService.getClothesByEmailForAdvanced(email);
-
-            List<ClothesDto> mostWornClothes = new ArrayList<>();
-            OutfitClothesDto outfitClothesDto;
-
-//            clothesFrequency.keySet().forEach(id -> {
-            for (Long id : clothesFrequency.keySet()) {
-
-                outfitClothesDto = outfitClothes.stream()
-                        .filter(oc -> oc.getClothingId().equals(id))
-                        .findFirst()
-                        .get();
-
-                mostWornClothes.add(
-                        ClothesDto.builder()
-                                .id(id)
-                                .build()
-                );
+                if (!clothesUsages.containsKey(c.getId())) {
+                    clothesUsages.put(c.getId(), 0);
+                }
             }
 
+            List<Long> clothingIdSortedByUsages = clothesUsages.entrySet()
+                    .stream()
+                    .sorted(Map.Entry.<Long, Integer>comparingByValue().reversed())
+                    .map(Map.Entry::getKey)
+                    .toList();
+
+            List<ClothesDto> mostWornClothes = new ArrayList<>();
             List<ClothesDto> leastWornClothes = new ArrayList<>();
 
             return AdvancedStatisticDto.builder()

@@ -24,14 +24,4 @@ public interface OutfitClothesRepository extends JpaRepository<OutfitClothes, Lo
             WHERE c.user.email = :email
             """)
     List<OutfitClothes> findAllByEmail(String email);
-
-    @Query("""
-            SELECT oc FROM OutfitClothes oc
-            JOIN FETCH oc.clothes c
-            JOIN FETCH c.image
-            JOIN FETCH c.user u
-            WHERE u.email = :email
-            ORDER BY oc.addedAt
-            """)
-    List<OutfitClothes> findAllByEmailWithSorting(String email);
 }
