@@ -32,29 +32,7 @@ public class AdvancedStatisticsService {
             List<ClothesDto> userClothes = clothesStatisticService.getClothesByEmailForAdvanced(email);
             List<OutfitClothesDto> outfitClothes = clothesStatisticService.getOutfitClothesByEmail(email);
 
-            Map<Long, Integer> clothesUsages = new HashMap<>();
-            Long clothingId;
-
-            for (OutfitClothesDto oc : outfitClothes) {
-
-                clothingId = oc.getClothingId();
-
-                if (clothesUsages.containsKey(clothingId)) {
-                    clothesUsages.put(
-                            clothingId,
-                            clothesUsages.get(clothingId) + 1
-                    );
-                } else {
-                    clothesUsages.put(clothingId, 1);
-                }
-            }
-
-            for (ClothesDto c : userClothes) {
-
-                if (!clothesUsages.containsKey(c.getId())) {
-                    clothesUsages.put(c.getId(), 0);
-                }
-            }
+            Map<Long, Integer> clothesUsages = getClothesUsages(userClothes, outfitClothes);
 
             List<Long> clothingIdSortedByUsages = clothesUsages.entrySet()
                     .stream()
@@ -62,23 +40,9 @@ public class AdvancedStatisticsService {
                     .map(Map.Entry::getKey)
                     .toList();
 
-            List<ClothesDto> mostWornClothes = new ArrayList<>();
-
-            for (int i = 0; i < ITEMS_NUMBER; i++) {
-
-                mostWornClothes.add(findClothingById(clothingIdSortedByUsages.get(i), userClothes));
-            }
-
-            List<ClothesDto> leastWornClothes = new ArrayList<>();
-
-            for (int i = userClothes.size() - 1; i > userClothes.size() - 1 - ITEMS_NUMBER; i--) {
-
-                leastWornClothes.add(findClothingById(clothingIdSortedByUsages.get(i), userClothes));
-            }
-
             return AdvancedStatisticDto.builder()
-                    .mostWornItems(mostWornClothes)
-                    .leastWornItems(leastWornClothes)
+                    .mostWornItems(getMostWornClothes(clothingIdSortedByUsages, userClothes))
+                    .leastWornItems(getLeastWornClothes(clothingIdSortedByUsages, userClothes))
                     .build();
 
         } catch (Exception e) {
@@ -86,6 +50,62 @@ public class AdvancedStatisticsService {
             log.error(e.getMessage(), e);
             throw new RuntimeException(e);
         }
+    }
+
+    private static Map<Long, Integer> getClothesUsages(List<ClothesDto> userClothes,
+                                                       List<OutfitClothesDto> outfitClothes) {
+
+        Map<Long, Integer> clothesUsages = new HashMap<>();
+        Long clothingId;
+
+        for (OutfitClothesDto oc : outfitClothes) {
+
+            clothingId = oc.getClothingId();
+
+            if (clothesUsages.containsKey(clothingId)) {
+                clothesUsages.put(
+                        clothingId,
+                        clothesUsages.get(clothingId) + 1
+                );
+            } else {
+                clothesUsages.put(clothingId, 1);
+            }
+        }
+
+        for (ClothesDto c : userClothes) {
+
+            if (!clothesUsages.containsKey(c.getId())) {
+                clothesUsages.put(c.getId(), 0);
+            }
+        }
+
+        return clothesUsages;
+    }
+
+    private static List<ClothesDto> getMostWornClothes(List<Long> clothingIdSortedByUsages,
+                                                       List<ClothesDto> userClothes) {
+
+        List<ClothesDto> mostWornClothes = new ArrayList<>();
+
+        for (int i = 0; i < ITEMS_NUMBER; i++) {
+
+            mostWornClothes.add(findClothingById(clothingIdSortedByUsages.get(i), userClothes));
+        }
+
+        return mostWornClothes;
+    }
+
+    private static List<ClothesDto> getLeastWornClothes(List<Long> clothingIdSortedByUsages,
+                                                        List<ClothesDto> userClothes) {
+
+        List<ClothesDto> leastWornClothes = new ArrayList<>();
+
+        for (int i = userClothes.size() - 1; i > userClothes.size() - 1 - ITEMS_NUMBER; i--) {
+
+            leastWornClothes.add(findClothingById(clothingIdSortedByUsages.get(i), userClothes));
+        }
+
+        return leastWornClothes;
     }
 
     private static ClothesDto findClothingById(Long clothingId, List<ClothesDto> clothes) {
