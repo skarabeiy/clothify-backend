@@ -1,4 +1,4 @@
-package by.com.clothify.imagies.model.entity;
+package by.com.clothify.images.model.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -12,5 +12,5 @@ import lombok.*;
 @AllArgsConstructor
 @ToString
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-public class Fantasy {
+public class Image {
 }

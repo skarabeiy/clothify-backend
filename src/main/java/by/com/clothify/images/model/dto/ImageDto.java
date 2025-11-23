@@ -1,4 +1,4 @@
-package by.com.clothify.imagies.model.dto;
+package by.com.clothify.images.model.dto;
 
 import by.com.clothify.clothes.model.dto.ClothesBrandDto;
 import by.com.clothify.clothes.model.dto.ClothesCategoryDto;
@@ -14,7 +14,7 @@ import org.springframework.lang.Nullable;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class FantasyDto {
+public class ImageDto {
 
     @Schema(example = "1")
     private Long id;
@@ -33,7 +33,7 @@ public class FantasyDto {
 
     private ClothesBrandDto brand;
 
-    @Schema(description = "Fantasy color", example = "#FF0000")
+    @Schema(description = "Image color", example = "#FF0000")
     private String color;
 
     private Season season;

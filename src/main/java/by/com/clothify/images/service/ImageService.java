@@ -1,26 +1,18 @@
-package by.com.clothify.imagies.service;
+package by.com.clothify.images.service;
 
-import by.com.clothify.clothes.model.dto.ClothesDto;
-import by.com.clothify.clothes.model.entity.Clothes;
 import by.com.clothify.common.util.AuthUtils;
-import by.com.clothify.imagies.model.dto.FantasyDto;
-import by.com.clothify.outfit.model.entity.Outfit;
+import by.com.clothify.images.model.dto.ImageDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
-
-import static by.com.clothify.clothes.mapper.ClothesMapper.mapToClothesWithOutfitsDto;
-
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class FantasyService {
+public class ImageService {
 
-    public ResponseEntity<FantasyDto> getFantasyById(Long id) {
+    public ResponseEntity<ImageDto> getImageById(Long id) {
 
         final String email = AuthUtils.getEmail();
 

@@ -1,7 +1,7 @@
-package by.com.clothify.imagies.controller;
+package by.com.clothify.images.controller;
 
-import by.com.clothify.imagies.model.dto.FantasyDto;
-import by.com.clothify.imagies.service.FantasyService;
+import by.com.clothify.images.model.dto.ImageDto;
+import by.com.clothify.images.service.ImageService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -14,23 +14,23 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/imagies")
+@RequestMapping("/images")
 @RequiredArgsConstructor
-@Tag(name = "14 - Imagies API", description = "Operations for imagies")
-public class FantasyController {
+@Tag(name = "14 - Images API", description = "Operations for images")
+public class ImageController {
 
-    private final FantasyService fantasyService;
+    private final ImageService imageService;
 
     @GetMapping("/{id}")
     @Operation(
-            summary = "Get fantasy by ID",
-            description = "Return user fantasy by ID",
+            summary = "Get image by ID",
+            description = "Return user image by ID",
             security = @SecurityRequirement(name = "Bearer")
     )
-    public ResponseEntity<FantasyDto> getFantasyById(
-            @Parameter(description = "Fantasy ID", example = "1")
+    public ResponseEntity<ImageDto> getImageById(
+            @Parameter(description = "Image ID", example = "1")
             @PathVariable Long id
     ) {
-        return fantasyService.getFantasyById(id);
+        return imageService.getImageById(id);
     }
 }
