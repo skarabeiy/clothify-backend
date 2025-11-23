@@ -1,7 +1,7 @@
 package by.com.clothify.images.service;
 
 import by.com.clothify.common.util.AuthUtils;
-import by.com.clothify.images.model.dto.ImageDto;
+import by.com.clothify.images.model.dto.ClothingImageDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -10,9 +10,9 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class ImageService {
+public class ClothingImageService {
 
-    public ResponseEntity<ImageDto> getImageById(Long id) {
+    public ResponseEntity<ClothingImageDto> getClothingImageById(Long id) {
 
         final String email = AuthUtils.getEmail();
 

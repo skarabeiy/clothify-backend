@@ -1,7 +1,7 @@
 package by.com.clothify.images.controller;
 
-import by.com.clothify.images.model.dto.ImageDto;
-import by.com.clothify.images.service.ImageService;
+import by.com.clothify.images.model.dto.ClothingImageDto;
+import by.com.clothify.images.service.ClothingImageService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -17,9 +17,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/images")
 @RequiredArgsConstructor
 @Tag(name = "14 - Images API", description = "Operations for images")
-public class ImageController {
+public class ClothingImageController {
 
-    private final ImageService imageService;
+    private final ClothingImageService clothingImageService;
 
     @GetMapping("/{id}")
     @Operation(
@@ -27,10 +27,10 @@ public class ImageController {
             description = "Return user image by ID",
             security = @SecurityRequirement(name = "Bearer")
     )
-    public ResponseEntity<ImageDto> getImageById(
+    public ResponseEntity<ClothingImageDto> getClothingImageById(
             @Parameter(description = "Image ID", example = "1")
             @PathVariable Long id
     ) {
-        return imageService.getImageById(id);
+        return clothingImageService.getClothingImageById(id);
     }
 }

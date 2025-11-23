@@ -14,7 +14,7 @@ import org.springframework.lang.Nullable;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class ImageDto {
+public class ClothingImageDto {
 
     @Schema(example = "1")
     private Long id;
