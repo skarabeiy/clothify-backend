@@ -1,10 +1,13 @@
 package by.com.clothify.images.service;
 
+import by.com.clothify.clothes.model.entity.ClothesBrand;
+import by.com.clothify.clothes.model.entity.ClothesCategory;
 import by.com.clothify.clothes.model.entity.Image;
 import by.com.clothify.clothes.service.file.ImageService;
 import by.com.clothify.common.util.AuthUtils;
 import by.com.clothify.images.mapper.ClothingImageMapper;
 import by.com.clothify.images.model.dto.ClothingImageDto;
+import by.com.clothify.images.model.dto.PatchedClothingImageDto;
 import by.com.clothify.images.model.dto.UploadedClothingImageDto;
 import by.com.clothify.images.model.entity.ClothingImage;
 import by.com.clothify.images.repository.ClothingImageRepository;
@@ -76,6 +79,77 @@ public class ClothingImageService {
             log.error("Failed save clothing image: {} for user: {}", uploadedImageDto.getName(), email);
             log.error(e.getMessage(), e);
             throw new RuntimeException(e);
+        }
+    }
+
+    @Transactional
+    public ResponseEntity<ClothingImageDto> patchClothingImage(PatchedClothingImageDto patchedImageDto) {
+
+        final String email = AuthUtils.getEmail();
+
+        try {
+            Optional<ClothingImage> optionalClothingImage = clothingImageRepository
+                    .findByIdAndEmail(patchedImageDto.getId(), email);
+
+            if (optionalClothingImage.isEmpty()) {
+                return ResponseEntity.notFound().build();
+            }
+
+            ClothingImage clothingImage = optionalClothingImage.get();
+
+            if (patchedImageDto.getImageFile() != null) {
+                Image image = imageService.updateImage(clothingImage.getImage(), patchedImageDto.getImageFile());
+                clothingImage.setImage(image);
+            }
+
+            setPatchedClothingImageFields(clothingImage, patchedImageDto);
+
+            clothingImage.setUpdatedAt(LocalDateTime.now());
+
+            clothingImage = clothingImageRepository.save(clothingImage);
+
+            return ResponseEntity.ok(mapToClothingImageDto(clothingImage));
+
+        } catch (Exception e) {
+            log.error("Failed patch clothing id with ID = {} for user: {}", patchedImageDto.getId(), email);
+            log.error(e.getMessage(), e);
+            throw new RuntimeException(e);
+        }
+    }
+
+    private static void setPatchedClothingImageFields(ClothingImage clothingImage,
+                                                      PatchedClothingImageDto patchedImageDto) {
+
+        if (patchedImageDto.getName() != null) {
+            clothingImage.setName(patchedImageDto.getName());
+        }
+
+        if (patchedImageDto.getBackgroundColor() != null) {
+            clothingImage.setBackgroundColor(patchedImageDto.getBackgroundColor());
+        }
+
+        if (patchedImageDto.getCategoryId() != null) {
+            clothingImage.setCategory(
+                    ClothesCategory.builder()
+                            .id(patchedImageDto.getCategoryId())
+                            .build()
+            );
+        }
+
+        if (patchedImageDto.getBrandId() != null) {
+            clothingImage.setBrand(
+                    ClothesBrand.builder()
+                            .id(patchedImageDto.getBrandId())
+                            .build()
+            );
+        }
+
+        if (patchedImageDto.getColor() != null) {
+            clothingImage.setColor(patchedImageDto.getColor());
+        }
+
+        if (patchedImageDto.getSeason() != null) {
+            clothingImage.setSeason(patchedImageDto.getSeason());
         }
     }
 
