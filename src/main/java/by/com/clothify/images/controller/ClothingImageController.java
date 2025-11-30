@@ -1,15 +1,19 @@
 package by.com.clothify.images.controller;
 
 import by.com.clothify.images.model.dto.ClothingImageDto;
+import by.com.clothify.images.model.dto.UploadedClothingImageDto;
 import by.com.clothify.images.service.ClothingImageService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -23,7 +27,7 @@ public class ClothingImageController {
 
     @GetMapping("/{id}")
     @Operation(
-            summary = "Get image by ID",
+            summary = "Get user image by ID",
             description = "Return user image by ID",
             security = @SecurityRequirement(name = "Bearer")
     )
@@ -32,5 +36,18 @@ public class ClothingImageController {
             @PathVariable Long id
     ) {
         return clothingImageService.getClothingImageById(id);
+    }
+
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @Operation(
+            summary = "Save user image",
+            description = "Accepts multipart/form-data and save image",
+            security = @SecurityRequirement(name = "Bearer")
+    )
+    public ClothingImageDto saveClothingImage(
+            @Parameter(description = "Image that need to be saved")
+            @ModelAttribute UploadedClothingImageDto uploadedImageDto
+    ) {
+        return clothingImageService.saveClothingImage(uploadedImageDto);
     }
 }
