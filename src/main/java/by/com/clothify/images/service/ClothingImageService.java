@@ -78,4 +78,29 @@ public class ClothingImageService {
             throw new RuntimeException(e);
         }
     }
+
+    @Transactional
+    public ResponseEntity<Void> deleteClothingImageById(Long id) {
+
+        final String email = AuthUtils.getEmail();
+
+        try {
+            Optional<Image> optionalImage = imageService.getImageByClothingImageIdAndEmail(id, email);
+
+            if (optionalImage.isEmpty()) {
+                return ResponseEntity.notFound().build();
+            }
+
+            clothingImageRepository.deleteByIdAndUser_Email(id, email);
+
+            imageService.deleteImageFromCloud(optionalImage.get().getPublicId());
+
+            return ResponseEntity.ok().build();
+
+        } catch (Exception e) {
+            log.error("Failed delete clothing image with ID = {} for user: {}", id, email);
+            log.error(e.getMessage(), e);
+            throw new RuntimeException(e);
+        }
+    }
 }

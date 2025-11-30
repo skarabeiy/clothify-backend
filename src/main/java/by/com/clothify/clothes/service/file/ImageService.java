@@ -23,6 +23,11 @@ public class ImageService {
         return imageRepository.findByClothesIdAndEmail(clothesId, email);
     }
 
+    public Optional<Image> getImageByClothingImageIdAndEmail(Long clothingImageId, String email) {
+
+        return imageRepository.findImageByClothingImageIdAndEmail(clothingImageId, email);
+    }
+
     public Image saveImage(MultipartFile file) {
 
         try {

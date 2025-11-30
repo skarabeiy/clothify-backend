@@ -20,4 +20,6 @@ public interface ClothingImageRepository extends JpaRepository<ClothingImage, Lo
             AND u.email = :email
             """)
     Optional<ClothingImage> findByIdAndEmail(Long id, String email);
+
+    void deleteByIdAndUser_Email(Long id, String email);
 }

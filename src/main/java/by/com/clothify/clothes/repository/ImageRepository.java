@@ -14,4 +14,9 @@ public interface ImageRepository extends JpaRepository<Image, Long> {
             "JOIN FETCH Clothes c ON c.image.id = i.id " +
             "WHERE c.id = :clothesId AND c.user.email = :email")
     Optional<Image> findByClothesIdAndEmail(Long clothesId, String email);
+
+    @Query("SELECT i FROM Image i " +
+            "JOIN FETCH ClothingImage ci ON ci.image.id = i.id " +
+            "WHERE ci.id = :clothingImageId AND ci.user.email = :email")
+    Optional<Image> findImageByClothingImageIdAndEmail(Long clothingImageId, String email);
 }
