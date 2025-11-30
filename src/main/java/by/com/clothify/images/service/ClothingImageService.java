@@ -17,6 +17,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
+
+import static by.com.clothify.images.mapper.ClothingImageMapper.mapToClothingImageDto;
 
 @Service
 @RequiredArgsConstructor
@@ -32,20 +35,17 @@ public class ClothingImageService {
         final String email = AuthUtils.getEmail();
 
         try {
-//            Optional<Clothes> optionalClothes = clothesRepository.findByIdAndEmail(id, email);
-//
-//            if (optionalClothes.isEmpty()) {
-//                log.error("Can't find clothes by id = {} for user: {}", id, email);
-//                return ResponseEntity.notFound().build();
-//            }
-//
-//            List<Long> outfitIds = outfitRepository.findAllByClothingId(optionalClothes.get().getId());
-//            List<Outfit> outfits = outfitRepository.findOutfitsByIds(outfitIds);
-//
-//            return ResponseEntity.ok(mapToClothesWithOutfitsDto(optionalClothes.get(), outfits));
-            return null;
+            Optional<ClothingImage> optionalClothingImage = clothingImageRepository.findByIdAndEmail(id, email);
+
+            if (optionalClothingImage.isEmpty()) {
+                log.error("Can't find clothing image by id = {} for user: {}", id, email);
+                return ResponseEntity.notFound().build();
+            }
+
+            return ResponseEntity.ok(mapToClothingImageDto(optionalClothingImage.get()));
+
         } catch (Exception e) {
-            log.error("Failed get clothes by id = {} for user: {}", id, email);
+            log.error("Failed get clothing image by id = {} for user: {}", id, email);
             log.error(e.getMessage(), e);
             throw new RuntimeException(e);
         }
@@ -70,7 +70,7 @@ public class ClothingImageService {
 
             clothingImage = clothingImageRepository.save(clothingImage);
 
-            return ClothingImageMapper.mapToClothingImageDto(clothingImage);
+            return mapToClothingImageDto(clothingImage);
 
         } catch (Exception e) {
             log.error("Failed save clothing image: {} for user: {}", uploadedImageDto.getName(), email);
