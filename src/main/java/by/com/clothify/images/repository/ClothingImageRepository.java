@@ -46,4 +46,11 @@ public interface ClothingImageRepository extends JpaRepository<ClothingImage, Lo
     List<ClothingImage> findClothingImagesByIds(List<Long> ids);
 
     void deleteByIdAndUser_Email(Long id, String email);
+
+    @Query("""
+            SELECT ci.name FROM ClothingImage ci
+            WHERE ci.user.email = :email
+            ORDER BY ci.updatedAt DESC
+            """)
+    List<String> findClothingImagesNames(String email);
 }

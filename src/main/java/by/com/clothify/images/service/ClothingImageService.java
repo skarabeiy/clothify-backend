@@ -210,4 +210,20 @@ public class ClothingImageService {
             throw new RuntimeException(e);
         }
     }
+
+    public List<String> getClothingImagesNames() {
+
+        final String email = AuthUtils.getEmail();
+
+        try {
+            return clothingImageRepository.findClothingImagesNames(email).stream()
+                    .distinct()
+                    .toList();
+
+        } catch (Exception e) {
+            log.error("Failed get clothing images names for user: {}", email);
+            log.error(e.getMessage(), e);
+            throw new RuntimeException(e);
+        }
+    }
 }

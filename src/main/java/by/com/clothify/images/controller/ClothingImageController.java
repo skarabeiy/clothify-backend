@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
 import java.util.Set;
 
 @RestController
@@ -125,5 +126,15 @@ public class ClothingImageController {
             @PathVariable Long id
     ) {
         return clothingImageService.deleteClothingImageById(id);
+    }
+
+    @GetMapping("/names")
+    @Operation(
+            summary = "Get user images names",
+            description = "Return all user images names",
+            security = @SecurityRequirement(name = "Bearer")
+    )
+    public List<String> getClothingImagesNames() {
+        return clothingImageService.getClothingImagesNames();
     }
 }
