@@ -7,6 +7,7 @@ import by.com.clothify.clothes.service.file.ImageService;
 import by.com.clothify.common.util.AuthUtils;
 import by.com.clothify.images.mapper.ClothingImageMapper;
 import by.com.clothify.images.model.dto.ClothingImageDto;
+import by.com.clothify.images.model.dto.ClothingImageFilterDto;
 import by.com.clothify.images.model.dto.PatchedClothingImageDto;
 import by.com.clothify.images.model.dto.UploadedClothingImageDto;
 import by.com.clothify.images.model.entity.ClothingImage;
@@ -15,11 +16,16 @@ import by.com.clothify.security.model.entity.User;
 import by.com.clothify.security.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 import static by.com.clothify.images.mapper.ClothingImageMapper.mapToClothingImageDto;
@@ -49,6 +55,33 @@ public class ClothingImageService {
 
         } catch (Exception e) {
             log.error("Failed get clothing image by id = {} for user: {}", id, email);
+            log.error(e.getMessage(), e);
+            throw new RuntimeException(e);
+        }
+    }
+
+    public Page<ClothingImageDto> getFilteredClothingImages(ClothingImageFilterDto filter, int page, int size) {
+
+        final String email = AuthUtils.getEmail();
+
+        try {
+            Pageable pageable = PageRequest.of(page, size);
+
+            Page<Long> clothingImageIds = clothingImageRepository.findFilteredClothingImageIds(email, pageable, filter);
+
+            if (clothingImageIds.isEmpty()) {
+                return Page.empty(pageable);
+            }
+
+            List<ClothingImageDto> clothingImages = clothingImageRepository
+                    .findClothingImagesByIds(clothingImageIds.getContent()).stream()
+                    .map(ClothingImageMapper::mapToPageClothingImageDto)
+                    .toList();
+
+            return new PageImpl<>(clothingImages, pageable, clothingImageIds.getTotalElements());
+
+        } catch (Exception e) {
+            log.error("Failed get clothing images by category id = {}, for user: {}", filter.getCategoryId(), email);
             log.error(e.getMessage(), e);
             throw new RuntimeException(e);
         }

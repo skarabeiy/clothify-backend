@@ -3,6 +3,7 @@ package by.com.clothify.images.model.dto;
 import by.com.clothify.clothes.model.dto.ClothesBrandDto;
 import by.com.clothify.clothes.model.dto.ClothesCategoryDto;
 import by.com.clothify.common.model.enums.Season;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -14,6 +15,7 @@ import org.springframework.lang.Nullable;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class ClothingImageDto {
 
     @Schema(example = "1")

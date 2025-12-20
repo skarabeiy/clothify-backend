@@ -2,6 +2,8 @@ package by.com.clothify.images.mapper;
 
 import by.com.clothify.clothes.mapper.ClothesBrandMapper;
 import by.com.clothify.clothes.mapper.ClothesCategoryMapper;
+import by.com.clothify.clothes.model.dto.ClothesDto;
+import by.com.clothify.clothes.model.entity.Clothes;
 import by.com.clothify.clothes.model.entity.ClothesBrand;
 import by.com.clothify.clothes.model.entity.ClothesCategory;
 import by.com.clothify.images.model.dto.ClothingImageDto;
@@ -9,6 +11,16 @@ import by.com.clothify.images.model.dto.UploadedClothingImageDto;
 import by.com.clothify.images.model.entity.ClothingImage;
 
 public final class ClothingImageMapper {
+
+    public static ClothingImageDto mapToPageClothingImageDto(ClothingImage clothingImage) {
+
+        return ClothingImageDto.builder()
+                .id(clothingImage.getId())
+                .name(clothingImage.getName())
+                .image(clothingImage.getImage().getUrl())
+                .backgroundColor(clothingImage.getBackgroundColor())
+                .build();
+    }
 
     public static ClothingImageDto mapToClothingImageDto(ClothingImage clothingImage) {
 
