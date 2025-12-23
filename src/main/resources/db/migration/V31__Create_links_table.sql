@@ -4,10 +4,10 @@ CREATE TABLE links
     name                    VARCHAR(255) NOT NULL,
     auth_user_id            INTEGER      NOT NULL,
     url                     TEXT         NOT NULL,
-    clothes_category_id     INTEGER      NOT NULL,
+    clothes_category_id     INTEGER,
     clothes_brand_id        INTEGER,
-    color                   VARCHAR(30)  NOT NULL,
-    season                  VARCHAR(10)  NOT NULL,
+    color                   VARCHAR(30),
+    season                  VARCHAR(10),
     created_at              TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at              TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
 

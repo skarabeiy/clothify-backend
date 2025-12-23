@@ -36,18 +36,18 @@ public class Link {
     private String url;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "clothes_category_id", nullable = false)
+    @JoinColumn(name = "clothes_category_id")
     private ClothesCategory category;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "clothes_brand_id", nullable = false)
+    @JoinColumn(name = "clothes_brand_id")
     private ClothesBrand brand;
 
-    @Column(nullable = false, length = 30)
+    @Column(length = 30)
     private String color;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false, length = 10)
+    @Column(length = 10)
     private Season season;
 
     @Column(nullable = false)
