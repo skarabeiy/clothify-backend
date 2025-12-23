@@ -30,7 +30,7 @@ public class LinkDto {
 
     private ClothesBrandDto brand;
 
-    @Schema(description = "Color", example = "#FF0000")
+    @Schema(description = "Item color", example = "#FF0000")
     private String color;
 
     private Season season;

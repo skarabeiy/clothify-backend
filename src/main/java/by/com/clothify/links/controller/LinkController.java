@@ -1,6 +1,7 @@
 package by.com.clothify.links.controller;
 
 import by.com.clothify.links.model.dto.LinkDto;
+import by.com.clothify.links.model.dto.PatchedLinkDto;
 import by.com.clothify.links.model.dto.SavedLinkDto;
 import by.com.clothify.links.service.LinkService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -40,6 +41,16 @@ public class LinkController {
     )
     public LinkDto saveLink(@RequestBody SavedLinkDto savedLinkDto) {
         return linkService.saveLink(savedLinkDto);
+    }
+
+    @PatchMapping
+    @Operation(
+            summary = "Update user link",
+            description = "Update filled fields for user link",
+            security = @SecurityRequirement(name = "Bearer")
+    )
+    public ResponseEntity<LinkDto> patchLink(@RequestBody PatchedLinkDto patchedLinkDto) {
+        return linkService.patchLink(patchedLinkDto);
     }
 
     @DeleteMapping("/{id}")
