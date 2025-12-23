@@ -184,4 +184,20 @@ public class LinkService {
             throw new RuntimeException(e);
         }
     }
+
+    public List<String> getLinksNames() {
+
+        final String email = AuthUtils.getEmail();
+
+        try {
+            return linkRepository.findLinksNames(email).stream()
+                    .distinct()
+                    .toList();
+
+        } catch (Exception e) {
+            log.error("Failed get links names for user: {}", email);
+            log.error(e.getMessage(), e);
+            throw new RuntimeException(e);
+        }
+    }
 }

@@ -44,4 +44,11 @@ public interface LinkRepository extends JpaRepository<Link, Long> {
     List<Link> findLinksByIds(List<Long> ids);
 
     void deleteByIdAndUser_Email(Long id, String email);
+
+    @Query("""
+            SELECT l.name FROM Link l
+            WHERE l.user.email = :email
+            ORDER BY l.updatedAt DESC
+            """)
+    List<String> findLinksNames(String email);
 }

@@ -15,6 +15,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Set;
 
 @RestController
@@ -111,5 +112,15 @@ public class LinkController {
             @PathVariable Long id
     ) {
         return linkService.deleteLinkById(id);
+    }
+
+    @GetMapping("/names")
+    @Operation(
+            summary = "Get user links names",
+            description = "Return all user links names",
+            security = @SecurityRequirement(name = "Bearer")
+    )
+    public List<String> getLinksNames() {
+        return linkService.getLinksNames();
     }
 }
