@@ -13,8 +13,8 @@ public interface LinkRepository extends JpaRepository<Link, Long> {
     @Query("""
             SELECT l FROM Link l
             JOIN l.user u
-            JOIN FETCH l.category
-            JOIN FETCH l.brand
+            LEFT JOIN FETCH l.category
+            LEFT JOIN FETCH l.brand
             WHERE l.id = :id
             AND u.email = :email
             """)
