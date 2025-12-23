@@ -41,4 +41,17 @@ public class LinkController {
     public LinkDto saveLink(@RequestBody SavedLinkDto savedLinkDto) {
         return linkService.saveLink(savedLinkDto);
     }
+
+    @DeleteMapping("/{id}")
+    @Operation(
+            summary = "Delete user link",
+            description = "Delete user link by ID",
+            security = @SecurityRequirement(name = "Bearer")
+    )
+    public ResponseEntity<Void> deleteLinkById(
+            @Parameter(description = "Link ID", example = "1")
+            @PathVariable Long id
+    ) {
+        return linkService.deleteLinkById(id);
+    }
 }

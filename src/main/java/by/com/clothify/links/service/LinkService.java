@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -64,6 +65,22 @@ public class LinkService {
 
         } catch (Exception e) {
             log.error("Failed save link: {} for user: {}", savedLinkDto.getName(), email);
+            log.error(e.getMessage(), e);
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Transactional
+    public ResponseEntity<Void> deleteLinkById(Long id) {
+
+        final String email = AuthUtils.getEmail();
+
+        try {
+            linkRepository.deleteByIdAndUser_Email(id, email);
+            return ResponseEntity.ok().build();
+
+        } catch (Exception e) {
+            log.error("Failed delete link with ID = {} for user: {}", id, email);
             log.error(e.getMessage(), e);
             throw new RuntimeException(e);
         }

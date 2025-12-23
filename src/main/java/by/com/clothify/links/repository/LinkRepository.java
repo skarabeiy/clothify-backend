@@ -19,4 +19,6 @@ public interface LinkRepository extends JpaRepository<Link, Long> {
             AND u.email = :email
             """)
     Optional<Link> findByIdAndEmail(Long id, String email);
+
+    void deleteByIdAndUser_Email(Long id, String email);
 }
