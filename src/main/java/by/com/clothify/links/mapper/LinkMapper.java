@@ -9,6 +9,15 @@ import by.com.clothify.security.model.entity.User;
 
 public class LinkMapper {
 
+    public static LinkDto mapToPageLinkDto(Link link) {
+
+        return LinkDto.builder()
+                .id(link.getId())
+                .name(link.getName())
+                .url(link.getUrl())
+                .build();
+    }
+
     public static LinkDto mapToLinkDto(Link link) {
 
         return LinkDto.builder()
@@ -17,13 +26,13 @@ public class LinkMapper {
                 .url(link.getUrl())
                 .category(
                         link.getCategory() == null
-                        ? null
-                        : ClothesCategoryMapper.mapToCategoryDto(link.getCategory())
+                                ? null
+                                : ClothesCategoryMapper.mapToCategoryDto(link.getCategory())
                 )
                 .brand(
                         link.getBrand() == null
-                        ? null
-                        : ClothesBrandMapper.mapToClothesBrandDto(link.getBrand())
+                                ? null
+                                : ClothesBrandMapper.mapToClothesBrandDto(link.getBrand())
                 )
                 .color(link.getColor())
                 .season(link.getSeason())

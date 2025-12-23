@@ -5,6 +5,7 @@ import by.com.clothify.clothes.model.entity.ClothesCategory;
 import by.com.clothify.common.util.AuthUtils;
 import by.com.clothify.links.mapper.LinkMapper;
 import by.com.clothify.links.model.dto.LinkDto;
+import by.com.clothify.links.model.dto.LinkFilterDto;
 import by.com.clothify.links.model.dto.PatchedLinkDto;
 import by.com.clothify.links.model.dto.SavedLinkDto;
 import by.com.clothify.links.model.entity.Link;
@@ -13,11 +14,16 @@ import by.com.clothify.security.model.entity.User;
 import by.com.clothify.security.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 import static by.com.clothify.links.mapper.LinkMapper.mapToLinkDto;
@@ -46,6 +52,33 @@ public class LinkService {
 
         } catch (Exception e) {
             log.error("Failed get link by id = {} for user: {}", id, email);
+            log.error(e.getMessage(), e);
+            throw new RuntimeException(e);
+        }
+    }
+
+    public Page<LinkDto> getFilteredLinks(LinkFilterDto filter, int page, int size) {
+
+        final String email = AuthUtils.getEmail();
+
+        try {
+            Pageable pageable = PageRequest.of(page, size);
+
+            Page<Long> linkIds = linkRepository.findFilteredLinkIds(email, pageable, filter);
+
+            if (linkIds.isEmpty()) {
+                return Page.empty(pageable);
+            }
+
+            List<LinkDto> links = linkRepository
+                    .findLinksByIds(linkIds.getContent()).stream()
+                    .map(LinkMapper::mapToPageLinkDto)
+                    .toList();
+
+            return new PageImpl<>(links, pageable, linkIds.getTotalElements());
+
+        } catch (Exception e) {
+            log.error("Failed get links by category id = {}, for user: {}", filter.getCategoryId(), email);
             log.error(e.getMessage(), e);
             throw new RuntimeException(e);
         }
