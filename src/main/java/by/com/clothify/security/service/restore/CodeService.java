@@ -35,7 +35,7 @@ public class CodeService {
     @Value("${restore.code-lock-time}")
     private Long lockTime;
 
-    //    TODO: Лучше поменять на redis, но пока так
+    //    TODO- Лучше поменять на redis, но пока так
     private final UserCodeRepository userCodeRepository;
     private final SendCodeRequestRepository sendCodeRequestRepository;
 

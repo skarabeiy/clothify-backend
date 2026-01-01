@@ -31,7 +31,7 @@ public class AuthController {
     private final AuthenticateService authenticateService;
     private final RefreshService refreshService;
 
-    // TODO: Удобная штука, но пока отложу - время + загромождение + актуальность
+    // TODO- Удобная штука, но пока отложу - время + загромождение + актуальность
     @PostMapping("/check-email")
     @Operation(
             summary = "Check email availability",

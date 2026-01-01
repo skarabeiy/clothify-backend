@@ -42,10 +42,10 @@ public class AppleClientSecretService {
     @Value("${apple.account.client-secret-expiration-time}")
     private Long clientSecretExpirationInMinutes;
 
-    // TODO: Лучше поменять на redis, но пока так
+    // TODO- Лучше поменять на redis, но пока так
     private final AppleClientSecretRepository appleClientSecretRepository;
 
-    // TODO: пока просто synchronized над всем методом, но можно подумать, где уменшить его скоуп,
+    // TODO- пока просто synchronized над всем методом, но можно подумать, где уменшить его скоуп,
     //  для производительности, пока это маловажно
     @Transactional
     public synchronized String getAppleClientSecret() {
