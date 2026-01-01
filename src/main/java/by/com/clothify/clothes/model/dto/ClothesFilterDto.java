@@ -23,4 +23,6 @@ public class ClothesFilterDto {
     private Season season;
 
     private Set<String> names;
+
+    private Boolean usedInOutfits;
 }

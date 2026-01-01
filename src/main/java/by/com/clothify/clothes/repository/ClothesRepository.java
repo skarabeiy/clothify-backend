@@ -38,6 +38,33 @@ public interface ClothesRepository extends JpaRepository<Clothes, Long> {
     Page<Long> findFilteredClothesIds(String email, Pageable pageable, ClothesFilterDto filter);
 
     @Query("""
+            SELECT c.id FROM Clothes c
+            LEFT JOIN OutfitClothes oc ON c.id = oc.clothes.id
+            WHERE c.user.email = :email
+            AND oc IS NULL
+            AND (:#{#filter.categoryId} IS NULL OR c.category.id = :#{#filter.categoryId})
+            AND (COALESCE(:#{#filter.colors}, NULL) IS NULL OR c.color IN :#{#filter.colors})
+            AND (COALESCE(:#{#filter.brandIds}, NULL) IS NULL OR c.brand.id IN :#{#filter.brandIds})
+            AND (:#{#filter.season} IS NULL OR c.season = :#{#filter.season})
+            AND (COALESCE(:#{#filter.names}, NULL) IS NULL OR c.name IN :#{#filter.names})
+            ORDER BY c.updatedAt DESC
+            """)
+    Page<Long> findFilteredClothesIdsNotUsedInOutfits(String email, Pageable pageable, ClothesFilterDto filter);
+
+    @Query("""
+            SELECT c.id FROM Clothes c
+            JOIN OutfitClothes oc ON c.id = oc.clothes.id
+            WHERE c.user.email = :email
+            AND (:#{#filter.categoryId} IS NULL OR c.category.id = :#{#filter.categoryId})
+            AND (COALESCE(:#{#filter.colors}, NULL) IS NULL OR c.color IN :#{#filter.colors})
+            AND (COALESCE(:#{#filter.brandIds}, NULL) IS NULL OR c.brand.id IN :#{#filter.brandIds})
+            AND (:#{#filter.season} IS NULL OR c.season = :#{#filter.season})
+            AND (COALESCE(:#{#filter.names}, NULL) IS NULL OR c.name IN :#{#filter.names})
+            ORDER BY c.updatedAt DESC
+            """)
+    Page<Long> findFilteredClothesIdsUsedInOutfits(String email, Pageable pageable, ClothesFilterDto filter);
+
+    @Query("""
             SELECT c FROM Clothes c
             JOIN FETCH c.image
             WHERE c.id IN :ids

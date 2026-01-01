@@ -75,7 +75,7 @@ public class ClothesService {
         try {
             Pageable pageable = PageRequest.of(page, size);
 
-            Page<Long> clothesIds = clothesRepository.findFilteredClothesIds(email, pageable, filter);
+            Page<Long> clothesIds = getFilteredClothesIds(email, pageable, filter);
 
             if (clothesIds.isEmpty()) {
                 return Page.empty(pageable);
@@ -91,6 +91,20 @@ public class ClothesService {
             log.error("Failed get clothes by category id = {}, for user: {}", filter.getCategoryId(), email);
             log.error(e.getMessage(), e);
             throw new RuntimeException(e);
+        }
+    }
+
+    private Page<Long> getFilteredClothesIds(String email, Pageable pageable, ClothesFilterDto filter) {
+
+        if (filter.getUsedInOutfits() == null) {
+            return clothesRepository.findFilteredClothesIds(email, pageable, filter);
+        } else {
+
+            if (filter.getUsedInOutfits()) {
+                return clothesRepository.findFilteredClothesIdsUsedInOutfits(email, pageable, filter);
+            } else {
+                return clothesRepository.findFilteredClothesIdsNotUsedInOutfits(email, pageable, filter);
+            }
         }
     }
 

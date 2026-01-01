@@ -75,7 +75,10 @@ public class ClothesController {
             @RequestParam(name = "season", required = false) Season season,
 
             @Parameter(description = "List of clothes names to filter")
-            @RequestParam(name = "names", required = false) Set<String> names
+            @RequestParam(name = "names", required = false) Set<String> names,
+
+            @Parameter(description = "Use in outfits", example = "null")
+            @RequestParam(name = "usedInOutfits", required = false) Boolean usedInOutfits
     ) {
 
         ClothesFilterDto filter = ClothesFilterDto.builder()
@@ -84,6 +87,7 @@ public class ClothesController {
                 .brandIds(brandIds)
                 .season(season)
                 .names(names)
+                .usedInOutfits(usedInOutfits)
                 .build();
 
         return clothesService.getFilteredClothes(filter, page, size);
