@@ -27,9 +27,6 @@ import static by.com.clothify.security.util.AuthConstants.APPLE_ID_URL;
 @Slf4j
 public class AppleClientSecretService {
 
-    // TODO: перенести в надёжное место
-    private static final String APPLE_PRIVATE_KEY = "MIGTAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBHkwdwIBAQQgJh3tQ8075e9UB5BDulsdnr8uqQEf7cO2p9YfuaKp9B2gCgYIKoZIzj0DAQehRANCAAR2w225RS3s8nYA7BHPhtbwlgLzOupHXCcwEOAoiZdGPzUD9O7ag6Y1rjn/qJej7dATBxm0QdU7kLv/2ThZjABY";
-
     @Value("${apple.account.client-id}")
     private String clientId;
 
@@ -38,6 +35,9 @@ public class AppleClientSecretService {
 
     @Value("${apple.account.team-id}")
     private String teamId;
+
+    @Value("${apple.account.private-key}")
+    private String applePrivateKey;
 
     @Value("${apple.account.client-secret-expiration-time}")
     private Long clientSecretExpirationInMinutes;
@@ -117,9 +117,9 @@ public class AppleClientSecretService {
         }
     }
 
-    private static PrivateKey loadPrivateKey() {
+    private PrivateKey loadPrivateKey() {
         try {
-            byte[] decodedKey = Base64.getDecoder().decode(APPLE_PRIVATE_KEY);
+            byte[] decodedKey = Base64.getDecoder().decode(applePrivateKey);
             PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(decodedKey);
 
             KeyFactory keyFactory = KeyFactory.getInstance("EC");
