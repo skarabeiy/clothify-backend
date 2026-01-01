@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-// TODO: кэш для статистики - хорошая идея
+// TODO- кэш для статистики - хорошая идея, но пока он не нужен
 @RestController
 @RequestMapping("/statistics")
 @RequiredArgsConstructor
