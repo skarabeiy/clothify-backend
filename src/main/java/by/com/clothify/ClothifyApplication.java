@@ -14,7 +14,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 // TODO: пересмотреть индексы
 // TODO- при выносе на прод подумать про логи, метрики
 public class ClothifyApplication {
-    public static void main(String[] args) {
+    static void main(String[] args) {
         SpringApplication.run(ClothifyApplication.class, args);
     }
 }
