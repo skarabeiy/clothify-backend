@@ -3,6 +3,7 @@ package by.com.clothify.security.config.security;
 import by.com.clothify.security.model.dto.enums.AuthError;
 import by.com.clothify.security.service.JwtService;
 import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.security.SignatureException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -10,8 +11,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.jspecify.annotations.NonNull;
 import org.springframework.http.HttpStatus;
-import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.authorization.AuthorizationDeniedException;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -90,9 +91,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         try {
             return Optional.of(jwtService.extractUsername(jwt));
 
-        } catch (SignatureException se) {
+        } catch (SignatureException | MalformedJwtException e) {
             log.error(AuthError.INVALID_TOKEN.getDescription());
-            log.error(se.getMessage(), se);
+            log.error(e.getMessage(), e);
             sendError(response, HttpStatus.UNAUTHORIZED, AuthError.INVALID_TOKEN);
             return Optional.empty();
 
