@@ -13,6 +13,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 // TODO- подумать над кешированием
 // TODO: пересмотреть индексы
 // TODO- при выносе на прод подумать про логи, метрики
+// TODO - перешел на спринг бут 4 - если будет тяжело вернусь обратно на 3
 public class ClothifyApplication {
     static void main(String[] args) {
         SpringApplication.run(ClothifyApplication.class, args);
