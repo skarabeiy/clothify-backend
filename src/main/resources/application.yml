@@ -1,0 +1,79 @@
+server:
+  port: ${PORT:8090}
+  servlet:
+    context-path: /api
+
+# TODO- hide secret settings
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: ${DATASOURCE_URL:jdbc:postgresql://aws-0-eu-central-1.pooler.supabase.com:5432/postgres?ssl=true&sslmode=require}
+    username: ${DATASOURCE_USERNAME:postgres.dfeoncaryufrsbkmzios}
+    password: ${DATASOURCE_PASSWORD:8pNcKqJUw?X%-V?}
+    hikari:
+      idle-timeout: 30000
+      max-lifetime: 1800000
+      # maximum-pool-size: 5
+      # connection-timeout: 2000
+      # leak-detection-threshold: 5000
+
+  jpa:
+    show-sql: true # TODO hide on prod
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+    baseline-on-migrate: true
+
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: clothifyapplication
+    password: mxaducltmezuwdtp
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+          connectiontimeout: 5000
+          timeout: 5000
+          writetimeout: 5000
+
+  servlet:
+    multipart:
+      max-file-size: ${MAX_FILE_SIZE:3MB}
+
+springdoc:
+  swagger-ui:
+    tags-sorter: alpha
+
+jwt:
+  secret-key: ${JWT_SECRET_KEY:3+l65plPEjODmOLRJBWsMi4iAI8wH98IbCZwwHNe0EU=}
+  access:
+    expiration-time: ${JWT_ACCESS_EXPIRATION:480} # 24 hours in minutes
+  refresh:
+    expiration-time: ${JWT_REFRESH_EXPIRATION:43200} # 30 days in minutes
+
+apple:
+  account:
+    client-id: ${APPLE_CLIENT_ID:com.hrabar.Clothify}
+    key-id: ${APPLE_KEY_ID:4U58KF33HA}
+    team-id: ${APPLE_TEAM_ID:LH4ZDS6S2J}
+    private-key: ${APPLE_PRIVATE_KEY:MIGTAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBHkwdwIBAQQgJh3tQ8075e9UB5BDulsdnr8uqQEf7cO2p9YfuaKp9B2gCgYIKoZIzj0DAQehRANCAAR2w225RS3s8nYA7BHPhtbwlgLzOupHXCcwEOAoiZdGPzUD9O7ag6Y1rjn/qJej7dATBxm0QdU7kLv/2ThZjABY}
+    client-secret-expiration-time: ${APPLE_CLIENT_SECRET_EXPIRATION:1440} # 24 hours in minutes
+
+restore:
+  code-expiration-time: ${RESTORE_CODE_EXPIRATION:15}
+  code-attempts-number: ${RESTORE_CODE_ATTEMPTS:4}
+  code-max-requests-number: ${RESTORE_CODE_MAX_REQUESTS:5}
+  code-lock-time: ${RESTORE_CODE_LOCK_TIME:15}
+  code-retry-time: ${RESTORE_CODE_RETRY_TIME:1}
+
+cloudinary:
+  cloud-name: dbzlooyjl
+  api-key: 134294356693491
+  api-secret: BfHKqA8-5KlOUhd8KTCo7iA-A7M
