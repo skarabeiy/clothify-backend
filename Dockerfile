@@ -1,5 +1,5 @@
 # Dockerfile for Render hosting
-FROM maven:3.9-eclipse-temurin-24 as builder
+FROM maven:3.9.12-eclipse-temurin-25 AS builder
 
 WORKDIR /app
 
@@ -11,7 +11,7 @@ COPY src ./src
 
 RUN mvn clean package -DskipTests
 
-FROM eclipse-temurin:24-jre
+FROM eclipse-temurin:25-jre
 WORKDIR /app
 
 # Копируем только собранный JAR из стадии builder

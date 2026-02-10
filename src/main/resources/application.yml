@@ -77,3 +77,9 @@ cloudinary:
   cloud-name: dbzlooyjl
   api-key: 134294356693491
   api-secret: BfHKqA8-5KlOUhd8KTCo7iA-A7M
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,metrics,prometheus
