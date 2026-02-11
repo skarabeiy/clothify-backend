@@ -11,7 +11,6 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableSpringDataWebSupport(pageSerializationMode = EnableSpringDataWebSupport.PageSerializationMode.VIA_DTO)
 @EnableCaching
 // TODO- подумать над кешированием
-// TODO: пересмотреть индексы
 // TODO- при выносе на прод подумать про логи, метрики
 // TODO - перешел на спринг бут 4 - если будет тяжело вернусь обратно на 3
 public class ClothifyApplication {
