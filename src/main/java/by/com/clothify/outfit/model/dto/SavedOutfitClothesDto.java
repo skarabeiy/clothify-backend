@@ -1,5 +1,6 @@
 package by.com.clothify.outfit.model.dto;
 
+import  com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -27,6 +28,7 @@ public class SavedOutfitClothesDto {
     @Schema(description = "angle of rotation of the clothing image", example = "0.0")
     private Double rotation;
 
+    @JsonProperty("zIndex")
     @Schema(description = "order of the overlay of the clothing image (which element is on top)", example = "2")
     private Integer zIndex;
 }

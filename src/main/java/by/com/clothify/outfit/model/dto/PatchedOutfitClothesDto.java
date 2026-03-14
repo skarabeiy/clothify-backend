@@ -1,5 +1,6 @@
 package by.com.clothify.outfit.model.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.annotation.Nullable;
 import lombok.AllArgsConstructor;
@@ -32,6 +33,7 @@ public class PatchedOutfitClothesDto {
     @Nullable
     private Double rotation;
 
+    @JsonProperty("zIndex")
     @Schema(description = "order of the overlay of the clothing image (which element is on top)", example = "null")
     @Nullable
     private Integer zIndex;

@@ -12,11 +12,10 @@ public final class OutfitClothesMapper {
 
     public static OutfitClothesDto mapToOutfitClothesDto(OutfitClothes outfitClothes) {
 
-        return OutfitClothesDto.builder()
+        OutfitClothesDto outfitClothesDto = OutfitClothesDto.builder()
                 .id(outfitClothes.getId())
                 .clothingId(outfitClothes.getClothes().getId())
                 .name(outfitClothes.getClothes().getName())
-                .image(outfitClothes.getClothes().getImage().getUrl())
                 .backgroundColor(outfitClothes.getClothes().getBackgroundColor())
                 .positionX(outfitClothes.getPositionX())
                 .positionY(outfitClothes.getPositionY())
@@ -24,6 +23,12 @@ public final class OutfitClothesMapper {
                 .rotation(outfitClothes.getRotation())
                 .zIndex(outfitClothes.getZIndex())
                 .build();
+
+        if (outfitClothes.getClothes().getImage() != null) {
+            outfitClothesDto.setImage(outfitClothes.getClothes().getImage().getUrl());
+        }
+
+        return outfitClothesDto;
     }
 
     public static OutfitClothesDto mapToBasicStatisticOutfitClothesDto(OutfitClothes outfitClothes) {
