@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface OutfitPlanRepository extends JpaRepository<OutfitPlan, Long> {
@@ -64,6 +65,8 @@ public interface OutfitPlanRepository extends JpaRepository<OutfitPlan, Long> {
             ORDER BY op.plannedDate
             """)
     List<OutfitPlan> findByDatePeriodAndEmail(LocalDate startDate, LocalDate endDate, String email);
+
+    Optional<OutfitPlan> findFirstByOutfitId(Long outfitId);
 
     void deleteByIdAndUser_Email(Long id, String email);
 }

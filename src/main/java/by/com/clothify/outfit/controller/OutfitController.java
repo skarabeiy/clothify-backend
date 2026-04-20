@@ -112,9 +112,11 @@ public class OutfitController {
     )
     public ResponseEntity<Void> deleteOutfitById(
             @Parameter(description = "Outfit ID", example = "1")
-            @PathVariable Long id
+            @PathVariable Long id,
+            @Parameter(description = "Delete outfit anyway")
+            @RequestParam(name = "force", required = false) boolean force
     ) {
-        return outfitService.deleteOutfitById(id);
+        return outfitService.deleteOutfitById(id, force);
     }
 
     @GetMapping("/names")

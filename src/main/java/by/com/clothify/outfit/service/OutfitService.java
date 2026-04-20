@@ -14,6 +14,8 @@ import by.com.clothify.outfit.model.entity.OutfitCategory;
 import by.com.clothify.outfit.model.entity.OutfitClothes;
 import by.com.clothify.outfit.repository.OutfitClothesRepository;
 import by.com.clothify.outfit.repository.OutfitRepository;
+import by.com.clothify.plan.model.entity.OutfitPlan;
+import by.com.clothify.plan.repository.OutfitPlanRepository;
 import by.com.clothify.security.model.entity.User;
 import by.com.clothify.security.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +24,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -42,6 +45,7 @@ public class OutfitService {
     private final UserRepository userRepository;
     private final OutfitRepository outfitRepository;
     private final OutfitClothesRepository outfitClothesRepository;
+    private final OutfitPlanRepository outfitPlanRepository;
 
     public ResponseEntity<OutfitDto> getOutfitById(Long id) {
 
@@ -266,11 +270,19 @@ public class OutfitService {
 
 
     @Transactional
-    public ResponseEntity<Void> deleteOutfitById(Long id) {
+    public ResponseEntity<Void> deleteOutfitById(Long id, boolean force) {
 
         final String email = AuthUtils.getEmail();
 
         try {
+            if (!force) {
+                Optional<OutfitPlan> optionalOutfitPlan = outfitPlanRepository.findFirstByOutfitId(id);
+
+                if (optionalOutfitPlan.isPresent()) {
+                    return ResponseEntity.status(HttpStatus.CONFLICT).build();
+                }
+            }
+
             outfitRepository.deleteByIdAndUser_Email(id, email);
             return ResponseEntity.ok().build();
 
