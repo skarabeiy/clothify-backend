@@ -119,6 +119,7 @@ public class ClothesController {
         return clothesService.patchClothes(patchedClothes);
     }
 
+    // удалять CollectionClothes
     @DeleteMapping("/{id}")
     @Operation(
             summary = "Delete user clothes",

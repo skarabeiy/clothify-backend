@@ -14,6 +14,8 @@ import by.com.clothify.clothes.service.file.ImageService;
 import by.com.clothify.common.util.AuthUtils;
 import by.com.clothify.common.util.DateUtils;
 import by.com.clothify.outfit.model.entity.Outfit;
+import by.com.clothify.outfit.model.entity.OutfitClothes;
+import by.com.clothify.outfit.repository.OutfitClothesRepository;
 import by.com.clothify.outfit.repository.OutfitRepository;
 import by.com.clothify.security.model.entity.User;
 import by.com.clothify.security.repository.UserRepository;
@@ -23,6 +25,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -43,6 +46,7 @@ public class ClothesService {
     private final ClothesRepository clothesRepository;
     private final UserRepository userRepository;
     private final OutfitRepository outfitRepository;
+    private final OutfitClothesRepository outfitClothesRepository;
 
     public ResponseEntity<ClothesDto> getClothesById(Long id) {
 
@@ -219,6 +223,12 @@ public class ClothesService {
         final String email = AuthUtils.getEmail();
 
         try {
+            Optional<OutfitClothes> optionalOutfitClothes = outfitClothesRepository.findFirstByClothesId(id);
+
+            if (optionalOutfitClothes.isPresent()) {
+                return ResponseEntity.status(HttpStatus.CONFLICT).build();
+            }
+
             Optional<Image> optionalImage = imageService.getImageByClothesIdAndEmail(id, email);
 
             if (optionalImage.isEmpty()) {
