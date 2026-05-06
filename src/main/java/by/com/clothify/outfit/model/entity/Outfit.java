@@ -66,6 +66,6 @@ public class Outfit {
     @OneToMany(mappedBy = "outfit", cascade = CascadeType.REMOVE)
     private List<OutfitClothes> outfitClothes;
 
-    @OneToMany(mappedBy = "outfit", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    @OneToMany(mappedBy = "outfit", cascade = CascadeType.REMOVE)
     private List<OutfitPlan> outfitPlans;
 }
